@@ -1,0 +1,8 @@
+Features
+--------
+
+- Create a SQLite database file from:
+    - CSV file(s)
+    - JSON file(s)
+    - Microsoft Excel :superscript:`TM` file(s)
+    - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_

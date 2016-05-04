@@ -1,0 +1,4 @@
+click
+dataproperty
+path.py
+SimpleSQLite>=0.3.0

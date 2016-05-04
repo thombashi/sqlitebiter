@@ -1,0 +1,12 @@
+``sqlitebiter file`` subcommand help
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    Usage: sqlitebiter file [OPTIONS] [FILES]...
+
+      Convert CSV/JSON/Excel file(s) to a SQLite database file.
+
+    Options:
+      -o, --output-path TEXT  Output path of the SQLite database file
+      -h, --help              Show this message and exit.

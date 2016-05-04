@@ -1,0 +1,10 @@
+Example
+~~~~~~~
+
+.. code-block:: console
+
+    $ sqlitebiter gs credentials-xxxxxxxxxxxx.json samplebook -o sample.sqlite
+    convert 'samplebook' to 'sheet3' table
+    convert 'samplebook' to 'sheet1' table
+    $ ls sample.sqlite
+    sample.sqlite

@@ -1,0 +1,12 @@
+Requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Following python packages are required for Google Sheets converting.
+
+- `oauth2client <https://github.com/google/oauth2client/>`_
+- `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/install.html>`_
+
+::
+
+    pip install oauth2client
+    pip install pyopenssl
