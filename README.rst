@@ -28,7 +28,7 @@ Usage
 For more information
 --------------------
 More examples are available at 
-http://sqlitebiter.readthedocs.org/en/latest/pages/examples/index.html
+http://sqlitebiter.readthedocs.io/en/latest/pages/usage/index.html
 
 
 Installation

@@ -41,7 +41,7 @@ def write_examples(f):
         "For more information",
         "--------------------",
         "More examples are available at ",
-        "http://%s.readthedocs.org/en/latest/pages/examples/index.html" % (
+        "http://%s.readthedocs.io/en/latest/pages/usage/index.html" % (
             PROJECT_NAME),
         "",
     ])
