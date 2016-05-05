@@ -14,3 +14,6 @@ Example
     convert 'sample_data_single.json' to 'sample_data_single' table
     $ ls sample.sqlite
     sample.sqlite
+
+Convertible JSON format is as follows:
+http://simplesqlite.readthedocs.io/en/latest/pages/reference/loader.html#jsontablefileloader-class
