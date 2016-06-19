@@ -42,6 +42,8 @@ setuptools.setup(
         "Environment :: Console",
         "Intended Audience :: Information Technology",
         "License :: OSI Approved :: MIT License",
+        "Operating System :: Microsoft",
+        "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 2",
