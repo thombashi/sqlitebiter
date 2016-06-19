@@ -1,11 +1,16 @@
 from __future__ import with_statement
 import os.path
 import setuptools
+import sys
 
 import sqlitebiter
 
 
 REQUIREMENT_DIR = "requirements"
+
+needs_pytest = set(['pytest', 'test', 'ptr']).intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
+
 
 with open("README.rst") as fp:
     long_description = fp.read()
@@ -34,7 +39,7 @@ setuptools.setup(
     license="MIT License",
     long_description=long_description,
     packages=setuptools.find_packages(exclude=['test*']),
-    setup_requires=["pytest-runner"],
+    setup_requires=pytest_runner,
     tests_require=tests_require,
 
     classifiers=[
