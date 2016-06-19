@@ -1,97 +1,59 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import os
+"""
+.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+"""
+
 import sys
+
+import readmemaker
 
 
 PROJECT_NAME = "sqlitebiter"
-VERSION = "0.4.0"
 OUTPUT_DIR = ".."
-README_WORK_DIR = "."
-DOC_PAGE_DIR = os.path.join(README_WORK_DIR, "pages")
 
 
-def get_usage_file_path(filename):
-    return os.path.join(DOC_PAGE_DIR, "examples", filename)
-
-
-def write_line_list(f, line_list):
-    f.write("\n".join(line_list))
-    f.write("\n" * 2)
-
-
-def write_usage_file(f, filename):
-    write_line_list(f, [
-        line.rstrip()
-        for line in
-        open(get_usage_file_path(filename)).readlines()
-    ])
-
-
-def write_examples(f):
-    write_line_list(f, [
-        "Usage",
-        "========",
-        "",
+def write_examples(maker):
+    maker.set_indent_level(0)
+    maker.write_chapter("Usage")
+    maker.write_line_list([
         ".. image:: docs/gif/usage_example.gif",
     ])
 
-    write_line_list(f, [
-        "For more information",
-        "--------------------",
+    maker.inc_indent_level()
+    maker.write_chapter("For more information")
+    maker.write_line_list([
         "More examples are available at ",
-        "http://%s.readthedocs.io/en/latest/pages/usage/index.html" % (
-            PROJECT_NAME),
-        "",
+        "http://%s.readthedocs.io/en/latest/pages/%s/index.html" % (
+            PROJECT_NAME.lower(), maker.examples_dir_name),
     ])
 
 
 def main():
-    with open(os.path.join(OUTPUT_DIR, "README.rst"), "w") as f:
-        write_line_list(f, [
-            PROJECT_NAME,
-            "=============",
-            "",
-        ] + [
-            line.rstrip() for line in
-            open(os.path.join(
-                DOC_PAGE_DIR, "introduction", "badges.txt")).readlines()
-        ])
+    maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR)
+    maker.examples_dir_name = u"usage"
 
-        write_line_list(f, [
-            "Summary",
-            "-------",
-            "",
-        ] + [
-            line.rstrip() for line in
-            open(os.path.join(
-                DOC_PAGE_DIR, "introduction", "summary.txt")).readlines()
-        ])
+    maker.write_introduction_file("badges.txt")
 
-        write_line_list(f, [
-            line.rstrip() for line in
-            open(os.path.join(
-                DOC_PAGE_DIR, "introduction", "feature.txt")).readlines()
-        ])
+    maker.inc_indent_level()
+    maker.write_chapter("Summary")
+    maker.write_introduction_file("summary.txt")
+    maker.write_introduction_file("feature.txt")
 
-        write_examples(f)
+    write_examples(maker)
 
-        write_line_list(f, [
-            line.rstrip() for line in
-            open(os.path.join(DOC_PAGE_DIR, "installation.rst")).readlines()
-        ])
+    maker.write_file(
+        maker.doc_page_root_dir_path.joinpath("installation.rst"))
 
-        write_line_list(f, [
-            "Documentation",
-            "=============",
-            "",
-            "http://%s.readthedocs.org/en/latest/" % (PROJECT_NAME)
-        ])
+    maker.set_indent_level(0)
+    maker.write_chapter("Documentation")
+    maker.write_line_list([
+        "http://%s.readthedocs.org/en/latest/" % (PROJECT_NAME.lower()),
+    ])
 
-    sys.stdout.write("complete\n")
-    sys.stdout.flush()
-    sys.stdin.readline()
+    return 0
+
 
 if __name__ == '__main__':
     sys.exit(main())

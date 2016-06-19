@@ -1,1 +1,1 @@
-sqlitebiter is a CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets.
+sqlitebiter is a CLI tool to convert CSV/JSON/Excel/Google-Sheets to a SQLite database file.
