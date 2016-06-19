@@ -1,5 +1,5 @@
 sqlitebiter
-=============
+===========
 
 .. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
    :target: https://pypi.python.org/pypi/sqlitebiter
@@ -11,7 +11,7 @@ sqlitebiter
 Summary
 -------
 
-sqlitebiter is a CLI tool to create a SQLite database from CSV/JSON/Excel/Google-Sheets.
+sqlitebiter is a CLI tool to convert CSV/JSON/Excel/Google-Sheets to a SQLite database file.
 
 Features
 --------
@@ -23,15 +23,15 @@ Features
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
 
 Usage
-========
+=====
 
 .. image:: docs/gif/usage_example.gif
 
 For more information
 --------------------
+
 More examples are available at 
 http://sqlitebiter.readthedocs.io/en/latest/pages/usage/index.html
-
 
 Installation
 ============
