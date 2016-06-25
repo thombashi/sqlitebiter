@@ -112,6 +112,17 @@ def valid_excel_file():
         for col_idx, item in enumerate(row):
             worksheet.write(row_idx, col_idx, item)
 
+    worksheet = workbook.add_worksheet("excel_sheet_d")
+    table = [
+        ["a'b", 'b"c', "c'd[%]"],
+        [1, 1.1, "a"],
+        [2, "", "bb"],
+        [3, 3.3, ""],
+    ]
+    for row_idx, row in enumerate(table):
+        for col_idx, item in enumerate(row):
+            worksheet.write(row_idx, col_idx, item)
+
     workbook.close()
 
     return str(file_path)
@@ -174,7 +185,7 @@ class Test_sqlitebiter:
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_tables = [
                 'json_a', 'json_c', 'json_b',
-                'csv_a', 'excel_sheet_a', 'excel_sheet_c',
+                'csv_a', 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
             ]
 
             assert set(con.get_table_name_list()) == set(expected_tables)
@@ -187,6 +198,8 @@ class Test_sqlitebiter:
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
+                    [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
+                "excel_sheet_d":
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
             }
             for table in con.get_table_name_list():
