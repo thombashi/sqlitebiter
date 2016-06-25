@@ -139,7 +139,6 @@ def invalid_excel_file():
     return file_path
 
 
-class Test_:
 
     @pytest.mark.parametrize(["option_list", "expected"], [
         [["-h"], 0],
