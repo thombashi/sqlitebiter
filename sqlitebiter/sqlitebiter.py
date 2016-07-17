@@ -94,7 +94,7 @@ def file(files, output_path):
 
         try:
             for tabledata in loader.load():
-                click.echo("convert '%s' to '%s' table" % (
+                click.echo("convert '{:s}' to '{:s}' table".format(
                     file_path, tabledata.table_name))
                 con.create_table_from_tabledata(tabledata)
             convert_count += 1
@@ -127,8 +127,8 @@ def gs(credentials, title, output_path):
     loader.title = title
 
     for tabledata in loader.load():
-        click.echo(
-            "convert '%s' to '%s' table" % (title, tabledata.table_name))
+        click.echo("convert '{:s}' to '{:s}' table".format(
+            title, tabledata.table_name))
         con.create_table_from_tabledata(tabledata)
 
     return 0
