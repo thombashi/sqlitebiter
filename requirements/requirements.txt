@@ -1,4 +1,4 @@
 click
-DataProperty>=0.5.4
+DataProperty>=0.7.2
 path.py
-SimpleSQLite>=0.4.1
+SimpleSQLite>=0.4.2
