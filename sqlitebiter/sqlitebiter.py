@@ -99,7 +99,7 @@ def file(files, output_path):
             try:
                 con.create_table_from_tabledata(tabledata)
                 convert_count += 1
-            except (ValueError, ValidationError, InvalidDataError):
+            except (ValueError, IOError, ValidationError, InvalidDataError):
                 continue
 
     return 0 if convert_count == 0 else 1
