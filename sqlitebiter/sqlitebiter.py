@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 from __future__ import absolute_import
 import collections
 import re
+import sys
 
 import click
 import dataproperty
@@ -17,6 +16,8 @@ import path
 import simplesqlite
 from simplesqlite.loader import ValidationError
 from simplesqlite.loader import InvalidDataError
+
+from ._counter import ResultCounter
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -81,8 +82,8 @@ def file(files, output_path):
     """
 
     con = create_database(output_path)
+    result_counter = ResultCounter()
 
-    convert_count = 0
     for file_path in files:
         if not path.Path(file_path).isfile():
             continue
@@ -92,17 +93,21 @@ def file(files, output_path):
         except LoaderNotFound:
             continue
 
-        for tabledata in loader.load():
-            click.echo("convert '{:s}' to '{:s}' table".format(
-                file_path, tabledata.table_name))
+        try:
+            for tabledata in loader.load():
+                click.echo("convert '{:s}' to '{:s}' table".format(
+                    file_path, tabledata.table_name))
 
-            try:
-                con.create_table_from_tabledata(tabledata)
-                convert_count += 1
-            except (ValueError, IOError, ValidationError, InvalidDataError):
-                continue
+                try:
+                    con.create_table_from_tabledata(tabledata)
+                    result_counter.inc_success()
+                except (ValueError, IOError):
+                    result_counter.inc_fail()
+                    continue
+        except (ValidationError, InvalidDataError):
+            result_counter.inc_fail()
 
-    return 0 if convert_count == 0 else 1
+    sys.exit(result_counter.get_return_code())
 
 
 @cmd.command()
@@ -122,17 +127,26 @@ def gs(credentials, title, output_path):
     """
 
     con = create_database(output_path)
+    result_counter = ResultCounter()
 
     loader = simplesqlite.loader.GoogleSheetsTableLoader()
     loader.source = credentials
     loader.title = title
 
-    for tabledata in loader.load():
-        click.echo("convert '{:s}' to '{:s}' table".format(
-            title, tabledata.table_name))
-        con.create_table_from_tabledata(tabledata)
+    try:
+        for tabledata in loader.load():
+            click.echo("convert '{:s}' to '{:s}' table".format(
+                title, tabledata.table_name))
 
-    return 0
+            try:
+                con.create_table_from_tabledata(tabledata)
+                result_counter.inc_success()
+            except (ValidationError, InvalidDataError):
+                result_counter.inc_fail()
+    except (ValidationError, InvalidDataError):
+        result_counter.inc_fail()
+
+    sys.exit(result_counter.get_return_code())
 
 
 if __name__ == '__main__':
