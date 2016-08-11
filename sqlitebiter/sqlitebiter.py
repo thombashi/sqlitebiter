@@ -92,14 +92,15 @@ def file(files, output_path):
         except LoaderNotFound:
             continue
 
-        try:
-            for tabledata in loader.load():
-                click.echo("convert '{:s}' to '{:s}' table".format(
-                    file_path, tabledata.table_name))
+        for tabledata in loader.load():
+            click.echo("convert '{:s}' to '{:s}' table".format(
+                file_path, tabledata.table_name))
+
+            try:
                 con.create_table_from_tabledata(tabledata)
-            convert_count += 1
-        except (ValueError, ValidationError, InvalidDataError):
-            continue
+                convert_count += 1
+            except (ValueError, ValidationError, InvalidDataError):
+                continue
 
     return 0 if convert_count == 0 else 1
 
