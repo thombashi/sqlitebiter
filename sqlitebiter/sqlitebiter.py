@@ -81,6 +81,10 @@ def _setup_logger_from_context(ctx, logger):
     logger.level = log_level
 
 
+def _get_format_type_from_path(file_path):
+    return file_path.ext.lstrip(".")
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option()
 @click.option(
@@ -112,7 +116,8 @@ def file(ctx, files, output_path):
     _setup_logger_from_context(ctx, logger)
 
     for file_path in files:
-        if not path.Path(file_path).isfile():
+        file_path = path.Path(file_path)
+        if not file_path.isfile():
             continue
 
         try:
@@ -128,10 +133,20 @@ def file(ctx, files, output_path):
                 try:
                     con.create_table_from_tabledata(tabledata)
                     result_counter.inc_success()
-                except (ValueError, IOError):
+                except (ValueError, IOError) as e:
+                    logger.debug(
+                        "path={:s}, message={:s}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
-        except (ValidationError, InvalidDataError):
+        except ValidationError as e:
+            logger.error(
+                "invalid {:s} data format: path={:s}, message={:s}".format(
+                    _get_format_type_from_path(file_path), file_path, str(e)))
+            result_counter.inc_fail()
+        except InvalidDataError as e:
+            logger.error(
+                "invalid {:s} data: path={:s}, message={:s}".format(
+                    _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
     sys.exit(result_counter.get_return_code())
