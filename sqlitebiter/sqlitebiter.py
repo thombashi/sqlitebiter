@@ -12,15 +12,23 @@ import sys
 
 import click
 import dataproperty
+import logbook
 import path
 import simplesqlite
 from simplesqlite.loader import ValidationError
 from simplesqlite.loader import InvalidDataError
+from simplesqlite.loader import OpenError
 
 from ._counter import ResultCounter
 
 
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+CONTEXT_SETTINGS = dict(
+    help_option_names=["-h", "--help"],
+    obj={},
+)
+
+handler = logbook.StderrHandler()
+handler.push_application()
 
 
 class LoaderNotFound(Exception):
@@ -31,7 +39,7 @@ class LoaderFactory(object):
     LoaderTuple = collections.namedtuple(
         "LoaderTuple", "filename_regexp loader")
 
-    LOADERTUPLE_LIST = [
+    __LOADERTUPLE_LIST = [
         LoaderTuple(
             re.compile("[\.]csv$"),
             simplesqlite.loader.CsvTableFileLoader()),
@@ -45,7 +53,7 @@ class LoaderFactory(object):
 
     @classmethod
     def get_loader(cls, file_path):
-        for loadertuple in cls.LOADERTUPLE_LIST:
+        for loadertuple in cls.__LOADERTUPLE_LIST:
             if loadertuple.filename_regexp.search(file_path) is None:
                 continue
 
@@ -65,10 +73,30 @@ def create_database(database_path):
     return simplesqlite.SimpleSQLite(db_path, "w")
 
 
+def _setup_logger_from_context(ctx, logger):
+    log_level = ctx.obj.get("LOG_LEVEL")
+    if log_level == logbook.NOTSET:
+        logger.disable()
+    elif log_level is None:
+        log_level = logbook.INFO
+    logger.level = log_level
+
+
+def _get_format_type_from_path(file_path):
+    return file_path.ext.lstrip(".")
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option()
-def cmd():
-    pass
+@click.option(
+    "--debug", "log_level", flag_value=logbook.DEBUG,
+    help="for debug print.")
+@click.option(
+    "--quiet", "log_level", flag_value=logbook.NOTSET,
+    help="suppress execution log messages.")
+@click.pass_context
+def cmd(ctx, log_level):
+    ctx.obj["LOG_LEVEL"] = log_level
 
 
 @cmd.command()
@@ -76,7 +104,8 @@ def cmd():
 @click.option(
     "-o", "--output-path", default="out.sqlite",
     help="Output path of the SQLite database file")
-def file(files, output_path):
+@click.pass_context
+def file(ctx, files, output_path):
     """
     Convert CSV/JSON/Excel file(s) to a SQLite database file.
     """
@@ -84,8 +113,12 @@ def file(files, output_path):
     con = create_database(output_path)
     result_counter = ResultCounter()
 
+    logger = logbook.Logger("sqlitebiter")
+    _setup_logger_from_context(ctx, logger)
+
     for file_path in files:
-        if not path.Path(file_path).isfile():
+        file_path = path.Path(file_path)
+        if not file_path.isfile():
             continue
 
         try:
@@ -101,10 +134,20 @@ def file(files, output_path):
                 try:
                     con.create_table_from_tabledata(tabledata)
                     result_counter.inc_success()
-                except (ValueError, IOError):
+                except (ValueError, IOError) as e:
+                    logger.debug(
+                        "path={:s}, message={:s}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
-        except (ValidationError, InvalidDataError):
+        except ValidationError as e:
+            logger.error(
+                "invalid {:s} data format: path={:s}, message={:s}".format(
+                    _get_format_type_from_path(file_path), file_path, str(e)))
+            result_counter.inc_fail()
+        except InvalidDataError as e:
+            logger.error(
+                "invalid {:s} data: path={:s}, message={:s}".format(
+                    _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
     sys.exit(result_counter.get_return_code())
@@ -118,7 +161,8 @@ def file(files, output_path):
 @click.option(
     "-o", "--output-path", default="out.sqlite",
     help="output path of the SQLite database file")
-def gs(credentials, title, output_path):
+@click.pass_context
+def gs(ctx, credentials, title, output_path):
     """
     Convert Google Sheets to a SQLite database file.
 
@@ -128,6 +172,9 @@ def gs(credentials, title, output_path):
 
     con = create_database(output_path)
     result_counter = ResultCounter()
+
+    logger = logbook.Logger("sqlitebiter gs")
+    _setup_logger_from_context(ctx, logger)
 
     loader = simplesqlite.loader.GoogleSheetsTableLoader()
     loader.source = credentials
@@ -143,7 +190,14 @@ def gs(credentials, title, output_path):
                 result_counter.inc_success()
             except (ValidationError, InvalidDataError):
                 result_counter.inc_fail()
-    except (ValidationError, InvalidDataError):
+    except OpenError as e:
+        logger.error(e)
+    except AttributeError:
+        logger.error("invalid credentials data: path={:s}".format(credentials))
+    except (ValidationError, InvalidDataError) as e:
+        logger.error(
+            "invalid credentials data: path={:s}, message={:s}".format(
+                credentials, str(e)))
         result_counter.inc_fail()
 
     sys.exit(result_counter.get_return_code())
