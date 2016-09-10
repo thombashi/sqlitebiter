@@ -22,6 +22,9 @@ from ._counter import ResultCounter
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
+handler = logbook.StderrHandler()
+handler.push_application()
+
 
 class LoaderNotFound(Exception):
     pass
@@ -82,6 +85,7 @@ def file(files, output_path):
     """
 
     con = create_database(output_path)
+    logger = logbook.Logger("sqlitebiter")
     result_counter = ResultCounter()
 
     for file_path in files:

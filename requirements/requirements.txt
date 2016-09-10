@@ -1,4 +1,5 @@
 click
 DataProperty>=0.8.1
+logbook
 path.py
 SimpleSQLite>=0.4.6
