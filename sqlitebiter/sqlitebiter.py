@@ -31,7 +31,7 @@ class LoaderFactory(object):
     LoaderTuple = collections.namedtuple(
         "LoaderTuple", "filename_regexp loader")
 
-    LOADERTUPLE_LIST = [
+    __LOADERTUPLE_LIST = [
         LoaderTuple(
             re.compile("[\.]csv$"),
             simplesqlite.loader.CsvTableFileLoader()),
@@ -45,7 +45,7 @@ class LoaderFactory(object):
 
     @classmethod
     def get_loader(cls, file_path):
-        for loadertuple in cls.LOADERTUPLE_LIST:
+        for loadertuple in cls.__LOADERTUPLE_LIST:
             if loadertuple.filename_regexp.search(file_path) is None:
                 continue
 
