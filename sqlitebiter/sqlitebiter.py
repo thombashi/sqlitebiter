@@ -12,6 +12,7 @@ import sys
 
 import click
 import dataproperty
+import logbook
 import path
 import simplesqlite
 from simplesqlite.loader import ValidationError
