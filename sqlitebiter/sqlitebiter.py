@@ -17,6 +17,7 @@ import path
 import simplesqlite
 from simplesqlite.loader import ValidationError
 from simplesqlite.loader import InvalidDataError
+from simplesqlite.loader import OpenError
 
 from ._counter import ResultCounter
 
@@ -172,6 +173,9 @@ def gs(ctx, credentials, title, output_path):
     con = create_database(output_path)
     result_counter = ResultCounter()
 
+    logger = logbook.Logger("sqlitebiter gs")
+    _setup_logger_from_context(ctx, logger)
+
     loader = simplesqlite.loader.GoogleSheetsTableLoader()
     loader.source = credentials
     loader.title = title
@@ -186,7 +190,14 @@ def gs(ctx, credentials, title, output_path):
                 result_counter.inc_success()
             except (ValidationError, InvalidDataError):
                 result_counter.inc_fail()
-    except (ValidationError, InvalidDataError):
+    except OpenError as e:
+        logger.error(e)
+    except AttributeError:
+        logger.error("invalid credentials data: path={:s}".format(credentials))
+    except (ValidationError, InvalidDataError) as e:
+        logger.error(
+            "invalid credentials data: path={:s}, message={:s}".format(
+                credentials, str(e)))
         result_counter.inc_fail()
 
     sys.exit(result_counter.get_return_code())
