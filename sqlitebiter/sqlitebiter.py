@@ -139,6 +139,8 @@ def file(ctx, files, output_path):
                         "path={:s}, message={:s}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
+        except OpenError as e:
+            logger.error(e)
         except ValidationError as e:
             logger.error(
                 "invalid {:s} data format: path={:s}, message={:s}".format(
