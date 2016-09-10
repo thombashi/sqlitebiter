@@ -72,6 +72,15 @@ def create_database(database_path):
     return simplesqlite.SimpleSQLite(db_path, "w")
 
 
+def _setup_logger_from_context(ctx, logger):
+    log_level = ctx.obj.get("LOG_LEVEL")
+    if log_level == logbook.NOTSET:
+        logger.disable()
+    elif log_level is None:
+        log_level = logbook.INFO
+    logger.level = log_level
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option()
 @click.option(
