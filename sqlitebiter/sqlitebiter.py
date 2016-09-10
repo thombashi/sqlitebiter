@@ -113,7 +113,7 @@ def file(ctx, files, output_path):
     con = create_database(output_path)
     result_counter = ResultCounter()
 
-    logger = logbook.Logger("sqlitebiter")
+    logger = logbook.Logger("sqlitebiter file")
     _setup_logger_from_context(ctx, logger)
 
     for file_path in files:
