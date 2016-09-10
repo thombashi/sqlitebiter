@@ -7,8 +7,8 @@ import sqlitebiter
 
 REQUIREMENT_DIR = "requirements"
 
-needs_pytest = set(['pytest', 'test', 'ptr']).intersection(sys.argv)
-pytest_runner = ['pytest-runner'] if needs_pytest else []
+needs_pytest = set(["pytest", "test", "ptr"]).intersection(sys.argv)
+pytest_runner = ["pytest-runner"] if needs_pytest else []
 
 
 with open("README.rst") as fp:
