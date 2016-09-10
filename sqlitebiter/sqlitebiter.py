@@ -106,8 +106,10 @@ def file(ctx, files, output_path):
     """
 
     con = create_database(output_path)
-    logger = logbook.Logger("sqlitebiter")
     result_counter = ResultCounter()
+
+    logger = logbook.Logger("sqlitebiter")
+    _setup_logger_from_context(ctx, logger)
 
     for file_path in files:
         if not path.Path(file_path).isfile():
