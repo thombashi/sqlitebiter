@@ -7,6 +7,7 @@
 
 import click
 from click.testing import CliRunner
+import path
 import pytest
 import simplesqlite
 import xlsxwriter
@@ -150,6 +151,13 @@ def invalid_excel_file():
     return file_path
 
 
+def invalid_excel_file2():
+    file_path = "invalid2.xlsx"
+    path.Path(file_path).touch()
+
+    return file_path
+
+
 class Test_sqlitebiter:
 
     @pytest.mark.parametrize(["option_list", "expected"], [
@@ -166,18 +174,19 @@ class Test_sqlitebiter:
         db_path = "test.sqlite"
         runner = CliRunner()
         with runner.isolated_filesystem():
-            file_list = []
+            file_list = [
+                valid_json_single_file(),
+                invalid_json_single_file(),
 
-            file_list.append(valid_json_single_file())
-            file_list.append(invalid_json_single_file())
+                valid_json_multi_file(),
+                invalid_json_multi_file(),
 
-            file_list.append(valid_json_multi_file())
-            file_list.append(invalid_json_multi_file())
+                csv_file(),
 
-            file_list.append(csv_file())
-
-            file_list.append(valid_excel_file())
-            file_list.append(invalid_excel_file())
+                valid_excel_file(),
+                invalid_excel_file(),
+                invalid_excel_file2(),
+            ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
             assert result.exit_code == 0

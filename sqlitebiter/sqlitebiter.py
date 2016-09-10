@@ -113,7 +113,7 @@ def file(ctx, files, output_path):
     con = create_database(output_path)
     result_counter = ResultCounter()
 
-    logger = logbook.Logger("sqlitebiter")
+    logger = logbook.Logger("sqlitebiter file")
     _setup_logger_from_context(ctx, logger)
 
     for file_path in files:
@@ -139,6 +139,8 @@ def file(ctx, files, output_path):
                         "path={:s}, message={:s}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
+        except OpenError as e:
+            logger.error(e)
         except ValidationError as e:
             logger.error(
                 "invalid {:s} data format: path={:s}, message={:s}".format(
