@@ -20,7 +20,10 @@ from simplesqlite.loader import InvalidDataError
 from ._counter import ResultCounter
 
 
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+CONTEXT_SETTINGS = dict(
+    help_option_names=["-h", "--help"],
+    obj={},
+)
 
 handler = logbook.StderrHandler()
 handler.push_application()
@@ -70,8 +73,15 @@ def create_database(database_path):
 
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option()
-def cmd():
-    pass
+@click.option(
+    "--debug", "log_level", flag_value=logbook.DEBUG,
+    help="for debug print.")
+@click.option(
+    "--quiet", "log_level", flag_value=logbook.NOTSET,
+    help="suppress execution log messages.")
+@click.pass_context
+def cmd(ctx, log_level):
+    ctx.obj["LOG_LEVEL"] = log_level
 
 
 @cmd.command()
@@ -79,7 +89,8 @@ def cmd():
 @click.option(
     "-o", "--output-path", default="out.sqlite",
     help="Output path of the SQLite database file")
-def file(files, output_path):
+@click.pass_context
+def file(ctx, files, output_path):
     """
     Convert CSV/JSON/Excel file(s) to a SQLite database file.
     """
@@ -122,7 +133,8 @@ def file(files, output_path):
 @click.option(
     "-o", "--output-path", default="out.sqlite",
     help="output path of the SQLite database file")
-def gs(credentials, title, output_path):
+@click.pass_context
+def gs(ctx, credentials, title, output_path):
     """
     Convert Google Sheets to a SQLite database file.
 
