@@ -11,7 +11,7 @@ sqlitebiter
 Summary
 -------
 
-sqlitebiter is a CLI tool to convert CSV/JSON/Excel/Google-Sheets to a SQLite database file.
+sqlitebiter is a CLI tool to convert CSV/Excel/HTML/JSON/Google-Sheets to a SQLite database file.
 
 Features
 --------
@@ -50,9 +50,8 @@ Install via pip
 Dependencies
 ============
 
-Python packages
----------------
-
+Python packages (mandatory)
+------------------------------
 Dependency python packages are automatically installed during
 ``sqlitebiter`` installation via pip.
 
@@ -76,6 +75,11 @@ Test dependencies
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
 - `XlsxWriter <http://xlsxwriter.readthedocs.io/>`__
+
+Python packages (optional)
+------------------------------
+- `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
+
 
 Documentation
 =============

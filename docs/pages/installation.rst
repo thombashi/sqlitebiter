@@ -15,9 +15,8 @@ Install via pip
 Dependencies
 ============
 
-Python packages
----------------
-
+Python packages (mandatory)
+------------------------------
 Dependency python packages are automatically installed during
 ``sqlitebiter`` installation via pip.
 
@@ -41,3 +40,8 @@ Test dependencies
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
 - `XlsxWriter <http://xlsxwriter.readthedocs.io/>`__
+
+Python packages (optional)
+------------------------------
+- `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
+

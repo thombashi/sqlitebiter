@@ -34,7 +34,10 @@ setuptools.setup(
     description=summary,
     include_package_data=True,
     install_requires=install_requires,
-    keywords=["SQLite", "converter", "CSV", "JSON", "Excel", "Google Sheets"],
+    keywords=[
+        "SQLite", "converter",
+        "CSV", "Excel", "Google Sheets", "HTML", "JSON",
+    ],
     license="MIT License",
     long_description=long_description,
     packages=setuptools.find_packages(exclude=['test*']),
