@@ -44,6 +44,9 @@ class LoaderFactory(object):
             re.compile("[\.]csv$"),
             simplesqlite.loader.CsvTableFileLoader()),
         LoaderTuple(
+            re.compile("[\.]html$|[\.]htm$"),
+            simplesqlite.loader.HtmlTableFileLoader()),
+        LoaderTuple(
             re.compile("[\.]json$"),
             simplesqlite.loader.JsonTableFileLoader()),
         LoaderTuple(
@@ -107,7 +110,7 @@ def cmd(ctx, log_level):
 @click.pass_context
 def file(ctx, files, output_path):
     """
-    Convert CSV/JSON/Excel file(s) to a SQLite database file.
+    Convert CSV/Excel/HTML/JSON file(s) to a SQLite database file.
     """
 
     con = create_database(output_path)
