@@ -16,7 +16,7 @@ from sqlitebiter.sqlitebiter import cmd
 
 
 def valid_json_single_file():
-    file_path = "json_a.json"
+    file_path = "singlejson.json"
     with open(file_path, "w") as f:
         f.write("""[
             {"attr_b": 4, "attr_c": "a", "attr_a": 1},
@@ -40,15 +40,15 @@ def invalid_json_single_file():
 
 
 def valid_json_multi_file():
-    file_path = "multi.json"
+    file_path = "multijson.json"
     with open(file_path, "w") as f:
         f.write("""{
-            "json_b" : [
+            "table1" : [
                 {"attr_b": 4, "attr_c": "a", "attr_a": 1},
                 {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
                 {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
             ],
-            "json_c" : [
+            "table2" : [
                 {"a": 1, "b": 4},
                 {"a": 2 },
                 {"a": 3, "b": 120.9}
@@ -158,6 +158,71 @@ def invalid_excel_file2():
     return file_path
 
 
+def valid_html_file():
+    file_path = "htmltable.html"
+    with open(file_path, "w") as f:
+        f.write("""<table id="tablename">
+    <caption>caption</caption>
+    <tr>
+      <th>a</th>
+      <th>b</th>
+      <th>c</th>
+    </tr>
+    <tr>
+      <td align="right">1</td>
+      <td align="right">123.1</td>
+      <td align="left">a</td>
+    </tr>
+    <tr>
+      <td align="right">2</td>
+      <td align="right">2.2</td>
+      <td align="left">bb</td>
+    </tr>
+    <tr>
+      <td align="right">3</td>
+      <td align="right">3.3</td>
+      <td align="left">ccc</td>
+    </tr>
+</table>
+<table>
+    <tr>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+    <tr>
+      <td align="right">1</td>
+      <td align="right">123.1</td>
+    </tr>
+    <tr>
+      <td align="right">2</td>
+      <td align="right">2.2</td>
+    </tr>
+    <tr>
+      <td align="right">3</td>
+      <td align="right">3.3</td>
+    </tr>
+</table>
+""")
+
+    return file_path
+
+
+def invalid_html_file():
+    file_path = "invalid_html.html"
+    with open(file_path, "w") as f:
+        f.write("""<html>
+  <head>
+    header
+  </head>
+  <body>
+    hogehoge
+  </body>
+</html>
+""")
+
+    return file_path
+
+
 class Test_sqlitebiter:
 
     @pytest.mark.parametrize(["option_list", "expected"], [
@@ -186,6 +251,9 @@ class Test_sqlitebiter:
                 valid_excel_file(),
                 invalid_excel_file(),
                 invalid_excel_file2(),
+
+                valid_html_file(),
+                invalid_html_file(),
             ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
@@ -193,16 +261,24 @@ class Test_sqlitebiter:
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_tables = [
-                'json_a', 'json_c', 'json_b',
-                'csv_a', 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
+                'singlejson_json1', 'multijson_table1', 'multijson_table2',
+                'csv_a',
+                'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
+                'htmltable_tablename', 'htmltable_html2',
             ]
 
-            assert set(con.get_table_name_list()) == set(expected_tables)
+            message = "expected-tables={}, actual-tables={}".format(
+                expected_tables, con.get_table_name_list())
+            assert set(con.get_table_name_list()) == set(
+                expected_tables), message
 
-            expected_data = {
-                "json_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "json_b": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "json_c": [(1, '4'), (2, 'NULL'), (3, '120.9')],
+            expected_data_table = {
+                "singlejson_json1":
+                    [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
+                "multijson_table1":
+                    [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
+                "multijson_table2":
+                    [(1, '4'), (2, 'NULL'), (3, '120.9')],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
@@ -210,7 +286,16 @@ class Test_sqlitebiter:
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
                 "excel_sheet_d":
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
+                "htmltable_tablename":
+                    [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
+                "htmltable_html2":
+                    [(1, 123.1), (2, 2.2), (3, 3.3)],
             }
             for table in con.get_table_name_list():
                 result = con.select("*", table_name=table)
-                assert expected_data.get(table) == result.fetchall()
+                expected_data = expected_data_table.get(table)
+                actual_data = result.fetchall()
+
+                message = "table={}, expected={}, actual={}".format(
+                    table, expected_data, actual_data)
+                assert expected_data == actual_data, message
