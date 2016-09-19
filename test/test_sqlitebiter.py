@@ -4,8 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
-import click
 from click.testing import CliRunner
 import path
 import pytest
