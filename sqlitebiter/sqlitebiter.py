@@ -131,9 +131,6 @@ def file(ctx, files, output_path):
 
         try:
             for tabledata in loader.load():
-                click.echo("convert '{:s}' to '{:s}' table".format(
-                    file_path, tabledata.table_name))
-
                 try:
                     con.create_table_from_tabledata(tabledata)
                     result_counter.inc_success()
@@ -142,6 +139,9 @@ def file(ctx, files, output_path):
                         "path={:s}, message={:s}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
+
+                click.echo("convert '{:s}' to '{:s}' table".format(
+                    file_path, tabledata.table_name))
         except OpenError as e:
             logger.error(e)
         except ValidationError as e:

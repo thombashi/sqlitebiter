@@ -4,7 +4,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-
 import pytest
 from sqlitebiter._counter import ResultCounter
 
