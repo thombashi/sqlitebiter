@@ -1,5 +1,5 @@
 click
-DataProperty>=0.8.1
+DataProperty>=0.9.0
 logbook
 path.py
-SimpleSQLite>=0.5.1
+SimpleSQLite>=0.5.5
