@@ -113,6 +113,9 @@ def file(ctx, files, output_path):
     Convert CSV/Excel/HTML/JSON file(s) to a SQLite database file.
     """
 
+    if dataproperty.is_empty_sequence(files):
+        return 0
+
     con = create_database(output_path)
     result_counter = ResultCounter()
 
@@ -127,6 +130,8 @@ def file(ctx, files, output_path):
         try:
             loader = LoaderFactory.get_loader(file_path)
         except LoaderNotFound:
+            logger.debug(
+                "loader not found that coincide with '{}'".format(file_path))
             continue
 
         try:
