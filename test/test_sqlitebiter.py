@@ -271,6 +271,17 @@ class Test_sqlitebiter:
                     cmd, ["file", file_path, "-o", db_path])
                 assert result.exit_code == 0, file_path
 
+    def test_abnormal_empty(self):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(
+                cmd, ["file"])
+
+            assert result.exit_code == 0
+            assert not path.Path(
+                "out.sqlite").exists(), "output file must not exist"
+
     def test_abnormal_smoke(self):
         db_path = "test.sqlite"
         runner = CliRunner()
