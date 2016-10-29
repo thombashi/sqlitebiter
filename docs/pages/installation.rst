@@ -23,7 +23,9 @@ Dependency python packages are automatically installed during
 - `click <http://click.pocoo.org/>`__
 - `DataPropery <https://github.com/thombashi/DataProperty>`__
 - `path.py <https://github.com/jaraco/path.py>`__
+- `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
+
 
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
