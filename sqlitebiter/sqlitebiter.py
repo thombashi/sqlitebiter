@@ -6,18 +6,14 @@
 """
 
 from __future__ import absolute_import
-import collections
-import re
 import sys
 
 import click
 import dataproperty
 import logbook
 import path
+import pytablereader as ptr
 import simplesqlite
-from simplesqlite.loader import ValidationError
-from simplesqlite.loader import InvalidDataError
-from simplesqlite.loader import OpenError
 
 from ._counter import ResultCounter
 
@@ -29,42 +25,6 @@ CONTEXT_SETTINGS = dict(
 
 handler = logbook.StderrHandler()
 handler.push_application()
-
-
-class LoaderNotFound(Exception):
-    pass
-
-
-class LoaderFactory(object):
-    LoaderTuple = collections.namedtuple(
-        "LoaderTuple", "filename_regexp loader")
-
-    __LOADERTUPLE_LIST = [
-        LoaderTuple(
-            re.compile("[\.]csv$"),
-            simplesqlite.loader.CsvTableFileLoader()),
-        LoaderTuple(
-            re.compile("[\.]html$|[\.]htm$"),
-            simplesqlite.loader.HtmlTableFileLoader()),
-        LoaderTuple(
-            re.compile("[\.]json$"),
-            simplesqlite.loader.JsonTableFileLoader()),
-        LoaderTuple(
-            re.compile("[\.]xlsx$|[\.]xlsm$|[\.]xls$"),
-            simplesqlite.loader.ExcelTableFileLoader()),
-    ]
-
-    @classmethod
-    def get_loader(cls, file_path):
-        for loadertuple in cls.__LOADERTUPLE_LIST:
-            if loadertuple.filename_regexp.search(file_path) is None:
-                continue
-
-            loadertuple.loader.source = file_path
-
-            return loadertuple.loader
-
-        raise LoaderNotFound(file_path)
 
 
 def create_database(database_path):
@@ -110,7 +70,7 @@ def cmd(ctx, log_level):
 @click.pass_context
 def file(ctx, files, output_path):
     """
-    Convert CSV/Excel/HTML/JSON file(s) to a SQLite database file.
+    Convert CSV/Excel/HTML/Markdown/JSON file(s) to a SQLite database file.
     """
 
     if dataproperty.is_empty_sequence(files):
@@ -128,8 +88,13 @@ def file(ctx, files, output_path):
             continue
 
         try:
-            loader = LoaderFactory.get_loader(file_path)
-        except LoaderNotFound:
+            loader_factory = ptr.FileLoaderFactory(file_path)
+        except ptr.InvalidFilePathError:
+            continue
+
+        try:
+            loader = loader_factory.create_from_file_path()
+        except ptr.LoaderNotFound:
             logger.debug(
                 "loader not found that coincide with '{}'".format(file_path))
             continue
@@ -147,14 +112,14 @@ def file(ctx, files, output_path):
 
                 click.echo("convert '{:s}' to '{:s}' table".format(
                     file_path, tabledata.table_name))
-        except OpenError as e:
+        except ptr.OpenError as e:
             logger.error(e)
-        except ValidationError as e:
+        except ptr.ValidationError as e:
             logger.error(
                 "invalid {:s} data format: path={:s}, message={:s}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
-        except InvalidDataError as e:
+        except ptr.InvalidDataError as e:
             logger.error(
                 "invalid {:s} data: path={:s}, message={:s}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
@@ -198,13 +163,13 @@ def gs(ctx, credentials, title, output_path):
             try:
                 con.create_table_from_tabledata(tabledata)
                 result_counter.inc_success()
-            except (ValidationError, InvalidDataError):
+            except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
-    except OpenError as e:
+    except ptr.OpenError as e:
         logger.error(e)
     except AttributeError:
         logger.error("invalid credentials data: path={:s}".format(credentials))
-    except (ValidationError, InvalidDataError) as e:
+    except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
             "invalid credentials data: path={:s}, message={:s}".format(
                 credentials, str(e)))
