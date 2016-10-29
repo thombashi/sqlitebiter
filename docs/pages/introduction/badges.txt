@@ -1,6 +1,10 @@
 .. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
    :target: https://pypi.python.org/pypi/sqlitebiter
-.. image:: https://travis-ci.org/thombashi/sqlitebiter.svg?branch=master
+
+.. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
     :target: https://travis-ci.org/thombashi/sqlitebiter
-.. image:: https://ci.appveyor.com/api/projects/status/hunqrvo1inm2jjnj?svg=true
+    :alt: Linux CI test status
+
+.. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows
     :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
+    :alt: Windows CI test status
