@@ -94,7 +94,7 @@ def file(ctx, files, output_path):
 
         try:
             loader = loader_factory.create_from_file_path()
-        except ptr.LoaderNotFound:
+        except ptr.LoaderNotFoundError:
             logger.debug(
                 "loader not found that coincide with '{}'".format(file_path))
             continue
