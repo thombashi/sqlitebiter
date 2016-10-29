@@ -250,6 +250,14 @@ def valid_markdown_file():
     return file_path
 
 
+def not_supported_format_file():
+    file_path = "invalid_format.txt"
+    with open(file_path, "w") as f:
+        f.write("invalid format")
+
+    return file_path
+
+
 class Test_sqlitebiter:
 
     def setup_method(self, method):
@@ -307,6 +315,7 @@ class Test_sqlitebiter:
                 invalid_excel_file(),
                 invalid_excel_file2(),
                 invalid_html_file(),
+                not_supported_format_file(),
             ]
 
             for file_path in file_list:
@@ -336,6 +345,8 @@ class Test_sqlitebiter:
                 invalid_html_file(),
 
                 valid_markdown_file(),
+
+                not_supported_format_file(),
             ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
