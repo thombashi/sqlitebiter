@@ -89,7 +89,8 @@ def file(ctx, files, output_path):
 
         try:
             loader_factory = ptr.FileLoaderFactory(file_path)
-        except ptr.InvalidFilePathError:
+        except ptr.InvalidFilePathError as e:
+            logger.debug(e)
             continue
 
         try:
@@ -113,7 +114,8 @@ def file(ctx, files, output_path):
                 click.echo("convert '{:s}' to '{:s}' table".format(
                     file_path, tabledata.table_name))
         except ptr.OpenError as e:
-            logger.error(e)
+            logger.error("open error: file={:s}, message='{:s}'".format(
+                file_path, str(e)))
         except ptr.ValidationError as e:
             logger.error(
                 "invalid {:s} data format: path={:s}, message={:s}".format(
