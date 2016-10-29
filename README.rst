@@ -3,23 +3,29 @@ sqlitebiter
 
 .. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
    :target: https://pypi.python.org/pypi/sqlitebiter
-.. image:: https://travis-ci.org/thombashi/sqlitebiter.svg?branch=master
+
+.. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
     :target: https://travis-ci.org/thombashi/sqlitebiter
-.. image:: https://ci.appveyor.com/api/projects/status/hunqrvo1inm2jjnj?svg=true
+    :alt: Linux CI test status
+
+.. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows
     :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
+    :alt: Windows CI test status
 
 Summary
 -------
 
-sqlitebiter is a CLI tool to convert CSV/Excel/HTML/JSON/Google-Sheets to a SQLite database file.
+sqlitebiter is a CLI tool to convert CSV/Excel/HTML/JSON/Markdown/Google-Sheets to a SQLite database file.
 
 Features
 --------
 
 - Create a SQLite database file from:
     - CSV file(s)
-    - JSON file(s)
     - Microsoft Excel :superscript:`TM` file(s)
+    - HTML file(s): extract table tag data
+    - JSON file(s)
+    - Markdown file(s): extract Markdown table
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
 
 Usage
@@ -58,7 +64,9 @@ Dependency python packages are automatically installed during
 - `click <http://click.pocoo.org/>`__
 - `DataPropery <https://github.com/thombashi/DataProperty>`__
 - `path.py <https://github.com/jaraco/path.py>`__
+- `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
+
 
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
