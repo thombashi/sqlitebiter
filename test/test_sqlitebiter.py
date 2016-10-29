@@ -11,7 +11,7 @@ import simplesqlite
 import xlsxwriter
 
 from sqlitebiter.sqlitebiter import cmd
-from simplesqlite.loader.interface import TableLoader
+from pytablereader.interface import TableLoader
 
 
 def valid_json_single_file():
@@ -237,6 +237,19 @@ def invalid_html_file():
     return file_path
 
 
+def valid_markdown_file():
+    file_path = "valid_mdtable.md"
+    with open(file_path, "w") as f:
+        f.write(""" a |  b  | c 
+--:|----:|---
+  1|123.1|a  
+  2|  2.2|bb 
+  3|  3.3|ccc
+""")
+
+    return file_path
+
+
 class Test_sqlitebiter:
 
     def setup_method(self, method):
@@ -264,12 +277,24 @@ class Test_sqlitebiter:
                 valid_csv_file2(),
                 valid_excel_file(),
                 valid_html_file(),
+                valid_markdown_file(),
             ]
 
             for file_path in file_list:
                 result = runner.invoke(
                     cmd, ["file", file_path, "-o", db_path])
                 assert result.exit_code == 0, file_path
+
+    def test_abnormal_empty(self):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(
+                cmd, ["file"])
+
+            assert result.exit_code == 0
+            assert not path.Path(
+                "out.sqlite").exists(), "output file must not exist"
 
     def test_abnormal_smoke(self):
         db_path = "test.sqlite"
@@ -309,6 +334,8 @@ class Test_sqlitebiter:
 
                 valid_html_file(),
                 invalid_html_file(),
+
+                valid_markdown_file(),
             ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
@@ -320,6 +347,7 @@ class Test_sqlitebiter:
                 'csv_a', "insert_csv",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
                 'htmltable_tablename', 'htmltable_html2',
+                'valid_mdtable_markdown1',
             ]
 
             message = "expected-tables={}, actual-tables={}".format(
@@ -335,7 +363,8 @@ class Test_sqlitebiter:
                 "multijson_table2":
                     [(1, '4'), (2, 'NULL'), (3, '120.9')],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "insert_csv": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
+                "insert_csv":
+                    [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
@@ -346,6 +375,8 @@ class Test_sqlitebiter:
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
                 "htmltable_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
+                "valid_mdtable_markdown1":
+                    [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
             }
             for table in con.get_table_name_list():
                 result = con.select("*", table_name=table)
