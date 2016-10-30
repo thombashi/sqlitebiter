@@ -5,7 +5,7 @@
 
     Usage: sqlitebiter file [OPTIONS] [FILES]...
 
-      Convert CSV/JSON/Excel file(s) to a SQLite database file.
+      Convert CSV/Excel/HTML/Markdown/JSON file(s) to a SQLite database file.
 
     Options:
       -o, --output-path TEXT  Output path of the SQLite database file

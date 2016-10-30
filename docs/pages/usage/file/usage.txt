@@ -16,4 +16,4 @@ Example
     sample.sqlite
 
 Convertible JSON format is as follows:
-http://simplesqlite.readthedocs.io/en/latest/pages/reference/loader.html#jsontablefileloader-class
+http://pytablereader.readthedocs.io/en/latest/pages/reference/loader.html#json-loader-classes
