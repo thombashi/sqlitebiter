@@ -88,7 +88,7 @@ def file(ctx, files, output_path):
             continue
 
         try:
-            loader_factory = ptr.FileLoaderFactory(file_path)
+            loader_factory = ptr.TableFileLoaderFactory(file_path)
         except ptr.InvalidFilePathError as e:
             logger.debug(e)
             continue
@@ -103,7 +103,8 @@ def file(ctx, files, output_path):
         try:
             for tabledata in loader.load():
                 try:
-                    con.create_table_from_tabledata(tabledata)
+                    con.create_table_from_tabledata(
+                        ptr.SQLiteTableDataSanitizer(tabledata).sanitize())
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(

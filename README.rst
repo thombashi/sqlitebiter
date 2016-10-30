@@ -59,10 +59,11 @@ Dependencies
 Python packages (mandatory)
 ------------------------------
 Dependency python packages are automatically installed during
-``sqlitebiter`` installation via pip.
+``sqlitebiter`` installation via ``pip``.
 
 - `click <http://click.pocoo.org/>`__
 - `DataPropery <https://github.com/thombashi/DataProperty>`__
+- `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
@@ -71,10 +72,11 @@ Dependency python packages are automatically installed during
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Google Sheets dependency packages are required some manual installation.
+`Manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ required to use Google Sheets feature.
 
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
+
 
 Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
