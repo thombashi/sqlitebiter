@@ -31,8 +31,7 @@ Dependency python packages are automatically installed during
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- `Manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
-required to use Google Sheets feature.
+`Manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ required to use Google Sheets feature.
 
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
