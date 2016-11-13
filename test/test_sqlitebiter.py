@@ -175,7 +175,8 @@ def invalid_excel_file2():
 def valid_html_file():
     file_path = "htmltable.html"
     with open(file_path, "w") as f:
-        f.write("""<table id="tablename">
+        f.write("""<title>testtitle</title>
+<table id="tablename">
     <caption>caption</caption>
     <tr>
       <th>a</th>
@@ -355,9 +356,9 @@ class Test_sqlitebiter:
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_tables = [
                 'singlejson_json1', 'multijson_table1', 'multijson_table2',
-                'csv_a', "insert_csv",
+                'csv_a', "rename_insert",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
-                'htmltable_tablename', 'htmltable_html2',
+                'testtitle_tablename', 'testtitle_html2',
                 'valid_mdtable_markdown1',
             ]
 
@@ -372,9 +373,9 @@ class Test_sqlitebiter:
                 "multijson_table1":
                     [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "multijson_table2":
-                    [(1, '4'), (2, 'NULL'), (3, '120.9')],
+                    [(1, 4.0), (2, None), (3, 120.9)],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "insert_csv":
+                "rename_insert":
                     [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
@@ -382,9 +383,9 @@ class Test_sqlitebiter:
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
                 "excel_sheet_d":
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
-                "htmltable_tablename":
+                "testtitle_tablename":
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
-                "htmltable_html2":
+                "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
                 "valid_mdtable_markdown1":
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
