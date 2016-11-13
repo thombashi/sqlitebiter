@@ -104,9 +104,11 @@ def file(ctx, files, output_path):
 
         try:
             for tabledata in loader.load():
+                sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
+                    tabledata).sanitize()
+
                 try:
-                    con.create_table_from_tabledata(
-                        ptr.SQLiteTableDataSanitizer(tabledata).sanitize())
+                    con.create_table_from_tabledata(sqlite_tabledata)
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
@@ -115,7 +117,7 @@ def file(ctx, files, output_path):
                     continue
 
                 click.echo("convert '{:s}' to '{:s}' table".format(
-                    file_path, tabledata.table_name))
+                    file_path, sqlite_tabledata.table_name))
         except ptr.OpenError as e:
             logger.error("open error: file={:s}, message='{:s}'".format(
                 file_path, str(e)))
