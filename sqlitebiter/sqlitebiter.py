@@ -88,13 +88,10 @@ def file(ctx, files, output_path):
             continue
 
         try:
-            loader_factory = ptr.TableFileLoaderFactory(file_path)
+            loader = ptr.TableFileLoader(file_path)
         except ptr.InvalidFilePathError as e:
             logger.debug(e)
             continue
-
-        try:
-            loader = loader_factory.create_from_path()
         except ptr.LoaderNotFoundError:
             logger.debug(
                 "loader not found that coincide with '{}'".format(file_path))
