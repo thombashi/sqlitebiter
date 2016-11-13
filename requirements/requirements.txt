@@ -2,5 +2,5 @@ click
 DataProperty>=0.12.0
 logbook
 path.py
-pytablereader>=0.5.2
-SimpleSQLite>=0.6.3
+pytablereader>=0.6.0 
+SimpleSQLite>=0.6.4
