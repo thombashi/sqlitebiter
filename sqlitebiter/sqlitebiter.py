@@ -38,11 +38,16 @@ def create_database(database_path):
 
 def _setup_logger_from_context(ctx, logger):
     log_level = ctx.obj.get("LOG_LEVEL")
+
     if log_level == logbook.NOTSET:
         logger.disable()
+        ptr.logger.disable()
     elif log_level is None:
         log_level = logbook.INFO
+        ptr.logger.level = logbook.INFO
+
     logger.level = log_level
+    ptr.logger.level = log_level
 
 
 def _get_format_type_from_path(file_path):
