@@ -75,7 +75,7 @@ def cmd(ctx, log_level):
 @click.pass_context
 def file(ctx, files, output_path):
     """
-    Convert CSV/Excel/HTML/Markdown/JSON file(s) to a SQLite database file.
+    Convert CSV/Excel/HTML/JSON/Markdown file(s) to a SQLite database file.
     """
 
     if dataproperty.is_empty_sequence(files):
@@ -131,6 +131,62 @@ def file(ctx, files, output_path):
                 "invalid {:s} data: path={:s}, message={:s}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
+
+    sys.exit(result_counter.get_return_code())
+
+
+@cmd.command()
+@click.argument("url", type=str)
+@click.option(
+    "--format", "format_name", default="html",
+    type=click.Choice(["csv", "excel", "html", "json", "markdown"]),
+    help="Data format to loading (defaults to html).")
+@click.option(
+    "-o", "--output-path", default="out.sqlite",
+    help="Output path of the SQLite database file")
+@click.pass_context
+def url(ctx, url, format_name, output_path):
+    """
+    Fetch data from a URL and convert data to a SQLite database file.
+    """
+
+    if dataproperty.is_empty_sequence(url):
+        return 0
+
+    con = create_database(output_path)
+    result_counter = ResultCounter()
+
+    logger = logbook.Logger("sqlitebiter url")
+    _setup_logger_from_context(ctx, logger)
+
+    try:
+        loader = ptr.TableUrlLoader(url, format_name)
+    except ptr.LoaderNotFoundError as e:
+        logger.error(e)
+        sys.exit(1)
+    except ptr.HTTPError as e:
+        logger.error(e)
+        sys.exit(2)
+
+    try:
+        for tabledata in loader.load():
+            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
+                tabledata).sanitize()
+
+            try:
+                con.create_table_from_tabledata(sqlite_tabledata)
+                result_counter.inc_success()
+            except (ValueError) as e:
+                logger.debug(
+                    "url={}, message={}".format(url, str(e)))
+                result_counter.inc_fail()
+                continue
+
+            click.echo("convert a table to '{:s}' table".format(
+                sqlite_tabledata.table_name))
+    except ptr.InvalidDataError as e:
+        logger.error("invalid data: url={}, message={}".format(url, str(e)))
+        result_counter.inc_fail()
 
     sys.exit(result_counter.get_return_code())
 
