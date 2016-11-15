@@ -87,10 +87,10 @@ def valid_csv_file2():
     file_path = "insert.csv"
     with open(file_path, "w") as f:
         f.write("\n".join([
-            '"attr_a","attr_b","attr_c"',
-            '1,4,"a"',
-            '2,2.1,"bb"',
-            '3,120.9,"ccc"',
+            "index,No,Player_last_name,Age,Team",
+            "1, 55, D Sam, 31, Raven",
+            "2, 36, J Ifdgg, 30, Raven",
+            "3, 91, K Wedfb, 28, Raven",
         ]))
 
     return file_path
@@ -376,7 +376,11 @@ class Test_sqlitebiter:
                     [(1, 4.0), (2, None), (3, 120.9)],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "rename_insert":
-                    [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
+                    [
+                        (1, 55, 'D Sam', 31, 'Raven'),
+                        (2, 36, 'J Ifdgg', 30, 'Raven'),
+                        (3, 91, 'K Wedfb', 28, 'Raven'),
+                    ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
