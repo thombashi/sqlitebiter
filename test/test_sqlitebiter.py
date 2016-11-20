@@ -88,9 +88,9 @@ def valid_csv_file2():
     with open(file_path, "w") as f:
         f.write("\n".join([
             "index,No,Player_last_name,Age,Team",
-            "1, 55, D Sam, 31, Raven",
-            "2, 36, J Ifdgg, 30, Raven",
-            "3, 91, K Wedfb, 28, Raven",
+            "1, 55,D Sam, 31,Raven",
+            "2, 36,J Ifdgg, 30,Raven",
+            "3, 91,K Wedfb, 28,Raven",
         ]))
 
     return file_path
