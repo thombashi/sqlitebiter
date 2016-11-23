@@ -4,7 +4,9 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import unicode_literals
 from __future__ import print_function
+import io
 
 from click.testing import CliRunner
 import path
@@ -254,6 +256,17 @@ def valid_markdown_file():
     return file_path
 
 
+def valid_multibyte_char_file():
+    file_path = "valid_multibyte_char.csv"
+    with io.open(file_path, "w", encoding="utf-8") as f:
+        f.write(""""姓","名","生年月日","郵便番号","住所","電話番号"
+"山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
+"山田","次郎","2001/1/2","251-0036","神奈川県藤沢市江の島１丁目","03-9999-9999"
+""")
+
+    return file_path
+
+
 def not_supported_format_file():
     file_path = "invalid_format.txt"
     with open(file_path, "w") as f:
@@ -262,7 +275,7 @@ def not_supported_format_file():
     return file_path
 
 
-class Test_sqlitebiter:
+class Test_sqlitebiter_file:
 
     def setup_method(self, method):
         TableLoader.clear_table_count()
@@ -277,7 +290,34 @@ class Test_sqlitebiter:
         result = runner.invoke(cmd, option_list)
         assert result.exit_code == expected
 
-    def test_normal_smoke(self):
+    @pytest.mark.parametrize(["file_creator", "expected"], [
+        [valid_json_single_file, ExitCode.SUCCESS],
+        [valid_json_multi_file, ExitCode.SUCCESS],
+        [valid_csv_file, ExitCode.SUCCESS],
+        [valid_csv_file2, ExitCode.SUCCESS],
+        [valid_excel_file, ExitCode.SUCCESS],
+        [valid_html_file, ExitCode.SUCCESS],
+        [valid_markdown_file, ExitCode.SUCCESS],
+        [valid_multibyte_char_file, ExitCode.SUCCESS],
+
+        [invalid_json_single_file, ExitCode.FAILED_CONVERT],
+        [invalid_json_multi_file, ExitCode.FAILED_CONVERT],
+        [invalid_excel_file, ExitCode.NO_INPUT],
+        [invalid_excel_file2, ExitCode.FAILED_CONVERT],
+        [invalid_html_file, ExitCode.NO_INPUT],
+        [not_supported_format_file, ExitCode.FAILED_CONVERT],
+    ])
+    def test_normal_one_file(self, file_creator, expected):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            result = runner.invoke(
+                cmd, ["file", file_path, "-o", db_path])
+            assert result.exit_code == expected, file_path
+
+    def test_normal_multi_file(self):
         db_path = "test.sqlite"
         runner = CliRunner()
 
@@ -290,12 +330,12 @@ class Test_sqlitebiter:
                 valid_excel_file(),
                 valid_html_file(),
                 valid_markdown_file(),
+                valid_multibyte_char_file(),
             ]
 
-            for file_path in file_list:
-                result = runner.invoke(
-                    cmd, ["file", file_path, "-o", db_path])
-                assert result.exit_code == ExitCode.SUCCESS, file_path
+            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+
+            assert result.exit_code == ExitCode.SUCCESS
 
     def test_abnormal_empty(self):
         runner = CliRunner()
@@ -385,7 +425,7 @@ class Test_sqlitebiter:
                         (1, 55, 'D Sam', 31, 'Raven'),
                         (2, 36, 'J Ifdgg', 30, 'Raven'),
                         (3, 91, 'K Wedfb', 28, 'Raven'),
-                    ],
+                ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
