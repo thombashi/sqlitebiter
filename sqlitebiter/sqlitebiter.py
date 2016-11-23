@@ -144,7 +144,7 @@ def file(ctx, files, output_path):
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
-    "--format", "format_name", default="html",
+    "--format", "format_name",
     type=click.Choice(["csv", "excel", "html", "json", "markdown"]),
     help="Data format to loading (defaults to html).")
 @click.option(
@@ -178,8 +178,11 @@ def url(ctx, url, format_name, output_path, proxy):
     try:
         loader = ptr.TableUrlLoader(url, format_name, proxies=proxies)
     except ptr.LoaderNotFoundError as e:
-        logger.error(e)
-        sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
+        try:
+            loader = ptr.TableUrlLoader(url, "html", proxies=proxies)
+        except (ptr.LoaderNotFoundError, ptr.HTTPError):
+            logger.error(e)
+            sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
     except ptr.HTTPError as e:
         logger.error(e)
         sys.exit(ExitCode.FAILED_HTTP)
