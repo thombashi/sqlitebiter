@@ -150,8 +150,11 @@ def file(ctx, files, output_path):
 @click.option(
     "-o", "--output-path", default="out.sqlite",
     help="Output path of the SQLite database file")
+@click.option(
+    "--proxy", type=str, metavar="PROXY",
+    help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
 @click.pass_context
-def url(ctx, url, format_name, output_path):
+def url(ctx, url, format_name, output_path, proxy):
     """
     Fetch data from a URL and convert data to a SQLite database file.
     """
@@ -165,8 +168,15 @@ def url(ctx, url, format_name, output_path):
     logger = logbook.Logger("sqlitebiter url")
     _setup_logger_from_context(ctx, logger)
 
+    proxies = {}
+    if dataproperty.is_not_empty_string(proxy):
+        proxies = {
+            "http": proxy,
+            "https": proxy,
+        }
+
     try:
-        loader = ptr.TableUrlLoader(url, format_name)
+        loader = ptr.TableUrlLoader(url, format_name, proxies=proxies)
     except ptr.LoaderNotFoundError as e:
         logger.error(e)
         sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
