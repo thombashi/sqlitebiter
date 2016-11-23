@@ -91,6 +91,7 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
+            logger.debug("file not found: {}".format(file_path))
             result_counter.inc_fail()
             continue
 
@@ -116,24 +117,24 @@ def file(ctx, files, output_path):
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
-                        "path={:s}, message={:s}".format(file_path, e))
+                        "path={}, message={}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
 
                 click.echo("convert '{:s}' to '{:s}' table".format(
                     file_path, sqlite_tabledata.table_name))
         except ptr.OpenError as e:
-            logger.error("open error: file={:s}, message='{:s}'".format(
+            logger.error("open error: file={}, message='{}'".format(
                 file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             logger.error(
-                "invalid {:s} data format: path={:s}, message={:s}".format(
+                "invalid {} data format: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
         except ptr.InvalidDataError as e:
             logger.error(
-                "invalid {:s} data: path={:s}, message={:s}".format(
+                "invalid {} data: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
@@ -237,11 +238,11 @@ def gs(ctx, credentials, title, output_path):
         logger.error(e)
         result_counter.inc_fail()
     except AttributeError:
-        logger.error("invalid credentials data: path={:s}".format(credentials))
+        logger.error("invalid credentials data: path={}".format(credentials))
         result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
-            "invalid credentials data: path={:s}, message={:s}".format(
+            "invalid credentials data: path={}, message={}".format(
                 credentials, str(e)))
         result_counter.inc_fail()
 
