@@ -5,6 +5,8 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import unicode_literals
+
 import sys
 
 import readmemaker
@@ -17,9 +19,16 @@ OUTPUT_DIR = ".."
 def write_examples(maker):
     maker.set_indent_level(0)
     maker.write_chapter("Usage")
+
+    maker.inc_indent_level()
+    maker.write_chapter("Create SQLite database from files")
+
     maker.write_line_list([
         ".. image:: docs/gif/usage_example.gif",
     ])
+
+    maker.write_chapter("Create SQLite database from URL")
+    maker.write_example_file("url/usage.txt")
 
     maker.inc_indent_level()
     maker.write_chapter("For more information")
@@ -32,7 +41,7 @@ def write_examples(maker):
 
 def main():
     maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR)
-    maker.examples_dir_name = u"usage"
+    maker.examples_dir_name = "usage"
 
     maker.write_introduction_file("badges.txt")
 
