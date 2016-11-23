@@ -26,6 +26,7 @@ Dependency python packages are automatically installed during
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
+- `sqlitestructure <https://github.com/thombashi/sqlitestructure>`__
 
 
 Google Sheets dependencies

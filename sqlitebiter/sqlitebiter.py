@@ -14,14 +14,17 @@ import logbook
 import path
 import pytablereader as ptr
 import simplesqlite
+from sqlitestructure import TableStructureWriter
 
 from ._counter import ResultCounter
+from ._enum import ExitCode
 
 
 CONTEXT_SETTINGS = dict(
     help_option_names=["-h", "--help"],
     obj={},
 )
+SQLITE_TABLE_VERBOSE_LEVEL = 2
 
 handler = logbook.StderrHandler()
 handler.push_application()
@@ -70,7 +73,7 @@ def cmd(ctx, log_level):
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
-    "-o", "--output-path", default="out.sqlite",
+    "-o", "--output-path", metavar="PATH", default="out.sqlite",
     help="Output path of the SQLite database file")
 @click.pass_context
 def file(ctx, files, output_path):
@@ -79,7 +82,7 @@ def file(ctx, files, output_path):
     """
 
     if dataproperty.is_empty_sequence(files):
-        return 0
+        sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(output_path)
     result_counter = ResultCounter()
@@ -90,16 +93,20 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
+            logger.debug("file not found: {}".format(file_path))
+            result_counter.inc_fail()
             continue
 
         try:
             loader = ptr.TableFileLoader(file_path)
         except ptr.InvalidFilePathError as e:
             logger.debug(e)
+            result_counter.inc_fail()
             continue
         except ptr.LoaderNotFoundError:
             logger.debug(
                 "loader not found that coincide with '{}'".format(file_path))
+            result_counter.inc_fail()
             continue
 
         try:
@@ -112,25 +119,29 @@ def file(ctx, files, output_path):
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
-                        "path={:s}, message={:s}".format(file_path, e))
+                        "path={}, message={}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
 
                 click.echo("convert '{:s}' to '{:s}' table".format(
                     file_path, sqlite_tabledata.table_name))
         except ptr.OpenError as e:
-            logger.error("open error: file={:s}, message='{:s}'".format(
+            logger.error("open error: file={}, message='{}'".format(
                 file_path, str(e)))
+            result_counter.inc_fail()
         except ptr.ValidationError as e:
             logger.error(
-                "invalid {:s} data format: path={:s}, message={:s}".format(
+                "invalid {} data format: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
         except ptr.InvalidDataError as e:
             logger.error(
-                "invalid {:s} data: path={:s}, message={:s}".format(
+                "invalid {} data: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
+
+    logger.debug(TableStructureWriter(
+        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
 
@@ -138,20 +149,26 @@ def file(ctx, files, output_path):
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
-    "--format", "format_name", default="html",
+    "--format", "format_name",
     type=click.Choice(["csv", "excel", "html", "json", "markdown"]),
     help="Data format to loading (defaults to html).")
 @click.option(
-    "-o", "--output-path", default="out.sqlite",
-    help="Output path of the SQLite database file")
+    "-o", "--output-path", metavar="PATH", default="out.sqlite",
+    help="Output path of the SQLite database file.")
+@click.option(
+    "--encoding", type=str, metavar="ENCODING", default="utf-8",
+    help="Defaults to utf-8")
+@click.option(
+    "--proxy", type=str, metavar="PROXY",
+    help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
 @click.pass_context
-def url(ctx, url, format_name, output_path):
+def url(ctx, url, format_name, output_path, encoding, proxy):
     """
     Fetch data from a URL and convert data to a SQLite database file.
     """
 
     if dataproperty.is_empty_sequence(url):
-        return 0
+        sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(output_path)
     result_counter = ResultCounter()
@@ -159,14 +176,26 @@ def url(ctx, url, format_name, output_path):
     logger = logbook.Logger("sqlitebiter url")
     _setup_logger_from_context(ctx, logger)
 
+    proxies = {}
+    if dataproperty.is_not_empty_string(proxy):
+        proxies = {
+            "http": proxy,
+            "https": proxy,
+        }
+
     try:
-        loader = ptr.TableUrlLoader(url, format_name)
+        loader = ptr.TableUrlLoader(
+            url, format_name, encoding=encoding, proxies=proxies)
     except ptr.LoaderNotFoundError as e:
-        logger.error(e)
-        sys.exit(1)
+        try:
+            loader = ptr.TableUrlLoader(
+                url, "html", encoding=encoding, proxies=proxies)
+        except (ptr.LoaderNotFoundError, ptr.HTTPError):
+            logger.error(e)
+            sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
     except ptr.HTTPError as e:
         logger.error(e)
-        sys.exit(2)
+        sys.exit(ExitCode.FAILED_HTTP)
 
     try:
         for tabledata in loader.load():
@@ -188,6 +217,9 @@ def url(ctx, url, format_name, output_path):
         logger.error("invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
+    logger.debug(TableStructureWriter(
+        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
+
     sys.exit(result_counter.get_return_code())
 
 
@@ -197,7 +229,7 @@ def url(ctx, url, format_name, output_path):
 @click.argument(
     "title", type=str)
 @click.option(
-    "-o", "--output-path", default="out.sqlite",
+    "-o", "--output-path", metavar="PATH", default="out.sqlite",
     help="output path of the SQLite database file")
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
@@ -230,13 +262,18 @@ def gs(ctx, credentials, title, output_path):
                 result_counter.inc_fail()
     except ptr.OpenError as e:
         logger.error(e)
+        result_counter.inc_fail()
     except AttributeError:
-        logger.error("invalid credentials data: path={:s}".format(credentials))
+        logger.error("invalid credentials data: path={}".format(credentials))
+        result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
-            "invalid credentials data: path={:s}, message={:s}".format(
+            "invalid credentials data: path={}, message={}".format(
                 credentials, str(e)))
         result_counter.inc_fail()
+
+    logger.debug(TableStructureWriter(
+        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
 
