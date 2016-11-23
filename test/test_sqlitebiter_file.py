@@ -4,12 +4,15 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import print_function
+
 from click.testing import CliRunner
 import path
 import pytest
 import simplesqlite
 import xlsxwriter
 
+from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from pytablereader.interface import TableLoader
 
@@ -265,14 +268,14 @@ class Test_sqlitebiter:
         TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(["option_list", "expected"], [
-        [["-h"], 0],
-        [["file", "-h"], 0],
-        [["gs", "-h"], 0],
+        [["-h"], ExitCode.SUCCESS],
+        [["file", "-h"], ExitCode.SUCCESS],
+        [["gs", "-h"], ExitCode.SUCCESS],
     ])
     def test_help(self, option_list, expected):
         runner = CliRunner()
         result = runner.invoke(cmd, option_list)
-        assert result.exit_code == 0
+        assert result.exit_code == expected
 
     def test_normal_smoke(self):
         db_path = "test.sqlite"
@@ -292,7 +295,7 @@ class Test_sqlitebiter:
             for file_path in file_list:
                 result = runner.invoke(
                     cmd, ["file", file_path, "-o", db_path])
-                assert result.exit_code == 0, file_path
+                assert result.exit_code == ExitCode.SUCCESS, file_path
 
     def test_abnormal_empty(self):
         runner = CliRunner()
@@ -301,7 +304,7 @@ class Test_sqlitebiter:
             result = runner.invoke(
                 cmd, ["file"])
 
-            assert result.exit_code == 0
+            assert result.exit_code == ExitCode.NO_INPUT
             assert not path.Path(
                 "out.sqlite").exists(), "output file must not exist"
 
@@ -322,7 +325,9 @@ class Test_sqlitebiter:
             for file_path in file_list:
                 result = runner.invoke(
                     cmd, ["file", file_path, "-o", db_path])
-                assert result.exit_code != 0, file_path
+
+                assert result.exit_code in (
+                    ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
 
     def test_normal_multi(self):
         db_path = "test.sqlite"
@@ -351,7 +356,7 @@ class Test_sqlitebiter:
             ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
-            assert result.exit_code == 0
+            assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_tables = [

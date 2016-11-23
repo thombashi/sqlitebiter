@@ -6,6 +6,8 @@
 
 from __future__ import absolute_import
 
+from ._enum import ExitCode
+
 
 class ResultCounter(object):
 
@@ -25,9 +27,9 @@ class ResultCounter(object):
 
     def get_return_code(self):
         if self.__success_count > 0:
-            return 0
+            return ExitCode.SUCCESS
 
         if self.__fail_count > 0:
-            return 1
+            return ExitCode.FAILED_CONVERT
 
-        return 2
+        return ExitCode.NO_INPUT

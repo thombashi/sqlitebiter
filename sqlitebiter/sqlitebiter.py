@@ -16,6 +16,7 @@ import pytablereader as ptr
 import simplesqlite
 
 from ._counter import ResultCounter
+from ._enum import ExitCode
 
 
 CONTEXT_SETTINGS = dict(
@@ -79,7 +80,7 @@ def file(ctx, files, output_path):
     """
 
     if dataproperty.is_empty_sequence(files):
-        return 0
+        sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(output_path)
     result_counter = ResultCounter()
@@ -90,16 +91,19 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
+            result_counter.inc_fail()
             continue
 
         try:
             loader = ptr.TableFileLoader(file_path)
         except ptr.InvalidFilePathError as e:
             logger.debug(e)
+            result_counter.inc_fail()
             continue
         except ptr.LoaderNotFoundError:
             logger.debug(
                 "loader not found that coincide with '{}'".format(file_path))
+            result_counter.inc_fail()
             continue
 
         try:
@@ -121,6 +125,7 @@ def file(ctx, files, output_path):
         except ptr.OpenError as e:
             logger.error("open error: file={:s}, message='{:s}'".format(
                 file_path, str(e)))
+            result_counter.inc_fail()
         except ptr.ValidationError as e:
             logger.error(
                 "invalid {:s} data format: path={:s}, message={:s}".format(
@@ -151,7 +156,7 @@ def url(ctx, url, format_name, output_path):
     """
 
     if dataproperty.is_empty_sequence(url):
-        return 0
+        sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(output_path)
     result_counter = ResultCounter()
@@ -163,10 +168,10 @@ def url(ctx, url, format_name, output_path):
         loader = ptr.TableUrlLoader(url, format_name)
     except ptr.LoaderNotFoundError as e:
         logger.error(e)
-        sys.exit(1)
+        sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
     except ptr.HTTPError as e:
         logger.error(e)
-        sys.exit(2)
+        sys.exit(ExitCode.FAILED_HTTP)
 
     try:
         for tabledata in loader.load():
@@ -230,8 +235,10 @@ def gs(ctx, credentials, title, output_path):
                 result_counter.inc_fail()
     except ptr.OpenError as e:
         logger.error(e)
+        result_counter.inc_fail()
     except AttributeError:
         logger.error("invalid credentials data: path={:s}".format(credentials))
+        result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
             "invalid credentials data: path={:s}, message={:s}".format(
