@@ -14,6 +14,7 @@ import logbook
 import path
 import pytablereader as ptr
 import simplesqlite
+from sqlitestructure import TableStructureWriter
 
 from ._counter import ResultCounter
 from ._enum import ExitCode
@@ -23,6 +24,7 @@ CONTEXT_SETTINGS = dict(
     help_option_names=["-h", "--help"],
     obj={},
 )
+SQLITE_TABLE_VERBOSE_LEVEL = 2
 
 handler = logbook.StderrHandler()
 handler.push_application()
@@ -138,6 +140,9 @@ def file(ctx, files, output_path):
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
+    logger.debug(TableStructureWriter(
+        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
+
     sys.exit(result_counter.get_return_code())
 
 
@@ -207,6 +212,9 @@ def url(ctx, url, format_name, output_path, proxy):
         logger.error("invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
+    logger.debug(TableStructureWriter(
+        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
+
     sys.exit(result_counter.get_return_code())
 
 
@@ -258,6 +266,9 @@ def gs(ctx, credentials, title, output_path):
             "invalid credentials data: path={}, message={}".format(
                 credentials, str(e)))
         result_counter.inc_fail()
+
+    logger.debug(TableStructureWriter(
+        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
 
