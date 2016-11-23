@@ -71,7 +71,7 @@ def cmd(ctx, log_level):
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
-    "-o", "--output-path", default="out.sqlite",
+    "-o", "--output-path", metavar="PATH", default="out.sqlite",
     help="Output path of the SQLite database file")
 @click.pass_context
 def file(ctx, files, output_path):
@@ -148,7 +148,7 @@ def file(ctx, files, output_path):
     type=click.Choice(["csv", "excel", "html", "json", "markdown"]),
     help="Data format to loading (defaults to html).")
 @click.option(
-    "-o", "--output-path", default="out.sqlite",
+    "-o", "--output-path", metavar="PATH", default="out.sqlite",
     help="Output path of the SQLite database file")
 @click.option(
     "--proxy", type=str, metavar="PROXY",
@@ -213,7 +213,7 @@ def url(ctx, url, format_name, output_path, proxy):
 @click.argument(
     "title", type=str)
 @click.option(
-    "-o", "--output-path", default="out.sqlite",
+    "-o", "--output-path", metavar="PATH", default="out.sqlite",
     help="output path of the SQLite database file")
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
