@@ -154,12 +154,15 @@ def file(ctx, files, output_path):
     help="Data format to loading (defaults to html).")
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file")
+    help="Output path of the SQLite database file.")
+@click.option(
+    "--encoding", type=str, metavar="ENCODING", default="utf-8",
+    help="Defaults to utf-8")
 @click.option(
     "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
 @click.pass_context
-def url(ctx, url, format_name, output_path, proxy):
+def url(ctx, url, format_name, output_path, encoding, proxy):
     """
     Fetch data from a URL and convert data to a SQLite database file.
     """
@@ -181,10 +184,12 @@ def url(ctx, url, format_name, output_path, proxy):
         }
 
     try:
-        loader = ptr.TableUrlLoader(url, format_name, proxies=proxies)
+        loader = ptr.TableUrlLoader(
+            url, format_name, encoding=encoding, proxies=proxies)
     except ptr.LoaderNotFoundError as e:
         try:
-            loader = ptr.TableUrlLoader(url, "html", proxies=proxies)
+            loader = ptr.TableUrlLoader(
+                url, "html", encoding=encoding, proxies=proxies)
         except (ptr.LoaderNotFoundError, ptr.HTTPError):
             logger.error(e)
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
