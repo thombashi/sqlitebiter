@@ -13,6 +13,10 @@ class ResultCounter(object):
         self.__success_count = 0
         self.__fail_count = 0
 
+    def __repr__(self):
+        return "results: success={:d}, failed={:d}, return_code={:d}".format(
+            self.__success_count, self.__fail_count, self.get_return_code())
+
     def inc_success(self):
         self.__success_count += 1
 
