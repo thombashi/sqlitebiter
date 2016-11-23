@@ -2,9 +2,12 @@ Features
 --------
 
 - Create a SQLite database file from:
-    - CSV file(s)
-    - Microsoft Excel :superscript:`TM` file(s)
-    - HTML file(s): extract table tag data
-    - JSON file(s)
-    - Markdown file(s): extract Markdown table
+    - file(s):
+        - CSV
+        - Microsoft Excel :superscript:`TM`
+        - HTML: extract table tag data
+        - JSON
+        - Markdown: extract Markdown table
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
+    - URL (fetch data from the Internet)
+- Multi-byte character support

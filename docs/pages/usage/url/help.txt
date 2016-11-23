@@ -1,0 +1,17 @@
+``sqlitebiter url`` subcommand help
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    Usage: sqlitebiter url [OPTIONS] URL
+    
+      Fetch data from a URL and convert data to a SQLite database file.
+    
+    Options:
+      --format [csv|excel|html|json|markdown]
+                                      Data format to loading (defaults to html).
+      -o, --output-path PATH          Output path of the SQLite database file.
+      --encoding ENCODING             Defaults to utf-8
+      --proxy PROXY                   Specify a proxy in the form
+                                      [user:passwd@]proxy.server:port.
+      -h, --help                      Show this message and exit.
