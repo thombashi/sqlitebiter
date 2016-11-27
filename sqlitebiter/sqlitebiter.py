@@ -18,6 +18,7 @@ from sqlitestructure import TableStructureWriter
 
 from ._counter import ResultCounter
 from ._enum import ExitCode
+from ._version import VERSION
 
 
 CONTEXT_SETTINGS = dict(
@@ -30,13 +31,18 @@ handler = logbook.StderrHandler()
 handler.push_application()
 
 
-def create_database(database_path):
+def create_database(ctx, database_path):
+    is_append_table = ctx.obj.get("is_append_table")
+
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
     if dataproperty.is_not_empty_string(dir_path):
         dir_path.makedirs_p()
 
-    return simplesqlite.SimpleSQLite(db_path, "w")
+    if is_append_table:
+        return simplesqlite.SimpleSQLite(db_path, "a")
+    else:
+        return simplesqlite.SimpleSQLite(db_path, "w")
 
 
 def _setup_logger_from_context(ctx, logger):
@@ -58,7 +64,10 @@ def _get_format_type_from_path(file_path):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option()
+@click.version_option(version=VERSION)
+@click.option(
+    "--append", "is_append_table", is_flag=True,
+    help="append table(s) to existing database.")
 @click.option(
     "--debug", "log_level", flag_value=logbook.DEBUG,
     help="for debug print.")
@@ -66,8 +75,9 @@ def _get_format_type_from_path(file_path):
     "--quiet", "log_level", flag_value=logbook.NOTSET,
     help="suppress execution log messages.")
 @click.pass_context
-def cmd(ctx, log_level):
+def cmd(ctx, is_append_table, log_level):
     ctx.obj["LOG_LEVEL"] = log_level
+    ctx.obj["is_append_table"] = is_append_table
 
 
 @cmd.command()
@@ -84,7 +94,7 @@ def file(ctx, files, output_path):
     if dataproperty.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = create_database(output_path)
+    con = create_database(ctx, output_path)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
@@ -93,9 +103,11 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
-            logger.debug("file not found: {}".format(file_path))
+            logger.debug(u"file not found: {}".format(file_path))
             result_counter.inc_fail()
             continue
+
+        logger.debug(u"converting '{}'".format(file_path))
 
         try:
             loader = ptr.TableFileLoader(file_path)
@@ -105,7 +117,7 @@ def file(ctx, files, output_path):
             continue
         except ptr.LoaderNotFoundError:
             logger.debug(
-                "loader not found that coincide with '{}'".format(file_path))
+                u"loader not found that coincide with '{}'".format(file_path))
             result_counter.inc_fail()
             continue
 
@@ -119,24 +131,24 @@ def file(ctx, files, output_path):
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
-                        "path={}, message={}".format(file_path, e))
+                        u"path={}, message={}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
 
-                click.echo("convert '{:s}' to '{:s}' table".format(
+                click.echo(u"convert '{:s}' to '{:s}' table".format(
                     file_path, sqlite_tabledata.table_name))
         except ptr.OpenError as e:
-            logger.error("open error: file={}, message='{}'".format(
+            logger.error(u"open error: file={}, message='{}'".format(
                 file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             logger.error(
-                "invalid {} data format: path={}, message={}".format(
+                u"invalid {} data format: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
         except ptr.InvalidDataError as e:
             logger.error(
-                "invalid {} data: path={}, message={}".format(
+                u"invalid {} data: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
@@ -170,7 +182,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     if dataproperty.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = create_database(output_path)
+    con = create_database(ctx, output_path)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
@@ -207,14 +219,14 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
-                    "url={}, message={}".format(url, str(e)))
+                    u"url={}, message={}".format(url, str(e)))
                 result_counter.inc_fail()
                 continue
 
-            click.echo("convert a table to '{:s}' table".format(
+            click.echo(u"convert a table to '{:s}' table".format(
                 sqlite_tabledata.table_name))
     except ptr.InvalidDataError as e:
-        logger.error("invalid data: url={}, message={}".format(url, str(e)))
+        logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
     logger.debug(TableStructureWriter(
@@ -240,7 +252,7 @@ def gs(ctx, credentials, title, output_path):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    con = create_database(output_path)
+    con = create_database(ctx, output_path)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter gs")
@@ -252,7 +264,7 @@ def gs(ctx, credentials, title, output_path):
 
     try:
         for tabledata in loader.load():
-            click.echo("convert '{:s}' to '{:s}' table".format(
+            click.echo(u"convert '{:s}' to '{:s}' table".format(
                 title, tabledata.table_name))
 
             try:
@@ -264,11 +276,11 @@ def gs(ctx, credentials, title, output_path):
         logger.error(e)
         result_counter.inc_fail()
     except AttributeError:
-        logger.error("invalid credentials data: path={}".format(credentials))
+        logger.error(u"invalid credentials data: path={}".format(credentials))
         result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
-            "invalid credentials data: path={}, message={}".format(
+            u"invalid credentials data: path={}, message={}".format(
                 credentials, str(e)))
         result_counter.inc_fail()
 
