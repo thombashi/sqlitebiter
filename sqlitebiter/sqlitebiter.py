@@ -31,13 +31,18 @@ handler = logbook.StderrHandler()
 handler.push_application()
 
 
-def create_database(database_path):
+def create_database(ctx, database_path):
+    is_append_table = ctx.obj.get("is_append_table")
+
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
     if dataproperty.is_not_empty_string(dir_path):
         dir_path.makedirs_p()
 
-    return simplesqlite.SimpleSQLite(db_path, "w")
+    if is_append_table:
+        return simplesqlite.SimpleSQLite(db_path, "a")
+    else:
+        return simplesqlite.SimpleSQLite(db_path, "w")
 
 
 def _setup_logger_from_context(ctx, logger):
@@ -61,14 +66,18 @@ def _get_format_type_from_path(file_path):
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option()
 @click.option(
+    "--append", "is_append_table", is_flag=True,
+    help="append table(s) to existing database.")
+@click.option(
     "--debug", "log_level", flag_value=logbook.DEBUG,
     help="for debug print.")
 @click.option(
     "--quiet", "log_level", flag_value=logbook.NOTSET,
     help="suppress execution log messages.")
 @click.pass_context
-def cmd(ctx, log_level):
+def cmd(ctx, is_append_table, log_level):
     ctx.obj["LOG_LEVEL"] = log_level
+    ctx.obj["is_append_table"] = is_append_table
 
 
 @cmd.command()
@@ -85,7 +94,7 @@ def file(ctx, files, output_path):
     if dataproperty.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = create_database(output_path)
+    con = create_database(ctx, output_path)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
@@ -173,7 +182,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     if dataproperty.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = create_database(output_path)
+    con = create_database(ctx, output_path)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
@@ -243,7 +252,7 @@ def gs(ctx, credentials, title, output_path):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    con = create_database(output_path)
+    con = create_database(ctx, output_path)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter gs")
