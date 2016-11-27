@@ -6,6 +6,7 @@
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 import sys
 
 import click
@@ -96,6 +97,8 @@ def file(ctx, files, output_path):
             logger.debug("file not found: {}".format(file_path))
             result_counter.inc_fail()
             continue
+
+        logger.debug("converting '{}'".format(file_path))
 
         try:
             loader = ptr.TableFileLoader(file_path)
