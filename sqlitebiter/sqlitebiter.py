@@ -275,7 +275,7 @@ def gs(ctx, credentials, title, output_path):
         logger.error(e)
         result_counter.inc_fail()
     except AttributeError:
-        logger.error("invalid credentials data: path={}".format(credentials))
+        logger.error(u"invalid credentials data: path={}".format(credentials))
         result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
