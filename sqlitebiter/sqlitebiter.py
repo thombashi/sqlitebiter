@@ -6,7 +6,6 @@
 """
 
 from __future__ import absolute_import
-from __future__ import unicode_literals
 import sys
 
 import click
@@ -103,11 +102,11 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
-            logger.debug("file not found: {}".format(file_path))
+            logger.debug(u"file not found: {}".format(file_path))
             result_counter.inc_fail()
             continue
 
-        logger.debug("converting '{}'".format(file_path))
+        logger.debug(u"converting '{}'".format(file_path))
 
         try:
             loader = ptr.TableFileLoader(file_path)
@@ -117,7 +116,7 @@ def file(ctx, files, output_path):
             continue
         except ptr.LoaderNotFoundError:
             logger.debug(
-                "loader not found that coincide with '{}'".format(file_path))
+                u"loader not found that coincide with '{}'".format(file_path))
             result_counter.inc_fail()
             continue
 
@@ -131,24 +130,24 @@ def file(ctx, files, output_path):
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
-                        "path={}, message={}".format(file_path, e))
+                        u"path={}, message={}".format(file_path, e))
                     result_counter.inc_fail()
                     continue
 
-                click.echo("convert '{:s}' to '{:s}' table".format(
+                click.echo(u"convert '{:s}' to '{:s}' table".format(
                     file_path, sqlite_tabledata.table_name))
         except ptr.OpenError as e:
-            logger.error("open error: file={}, message='{}'".format(
+            logger.error(u"open error: file={}, message='{}'".format(
                 file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             logger.error(
-                "invalid {} data format: path={}, message={}".format(
+                u"invalid {} data format: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
         except ptr.InvalidDataError as e:
             logger.error(
-                "invalid {} data: path={}, message={}".format(
+                u"invalid {} data: path={}, message={}".format(
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
@@ -219,14 +218,14 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
-                    "url={}, message={}".format(url, str(e)))
+                    u"url={}, message={}".format(url, str(e)))
                 result_counter.inc_fail()
                 continue
 
-            click.echo("convert a table to '{:s}' table".format(
+            click.echo(u"convert a table to '{:s}' table".format(
                 sqlite_tabledata.table_name))
     except ptr.InvalidDataError as e:
-        logger.error("invalid data: url={}, message={}".format(url, str(e)))
+        logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
     logger.debug(TableStructureWriter(
@@ -264,7 +263,7 @@ def gs(ctx, credentials, title, output_path):
 
     try:
         for tabledata in loader.load():
-            click.echo("convert '{:s}' to '{:s}' table".format(
+            click.echo(u"convert '{:s}' to '{:s}' table".format(
                 title, tabledata.table_name))
 
             try:
@@ -280,7 +279,7 @@ def gs(ctx, credentials, title, output_path):
         result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
         logger.error(
-            "invalid credentials data: path={}, message={}".format(
+            u"invalid credentials data: path={}, message={}".format(
                 credentials, str(e)))
         result_counter.inc_fail()
 
