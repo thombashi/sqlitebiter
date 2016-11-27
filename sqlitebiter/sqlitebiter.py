@@ -18,6 +18,7 @@ from sqlitestructure import TableStructureWriter
 
 from ._counter import ResultCounter
 from ._enum import ExitCode
+from ._version import VERSION
 
 
 CONTEXT_SETTINGS = dict(
@@ -63,7 +64,7 @@ def _get_format_type_from_path(file_path):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option()
+@click.version_option(version=VERSION)
 @click.option(
     "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
