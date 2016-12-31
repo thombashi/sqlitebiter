@@ -14,7 +14,7 @@ import logbook
 import path
 import pytablereader as ptr
 import simplesqlite
-from sqlitestructure import TableStructureWriter
+from sqliteschema import SqliteSchemaExtractor
 
 from ._counter import ResultCounter
 from ._enum import ExitCode
@@ -152,7 +152,7 @@ def file(ctx, files, output_path):
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
-    logger.debug(TableStructureWriter(
+    logger.debug(SqliteSchemaExtractor(
         output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
@@ -229,7 +229,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
-    logger.debug(TableStructureWriter(
+    logger.debug(SqliteSchemaExtractor(
         output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
@@ -284,7 +284,7 @@ def gs(ctx, credentials, title, output_path):
                 credentials, str(e)))
         result_counter.inc_fail()
 
-    logger.debug(TableStructureWriter(
+    logger.debug(SqliteSchemaExtractor(
         output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
