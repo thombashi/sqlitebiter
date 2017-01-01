@@ -17,7 +17,10 @@ import simplesqlite
 from sqliteschema import SqliteSchemaExtractor
 
 from ._counter import ResultCounter
-from ._enum import ExitCode
+from ._enum import (
+    Context,
+    ExitCode,
+)
 from ._version import VERSION
 
 
@@ -35,7 +38,7 @@ logbook.StderrHandler(
 
 
 def create_database(ctx, database_path):
-    is_append_table = ctx.obj.get("is_append_table")
+    is_append_table = ctx.obj.get(Context.IS_APPEND_TABLE)
 
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
@@ -75,9 +78,10 @@ def _get_format_type_from_path(file_path):
     help="suppress execution log messages.")
 @click.pass_context
 def cmd(ctx, is_append_table, verbosity_level, log_level):
-    ctx.obj["is_append_table"] = is_append_table
-    ctx.obj["verbosity_level"] = verbosity_level
-    ctx.obj["LOG_LEVEL"] = logbook.INFO if log_level is None else log_level
+    ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
+    ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
+    ctx.obj[Context.LOG_LEVEL] = (
+        logbook.INFO if log_level is None else log_level)
 
 
 def get_schema_extractor(source, verbosity_level):
@@ -119,12 +123,12 @@ def file(ctx, files, output_path):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
-    verbosity_level = ctx.obj.get("verbosity_level")
+    verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
-    _setup_logger_from_context(logger, ctx.obj["LOG_LEVEL"])
+    _setup_logger_from_context(logger, ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -212,12 +216,12 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
-    verbosity_level = ctx.obj.get("verbosity_level")
+    verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
-    _setup_logger_from_context(logger, ctx.obj["LOG_LEVEL"])
+    _setup_logger_from_context(logger, ctx.obj[Context.LOG_LEVEL])
 
     proxies = {}
     if dataproperty.is_not_empty_string(proxy):
