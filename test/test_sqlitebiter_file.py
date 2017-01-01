@@ -23,13 +23,16 @@ from .dataset import (
     invalid_json_multi_file,
     valid_csv_file_1,
     valid_csv_file_2,
+    invalid_csv_file,
     valid_tsv_file,
+    invalid_tsv_file,
     valid_excel_file,
     invalid_excel_file_1,
     invalid_excel_file_2,
     valid_html_file,
     invalid_html_file,
     valid_ltsv_file,
+    invalid_ltsv_file,
     valid_markdown_file,
     valid_multibyte_char_file,
     not_supported_format_file,
@@ -63,11 +66,14 @@ class Test_sqlitebiter_file:
         [valid_markdown_file, ExitCode.SUCCESS],
         [valid_multibyte_char_file, ExitCode.SUCCESS],
 
+        [invalid_csv_file, ExitCode.FAILED_CONVERT],
         [invalid_json_single_file, ExitCode.FAILED_CONVERT],
         [invalid_json_multi_file, ExitCode.FAILED_CONVERT],
         [invalid_excel_file_1, ExitCode.NO_INPUT],
         [invalid_excel_file_2, ExitCode.FAILED_CONVERT],
         [invalid_html_file, ExitCode.NO_INPUT],
+        [invalid_ltsv_file, ExitCode.FAILED_CONVERT],
+        [invalid_tsv_file, ExitCode.FAILED_CONVERT],
         [not_supported_format_file, ExitCode.FAILED_CONVERT],
     ])
     def test_normal_one_file(self, file_creator, expected):
@@ -119,11 +125,14 @@ class Test_sqlitebiter_file:
 
         with runner.isolated_filesystem():
             file_list = [
+                invalid_csv_file(),
                 invalid_json_single_file(),
                 invalid_json_multi_file(),
                 invalid_excel_file_1(),
                 invalid_excel_file_2(),
                 invalid_html_file(),
+                invalid_ltsv_file(),
+                invalid_tsv_file(),
                 not_supported_format_file(),
             ]
 
@@ -147,8 +156,10 @@ class Test_sqlitebiter_file:
 
                 valid_csv_file_1(),
                 valid_csv_file_2(),
+                invalid_csv_file(),
 
                 valid_tsv_file(),
+                invalid_tsv_file(),
 
                 valid_excel_file(),
                 invalid_excel_file_1(),
@@ -158,6 +169,7 @@ class Test_sqlitebiter_file:
                 invalid_html_file(),
 
                 valid_ltsv_file(),
+                invalid_ltsv_file(),
 
                 valid_markdown_file(),
 

@@ -94,6 +94,19 @@ def valid_csv_file_2():
     return file_path
 
 
+def invalid_csv_file():
+    file_path = "invalid_csv.csv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"attr_a"\t"attr_b"\t"attr_c"',
+            '1\t4\t"tsv0"',
+            '2\t2.1\t"tsv1"',
+            '3\t120.9\t"tsv2"',
+        ]))
+
+    return file_path
+
+
 def valid_tsv_file():
     file_path = "tsv_a.tsv"
     with open(file_path, "w") as f:
@@ -102,6 +115,19 @@ def valid_tsv_file():
             '1\t4\t"tsv0"',
             '2\t2.1\t"tsv1"',
             '3\t120.9\t"tsv2"',
+        ]))
+
+    return file_path
+
+
+def invalid_tsv_file():
+    file_path = "invalid_tsv.tsv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"attr_a","attr_b","attr_c"',
+            '1,4,"a"',
+            '2,2.1,"bb"',
+            '3,120.9,"ccc"',
         ]))
 
     return file_path
@@ -256,6 +282,19 @@ def valid_ltsv_file():
 a.0:2\tb-1:2.2\tc_2:"ltsv1"\t"dd":2.2\te.f-g_4:"2.2"
 a.0:3\tb-1:3.3\tc_2:"ltsv2"\t"dd":3.0\te.f-g_4:"cccc"
 """)
+
+    return file_path
+
+
+def invalid_ltsv_file():
+    file_path = "invalid_ltsv.ltsv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"attr_a"\t"attr_b"\t"attr_c"',
+            '1\t4\t"tsv0"',
+            '2\t2.1\t"tsv1"',
+            '3\t120.9\t"tsv2"',
+        ]))
 
     return file_path
 
