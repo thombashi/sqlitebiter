@@ -30,7 +30,6 @@ CONTEXT_SETTINGS = dict(
 )
 MAX_VERBOSITY_LEVEL = 2
 QUIET_LOG_LEVEL = logbook.NOTSET
-COMPLETION_MESSAGE = u"----- sqlitebiter completed: created tables -----"
 
 logbook.StderrHandler(
     level=logbook.DEBUG,
@@ -49,6 +48,18 @@ def create_database(ctx, database_path):
         return simplesqlite.SimpleSQLite(db_path, "a")
     else:
         return simplesqlite.SimpleSQLite(db_path, "w")
+
+
+def write_completion_message(logger, database_path, result_counter):
+    logger.debug(u"----- sqlitebiter completed -----")
+    logger.debug(u"database path: {:s}".format(database_path))
+    logger.debug(u"number of created table: {:d}".format(
+        result_counter.success_count))
+    logger.debug(u"")
+
+    logger.debug(u"----- database schema -----")
+    logger.debug(
+        get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
 
 
 def _setup_logger_from_context(logger, log_level):
@@ -184,9 +195,7 @@ def file(ctx, files, output_path):
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
-    logger.debug(COMPLETION_MESSAGE)
-    logger.debug(
-        get_schema_extractor(output_path, MAX_VERBOSITY_LEVEL).dumps())
+    write_completion_message(logger, output_path, result_counter)
 
     sys.exit(result_counter.get_return_code())
 
@@ -266,9 +275,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
-    logger.debug(COMPLETION_MESSAGE)
-    logger.debug(
-        get_schema_extractor(output_path, MAX_VERBOSITY_LEVEL).dumps())
+    write_completion_message(logger, output_path, result_counter)
 
     sys.exit(result_counter.get_return_code())
 
@@ -322,9 +329,7 @@ def gs(ctx, credentials, title, output_path):
                 credentials, str(e)))
         result_counter.inc_fail()
 
-    logger.debug(COMPLETION_MESSAGE)
-    logger.debug(
-        get_schema_extractor(output_path, MAX_VERBOSITY_LEVEL).dumps())
+    write_completion_message(logger, output_path, result_counter)
 
     sys.exit(result_counter.get_return_code())
 
