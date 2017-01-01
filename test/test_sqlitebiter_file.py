@@ -23,6 +23,7 @@ from .dataset import (
     invalid_json_multi_file,
     valid_csv_file_1,
     valid_csv_file_2,
+    valid_tsv_file,
     valid_excel_file,
     invalid_excel_file_1,
     invalid_excel_file_2,
@@ -54,6 +55,7 @@ class Test_sqlitebiter_file:
         [valid_json_multi_file, ExitCode.SUCCESS],
         [valid_csv_file_1, ExitCode.SUCCESS],
         [valid_csv_file_2, ExitCode.SUCCESS],
+        [valid_tsv_file, ExitCode.SUCCESS],
         [valid_excel_file, ExitCode.SUCCESS],
         [valid_html_file, ExitCode.SUCCESS],
         [valid_markdown_file, ExitCode.SUCCESS],
@@ -86,6 +88,7 @@ class Test_sqlitebiter_file:
                 valid_json_multi_file(),
                 valid_csv_file_1(),
                 valid_csv_file_2(),
+                valid_tsv_file(),
                 valid_excel_file(),
                 valid_html_file(),
                 valid_markdown_file(),
@@ -142,6 +145,8 @@ class Test_sqlitebiter_file:
                 valid_csv_file_1(),
                 valid_csv_file_2(),
 
+                valid_tsv_file(),
+
                 valid_excel_file(),
                 invalid_excel_file_1(),
                 invalid_excel_file_2(),
@@ -163,6 +168,7 @@ class Test_sqlitebiter_file:
                 'csv_a', "rename_insert",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
                 'testtitle_tablename', 'testtitle_html2',
+                'tsv_a',
                 'valid_mdtable_markdown1',
             ]
 
@@ -183,7 +189,7 @@ class Test_sqlitebiter_file:
                     (1, 55, 'D Sam', 31, 'Raven'),
                     (2, 36, 'J Ifdgg', 30, 'Raven'),
                     (3, 91, 'K Wedfb', 28, 'Raven'),
-                ],
+                    ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
@@ -194,6 +200,8 @@ class Test_sqlitebiter_file:
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
                 "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
+                "tsv_a":
+                    [(1, 4.0, 'tsv0'), (2, 2.1, 'tsv1'), (3, 120.9, 'tsv2')],
                 "valid_mdtable_markdown1":
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
             }
@@ -204,4 +212,9 @@ class Test_sqlitebiter_file:
 
                 message = "table={}, expected={}, actual={}".format(
                     table, expected_data, actual_data)
+
+                print("--- table: {} ---".format(table))
+                print("[expected]\n{}\n".format(expected_data))
+                print("[actual]\n{}\n".format(actual_data))
+
                 assert expected_data == actual_data, message

@@ -94,6 +94,19 @@ def valid_csv_file_2():
     return file_path
 
 
+def valid_tsv_file():
+    file_path = "tsv_a.tsv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"attr_a"\t"attr_b"\t"attr_c"',
+            '1\t4\t"tsv0"',
+            '2\t2.1\t"tsv1"',
+            '3\t120.9\t"tsv2"',
+        ]))
+
+    return file_path
+
+
 def valid_excel_file():
     file_path = "valid.xlsx"
     workbook = xlsxwriter.Workbook(str(file_path))
