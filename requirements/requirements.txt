@@ -4,4 +4,4 @@ logbook
 path.py
 pytablereader>=0.8.5
 SimpleSQLite>=0.7.4
-sqliteschema>=0.7.2
+sqliteschema>=0.7.3
