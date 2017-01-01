@@ -115,7 +115,8 @@ def get_success_log_format(ctx):
 @click.pass_context
 def file(ctx, files, output_path):
     """
-    Convert CSV/Excel/HTML/JSON/Markdown file(s) to a SQLite database file.
+    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/TSV file(s)
+    to a SQLite database file.
     """
 
     if dataproperty.is_empty_sequence(files):
@@ -193,7 +194,7 @@ def file(ctx, files, output_path):
 @click.argument("url", type=str)
 @click.option(
     "--format", "format_name",
-    type=click.Choice(["csv", "excel", "html", "json", "markdown"]),
+    type=click.Choice(ptr.TableUrlLoader.get_format_name_list()),
     help="Data format to loading (defaults to html).")
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
