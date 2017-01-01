@@ -68,6 +68,7 @@ def _get_format_type_from_path(file_path):
 @click.option(
     "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
+@click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option(
     "--debug", "log_level", flag_value=logbook.DEBUG,
     help="for debug print.")
@@ -75,9 +76,35 @@ def _get_format_type_from_path(file_path):
     "--quiet", "log_level", flag_value=logbook.NOTSET,
     help="suppress execution log messages.")
 @click.pass_context
-def cmd(ctx, is_append_table, log_level):
-    ctx.obj["LOG_LEVEL"] = log_level
+def cmd(ctx, is_append_table, verbosity_level, log_level):
     ctx.obj["is_append_table"] = is_append_table
+    ctx.obj["verbosity_level"] = verbosity_level
+    ctx.obj["LOG_LEVEL"] = log_level
+
+
+def get_schema_extractor(ctx, con):
+    verbosity_level = ctx.obj.get("verbosity_level")
+
+    if verbosity_level == 0:
+        return SqliteSchemaExtractor(
+            con, verbosity_level=0, output_format="text")
+
+    if verbosity_level == 1:
+        return SqliteSchemaExtractor(
+            con, verbosity_level=3, output_format="text")
+
+    if verbosity_level >= 2:
+        return SqliteSchemaExtractor(
+            con, verbosity_level=0, output_format="table")
+
+
+def get_success_log_format(ctx):
+    verbosity_level = ctx.obj.get("verbosity_level")
+
+    if verbosity_level <= 1:
+        return u"convert '{:s}' to '{:s}' table"
+
+    return u"convert '{:s}' to {:s}"
 
 
 @cmd.command()
@@ -95,6 +122,7 @@ def file(ctx, files, output_path):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
+    extractor = get_schema_extractor(ctx, con)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
@@ -135,8 +163,11 @@ def file(ctx, files, output_path):
                     result_counter.inc_fail()
                     continue
 
-                click.echo(u"convert '{:s}' to '{:s}' table".format(
-                    file_path, sqlite_tabledata.table_name))
+                log_message = get_success_log_format(ctx).format(
+                    file_path,
+                    extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
+                click.echo(log_message)
+                logger.debug(log_message)
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
                 file_path, str(e)))
@@ -183,6 +214,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
+    extractor = get_schema_extractor(ctx, con)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
@@ -223,8 +255,11 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_fail()
                 continue
 
-            click.echo(u"convert a table to '{:s}' table".format(
-                sqlite_tabledata.table_name))
+            log_message = get_success_log_format(ctx).format(
+                url,
+                extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
+            click.echo(log_message)
+            logger.debug(log_message)
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
