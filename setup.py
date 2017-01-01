@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+"""
+
 import os.path
 import setuptools
 import sys
@@ -36,7 +43,7 @@ setuptools.setup(
     install_requires=install_requires,
     keywords=[
         "SQLite", "converter",
-        "CSV", "Excel", "Google Sheets", "HTML", "JSON",
+        "CSV", "Excel", "Google Sheets", "HTML", "JSON", "LTSV", "TSV",
     ],
     license="MIT License",
     long_description=long_description,
