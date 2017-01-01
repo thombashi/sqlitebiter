@@ -1,10 +1,8 @@
-.. sqlitebiter documentation master file, created by
-   sphinx-quickstart on Wed May  4 20:08:22 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to sqlitebiter's documentation!
 =======================================
+
+.. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
+   :target: https://github.com/thombashi/sqlitebiter
 
 .. toctree::
    :caption: Table of Contents

@@ -15,5 +15,7 @@ Example
     $ ls sample.sqlite
     sample.sqlite
 
-Convertible JSON format is as follows:
-http://pytablereader.readthedocs.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes
+.. note::
+
+    Available JSON Schema is limited, acceptable format is as follows:
+    http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes
