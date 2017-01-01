@@ -11,6 +11,14 @@ from ._enum import ExitCode
 
 class ResultCounter(object):
 
+    @property
+    def success_count(self):
+        return self.__success_count
+
+    @property
+    def fail_count(self):
+        return self.__fail_count
+
     def __init__(self):
         self.__success_count = 0
         self.__fail_count = 0

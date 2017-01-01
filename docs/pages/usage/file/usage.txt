@@ -2,18 +2,30 @@ Example
 ~~~~~~~
 
 .. code-block:: console
+    :caption: Using wildcard to designate multiple files
 
     $ ls
     sample_data.csv  sample_data.xlsx  sample_data_multi.json  sample_data_single.json
     $ sqlitebiter file * -o sample.sqlite
-    convert 'sample_data.csv' to 'sample_data' table
-    convert 'sample_data.xlsx' to 'samplesheet1' table
-    convert 'sample_data.xlsx' to 'samplesheet3' table
-    convert 'sample_data_multi.json' to 'table_b' table
-    convert 'sample_data_multi.json' to 'table_a' table
-    convert 'sample_data_single.json' to 'sample_data_single' table
+    [INFO] convert 'sample_data.csv' to 'sample_data' table
+    [INFO] convert 'sample_data.xlsx' to 'samplesheet1' table
+    [INFO] convert 'sample_data.xlsx' to 'samplesheet3' table
+    [INFO] convert 'sample_data_multi.json' to 'sample_data_multi_table_b' table
+    [INFO] convert 'sample_data_multi.json' to 'sample_data_multi_table_a' table
+    [INFO] convert 'sample_data_single.json' to 'sample_data_single_json3' table
     $ ls sample.sqlite
     sample.sqlite
 
-Convertible JSON format is as follows:
-http://pytablereader.readthedocs.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes
+.. code-block:: console
+    :caption: Designate multiple file path
+
+    $ sqlitebiter file hoge.csv sample_excel.xlsx
+    [INFO] convert 'hoge.csv' to 'hoge' table
+    [INFO] convert 'sample_excel.xlsx' to 'sheet3' table
+    [INFO] convert 'sample_excel.xlsx' to 'sheet1' table    
+
+.. note::
+
+    - Available JSON Schema is limited, acceptable format is described in `here <http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes>`__
+    - Wildcards cannot be used in Windows
+

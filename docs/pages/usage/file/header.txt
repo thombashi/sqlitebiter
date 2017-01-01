@@ -2,4 +2,8 @@ Create a SQLite database from CSV/Excel/JSON/Markdown files
 -------------------------------------------------------------
 
 ``sqlitebiter file`` is a subcommand to convert
-CSV/Excel/HTML/JSON/Markdown file(s) to a SQLite database file.
+CSV/Excel/HTML/JSON/LTSV/Markdown/TSV file(s) to a SQLite database file.
+
+Files which has following extensions could be convertible:
+``".csv"``, ``".xls"``, ``".xlsx"``, ``".htm"``, ``".html"``, ``".json"``, 
+``".ltsv"``, ``".md"``, ``".tsv"``.

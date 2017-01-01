@@ -6,273 +6,37 @@
 
 from __future__ import unicode_literals
 from __future__ import print_function
-import io
 
 from click.testing import CliRunner
 import path
 import pytest
 import simplesqlite
-import xlsxwriter
 
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from pytablereader.interface import TableLoader
 
-
-def valid_json_single_file():
-    file_path = "singlejson.json"
-    with open(file_path, "w") as f:
-        f.write("""[
-            {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-            {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-            {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-        ]""")
-
-    return file_path
-
-
-def invalid_json_single_file():
-    file_path = "invalid_json_a.json"
-    with open(file_path, "w") as f:
-        f.write("""[
-            {"attr_b": 4, "attr_c": "a", "attr_a": [1]},
-            {"attr_b": 2.1, "attr_c": "bb", "attr_a": [2]},
-            {"attr_b": 120.9, "attr_c": "ccc", "attr_a": [3]}
-        ]""")
-
-    return file_path
-
-
-def valid_json_multi_file():
-    file_path = "multijson.json"
-    with open(file_path, "w") as f:
-        f.write("""{
-            "table1" : [
-                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-            ],
-            "table2" : [
-                {"a": 1, "b": 4},
-                {"a": 2 },
-                {"a": 3, "b": 120.9}
-            ]
-        }""")
-
-    return file_path
-
-
-def invalid_json_multi_file():
-    file_path = "invalid_multi.json"
-    with open(file_path, "w") as f:
-        f.write("""{
-            "json_b" : "hoge",
-            "json_c" : "bar"
-        }""")
-
-    return file_path
-
-
-def valid_csv_file():
-    file_path = "csv_a.csv"
-    with open(file_path, "w") as f:
-        f.write("\n".join([
-            '"attr_a","attr_b","attr_c"',
-            '1,4,"a"',
-            '2,2.1,"bb"',
-            '3,120.9,"ccc"',
-        ]))
-
-    return file_path
-
-
-def valid_csv_file2():
-    # reserved keywod of SQLite
-
-    file_path = "insert.csv"
-    with open(file_path, "w") as f:
-        f.write("\n".join([
-            "index,No,Player_last_name,Age,Team",
-            "1, 55,D Sam, 31,Raven",
-            "2, 36,J Ifdgg, 30,Raven",
-            "3, 91,K Wedfb, 28,Raven",
-        ]))
-
-    return file_path
-
-
-def valid_excel_file():
-    file_path = "valid.xlsx"
-    workbook = xlsxwriter.Workbook(str(file_path))
-
-    worksheet = workbook.add_worksheet("excel_sheet_a")
-    table = [
-        ["", "", "", ""],
-        ["", "a", "b", "c"],
-        ["", 1, 1.1, "a"],
-        ["", 2, 2.2, "bb"],
-        ["", 3, 3.3, "cc"],
-    ]
-    for row_idx, row in enumerate(table):
-        for col_idx, item in enumerate(row):
-            worksheet.write(row_idx, col_idx, item)
-
-    worksheet = workbook.add_worksheet("excel_sheet_b")
-
-    worksheet = workbook.add_worksheet("excel_sheet_c")
-    table = [
-        ["", "", ""],
-        ["", "", ""],
-        ["a", "b", "c"],
-        [1, 1.1, "a"],
-        [2, "", "bb"],
-        [3, 3.3, ""],
-    ]
-    for row_idx, row in enumerate(table):
-        for col_idx, item in enumerate(row):
-            worksheet.write(row_idx, col_idx, item)
-
-    worksheet = workbook.add_worksheet("excel_sheet_d")
-    table = [
-        ["a'b", 'b"c', "c'd[%]"],
-        [1, 1.1, "a"],
-        [2, "", "bb"],
-        [3, 3.3, ""],
-    ]
-    for row_idx, row in enumerate(table):
-        for col_idx, item in enumerate(row):
-            worksheet.write(row_idx, col_idx, item)
-
-    workbook.close()
-
-    return str(file_path)
-
-
-def invalid_excel_file():
-    file_path = "invalid.xlsx"
-    workbook = xlsxwriter.Workbook(file_path)
-
-    worksheet = workbook.add_worksheet("testsheet1")
-    table = [
-        ["", "", "", ""],
-        ["", "a", "", "c"],
-        ["", "aa", "ab", ""],
-        ["", "", 1.1, "a"],
-    ]
-    for row_idx, row in enumerate(table):
-        for col_idx, item in enumerate(row):
-            worksheet.write(row_idx, col_idx, item)
-
-    worksheet = workbook.add_worksheet("testsheet2")
-
-    workbook.close()
-
-    return file_path
-
-
-def invalid_excel_file2():
-    file_path = "invalid2.xlsx"
-    path.Path(file_path).touch()
-
-    return file_path
-
-
-def valid_html_file():
-    file_path = "htmltable.html"
-    with open(file_path, "w") as f:
-        f.write("""<title>testtitle</title>
-<table id="tablename">
-    <caption>caption</caption>
-    <tr>
-      <th>a</th>
-      <th>b</th>
-      <th>c</th>
-    </tr>
-    <tr>
-      <td align="right">1</td>
-      <td align="right">123.1</td>
-      <td align="left">a</td>
-    </tr>
-    <tr>
-      <td align="right">2</td>
-      <td align="right">2.2</td>
-      <td align="left">bb</td>
-    </tr>
-    <tr>
-      <td align="right">3</td>
-      <td align="right">3.3</td>
-      <td align="left">ccc</td>
-    </tr>
-</table>
-<table>
-    <tr>
-      <th>a</th>
-      <th>b</th>
-    </tr>
-    <tr>
-      <td align="right">1</td>
-      <td align="right">123.1</td>
-    </tr>
-    <tr>
-      <td align="right">2</td>
-      <td align="right">2.2</td>
-    </tr>
-    <tr>
-      <td align="right">3</td>
-      <td align="right">3.3</td>
-    </tr>
-</table>
-""")
-
-    return file_path
-
-
-def invalid_html_file():
-    file_path = "invalid_html.html"
-    with open(file_path, "w") as f:
-        f.write("""<html>
-  <head>
-    header
-  </head>
-  <body>
-    hogehoge
-  </body>
-</html>
-""")
-
-    return file_path
-
-
-def valid_markdown_file():
-    file_path = "valid_mdtable.md"
-    with open(file_path, "w") as f:
-        f.write(""" a |  b  | c 
---:|----:|---
-  1|123.1|a  
-  2|  2.2|bb 
-  3|  3.3|ccc
-""")
-
-    return file_path
-
-
-def valid_multibyte_char_file():
-    file_path = "valid_multibyte_char.csv"
-    with io.open(file_path, "w", encoding="utf-8") as f:
-        f.write(""""姓","名","生年月日","郵便番号","住所","電話番号"
-"山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
-"山田","次郎","2001/1/2","251-0036","神奈川県藤沢市江の島１丁目","03-9999-9999"
-""")
-
-    return file_path
-
-
-def not_supported_format_file():
-    file_path = "invalid_format.txt"
-    with open(file_path, "w") as f:
-        f.write("invalid format")
-
-    return file_path
+from .dataset import (
+    valid_json_single_file,
+    invalid_json_single_file,
+    valid_json_multi_file,
+    invalid_json_multi_file,
+    valid_csv_file_1,
+    valid_csv_file_2,
+    invalid_csv_file,
+    valid_tsv_file,
+    invalid_tsv_file,
+    valid_excel_file,
+    invalid_excel_file_1,
+    invalid_excel_file_2,
+    valid_html_file,
+    invalid_html_file,
+    valid_ltsv_file,
+    invalid_ltsv_file,
+    valid_markdown_file,
+    valid_multibyte_char_file,
+    not_supported_format_file,
+)
 
 
 class Test_sqlitebiter_file:
@@ -293,18 +57,23 @@ class Test_sqlitebiter_file:
     @pytest.mark.parametrize(["file_creator", "expected"], [
         [valid_json_single_file, ExitCode.SUCCESS],
         [valid_json_multi_file, ExitCode.SUCCESS],
-        [valid_csv_file, ExitCode.SUCCESS],
-        [valid_csv_file2, ExitCode.SUCCESS],
+        [valid_csv_file_1, ExitCode.SUCCESS],
+        [valid_csv_file_2, ExitCode.SUCCESS],
+        [valid_tsv_file, ExitCode.SUCCESS],
         [valid_excel_file, ExitCode.SUCCESS],
         [valid_html_file, ExitCode.SUCCESS],
+        [valid_ltsv_file, ExitCode.SUCCESS],
         [valid_markdown_file, ExitCode.SUCCESS],
         [valid_multibyte_char_file, ExitCode.SUCCESS],
 
+        [invalid_csv_file, ExitCode.FAILED_CONVERT],
         [invalid_json_single_file, ExitCode.FAILED_CONVERT],
         [invalid_json_multi_file, ExitCode.FAILED_CONVERT],
-        [invalid_excel_file, ExitCode.NO_INPUT],
-        [invalid_excel_file2, ExitCode.FAILED_CONVERT],
+        [invalid_excel_file_1, ExitCode.NO_INPUT],
+        [invalid_excel_file_2, ExitCode.FAILED_CONVERT],
         [invalid_html_file, ExitCode.NO_INPUT],
+        [invalid_ltsv_file, ExitCode.FAILED_CONVERT],
+        [invalid_tsv_file, ExitCode.FAILED_CONVERT],
         [not_supported_format_file, ExitCode.FAILED_CONVERT],
     ])
     def test_normal_one_file(self, file_creator, expected):
@@ -325,10 +94,12 @@ class Test_sqlitebiter_file:
             file_list = [
                 valid_json_single_file(),
                 valid_json_multi_file(),
-                valid_csv_file(),
-                valid_csv_file2(),
+                valid_csv_file_1(),
+                valid_csv_file_2(),
+                valid_tsv_file(),
                 valid_excel_file(),
                 valid_html_file(),
+                valid_ltsv_file(),
                 valid_markdown_file(),
                 valid_multibyte_char_file(),
             ]
@@ -336,6 +107,46 @@ class Test_sqlitebiter_file:
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
 
             assert result.exit_code == ExitCode.SUCCESS
+
+    @pytest.mark.parametrize(
+        ["file_creator", "verbosity_option", "expected"],
+        [
+            [valid_csv_file_1, "-v", ExitCode.SUCCESS],
+            [valid_csv_file_1, "-vv", ExitCode.SUCCESS],
+            [valid_csv_file_1, "-vvv", ExitCode.SUCCESS],
+        ]
+    )
+    def test_smoke_verbose(self, file_creator, verbosity_option, expected):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            result = runner.invoke(
+                cmd, [verbosity_option, "file", file_path, "-o", db_path])
+            assert result.exit_code == expected, file_path
+
+    @pytest.mark.parametrize(
+        ["file_creator", "verbosity_option", "expected"],
+        [
+            [valid_csv_file_1, "--quiet", ExitCode.SUCCESS],
+        ]
+    )
+    def test_smoke_quiet(
+            self, capsys, file_creator, verbosity_option, expected):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            result = runner.invoke(
+                cmd, [verbosity_option, "file", file_path, "-o", db_path])
+
+            assert result.exit_code == expected, file_path
+
+            out, _err = capsys.readouterr()
+
+            assert out.strip() == ""
 
     def test_abnormal_empty(self):
         runner = CliRunner()
@@ -354,11 +165,14 @@ class Test_sqlitebiter_file:
 
         with runner.isolated_filesystem():
             file_list = [
+                invalid_csv_file(),
                 invalid_json_single_file(),
                 invalid_json_multi_file(),
-                invalid_excel_file(),
-                invalid_excel_file2(),
+                invalid_excel_file_1(),
+                invalid_excel_file_2(),
                 invalid_html_file(),
+                invalid_ltsv_file(),
+                invalid_tsv_file(),
                 not_supported_format_file(),
             ]
 
@@ -380,15 +194,22 @@ class Test_sqlitebiter_file:
                 valid_json_multi_file(),
                 invalid_json_multi_file(),
 
-                valid_csv_file(),
-                valid_csv_file2(),
+                valid_csv_file_1(),
+                valid_csv_file_2(),
+                invalid_csv_file(),
+
+                valid_tsv_file(),
+                invalid_tsv_file(),
 
                 valid_excel_file(),
-                invalid_excel_file(),
-                invalid_excel_file2(),
+                invalid_excel_file_1(),
+                invalid_excel_file_2(),
 
                 valid_html_file(),
                 invalid_html_file(),
+
+                valid_ltsv_file(),
+                invalid_ltsv_file(),
 
                 valid_markdown_file(),
 
@@ -403,7 +224,9 @@ class Test_sqlitebiter_file:
                 'singlejson_json1', 'multijson_table1', 'multijson_table2',
                 'csv_a', "rename_insert",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
+                "valid_ltsv_a",
                 'testtitle_tablename', 'testtitle_html2',
+                'tsv_a',
                 'valid_mdtable_markdown1',
             ]
 
@@ -420,11 +243,10 @@ class Test_sqlitebiter_file:
                 "multijson_table2":
                     [(1, 4.0), (2, None), (3, 120.9)],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "rename_insert":
-                    [
-                        (1, 55, 'D Sam', 31, 'Raven'),
-                        (2, 36, 'J Ifdgg', 30, 'Raven'),
-                        (3, 91, 'K Wedfb', 28, 'Raven'),
+                "rename_insert": [
+                    (1, 55, 'D Sam', 31, 'Raven'),
+                    (2, 36, 'J Ifdgg', 30, 'Raven'),
+                    (3, 91, 'K Wedfb', 28, 'Raven'),
                 ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
@@ -434,8 +256,16 @@ class Test_sqlitebiter_file:
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
                 "testtitle_tablename":
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
+
+                "valid_ltsv_a": [
+                    (1, 123.1, u'ltsv0', 1.0, u'1'),
+                    (2, 2.2, u'ltsv1', 2.2, u'2.2'),
+                    (3, 3.3, u'ltsv2', 3.0, u'cccc'),
+                ],
                 "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
+                "tsv_a":
+                    [(1, 4.0, 'tsv0'), (2, 2.1, 'tsv1'), (3, 120.9, 'tsv2')],
                 "valid_mdtable_markdown1":
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
             }
@@ -446,4 +276,9 @@ class Test_sqlitebiter_file:
 
                 message = "table={}, expected={}, actual={}".format(
                     table, expected_data, actual_data)
+
+                print("--- table: {} ---".format(table))
+                print("[expected]\n{}\n".format(expected_data))
+                print("[actual]\n{}\n".format(actual_data))
+
                 assert expected_data == actual_data, message
