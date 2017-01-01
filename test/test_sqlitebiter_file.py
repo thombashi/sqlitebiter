@@ -108,11 +108,14 @@ class Test_sqlitebiter_file:
 
             assert result.exit_code == ExitCode.SUCCESS
 
-    @pytest.mark.parametrize(["file_creator", "verbosity_option", "expected"], [
-        [valid_csv_file_1, "-v", ExitCode.SUCCESS],
-        [valid_csv_file_1, "-vv", ExitCode.SUCCESS],
-        [valid_csv_file_1, "-vvv", ExitCode.SUCCESS],
-    ])
+    @pytest.mark.parametrize(
+        ["file_creator", "verbosity_option", "expected"],
+        [
+            [valid_csv_file_1, "-v", ExitCode.SUCCESS],
+            [valid_csv_file_1, "-vv", ExitCode.SUCCESS],
+            [valid_csv_file_1, "-vvv", ExitCode.SUCCESS],
+        ]
+    )
     def test_smoke_verbose(self, file_creator, verbosity_option, expected):
         db_path = "test.sqlite"
         runner = CliRunner()
@@ -122,6 +125,28 @@ class Test_sqlitebiter_file:
             result = runner.invoke(
                 cmd, [verbosity_option, "file", file_path, "-o", db_path])
             assert result.exit_code == expected, file_path
+
+    @pytest.mark.parametrize(
+        ["file_creator", "verbosity_option", "expected"],
+        [
+            [valid_csv_file_1, "--quiet", ExitCode.SUCCESS],
+        ]
+    )
+    def test_smoke_quiet(
+            self, capsys, file_creator, verbosity_option, expected):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            result = runner.invoke(
+                cmd, [verbosity_option, "file", file_path, "-o", db_path])
+
+            assert result.exit_code == expected, file_path
+
+            out, _err = capsys.readouterr()
+
+            assert out.strip() == ""
 
     def test_abnormal_empty(self):
         runner = CliRunner()

@@ -26,10 +26,12 @@ CONTEXT_SETTINGS = dict(
     obj={},
 )
 MAX_VERBOSITY_LEVEL = 2
+QUIET_LOG_LEVEL = logbook.NOTSET
 COMPLETION_MESSAGE = u"----- sqlitebiter completed: created tables -----"
 
-handler = logbook.StderrHandler()
-handler.push_application()
+logbook.StderrHandler(
+    level=logbook.DEBUG,
+    format_string='[{record.level_name}] {record.message}').push_application()
 
 
 def create_database(ctx, database_path):
@@ -46,15 +48,10 @@ def create_database(ctx, database_path):
         return simplesqlite.SimpleSQLite(db_path, "w")
 
 
-def _setup_logger_from_context(ctx, logger):
-    log_level = ctx.obj.get("LOG_LEVEL")
-
-    if log_level == logbook.NOTSET:
+def _setup_logger_from_context(logger, log_level):
+    if log_level == QUIET_LOG_LEVEL:
         logger.disable()
         ptr.logger.disable()
-    elif log_level is None:
-        log_level = logbook.INFO
-        ptr.logger.level = logbook.INFO
 
     logger.level = log_level
     ptr.logger.level = log_level
@@ -74,13 +71,13 @@ def _get_format_type_from_path(file_path):
     "--debug", "log_level", flag_value=logbook.DEBUG,
     help="for debug print.")
 @click.option(
-    "--quiet", "log_level", flag_value=logbook.NOTSET,
+    "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL,
     help="suppress execution log messages.")
 @click.pass_context
 def cmd(ctx, is_append_table, verbosity_level, log_level):
     ctx.obj["is_append_table"] = is_append_table
     ctx.obj["verbosity_level"] = verbosity_level
-    ctx.obj["LOG_LEVEL"] = log_level
+    ctx.obj["LOG_LEVEL"] = logbook.INFO if log_level is None else log_level
 
 
 def get_schema_extractor(source, verbosity_level):
@@ -127,7 +124,7 @@ def file(ctx, files, output_path):
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
-    _setup_logger_from_context(ctx, logger)
+    _setup_logger_from_context(logger, ctx.obj["LOG_LEVEL"])
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -164,11 +161,10 @@ def file(ctx, files, output_path):
                     result_counter.inc_fail()
                     continue
 
-                log_message = get_success_log_format(ctx).format(
+                log_message = get_success_log_format(verbosity_level).format(
                     file_path,
                     extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
-                click.echo(log_message)
-                logger.debug(log_message)
+                logger.info(log_message)
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
                 file_path, str(e)))
@@ -221,7 +217,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
-    _setup_logger_from_context(ctx, logger)
+    _setup_logger_from_context(logger, ctx.obj["LOG_LEVEL"])
 
     proxies = {}
     if dataproperty.is_not_empty_string(proxy):
@@ -258,11 +254,10 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_fail()
                 continue
 
-            log_message = get_success_log_format(ctx).format(
+            log_message = get_success_log_format(verbosity_level).format(
                 url,
                 extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
-            click.echo(log_message)
-            logger.debug(log_message)
+            logger.info(log_message)
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
