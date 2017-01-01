@@ -29,6 +29,7 @@ from .dataset import (
     invalid_excel_file_2,
     valid_html_file,
     invalid_html_file,
+    valid_ltsv_file,
     valid_markdown_file,
     valid_multibyte_char_file,
     not_supported_format_file,
@@ -58,6 +59,7 @@ class Test_sqlitebiter_file:
         [valid_tsv_file, ExitCode.SUCCESS],
         [valid_excel_file, ExitCode.SUCCESS],
         [valid_html_file, ExitCode.SUCCESS],
+        [valid_ltsv_file, ExitCode.SUCCESS],
         [valid_markdown_file, ExitCode.SUCCESS],
         [valid_multibyte_char_file, ExitCode.SUCCESS],
 
@@ -91,6 +93,7 @@ class Test_sqlitebiter_file:
                 valid_tsv_file(),
                 valid_excel_file(),
                 valid_html_file(),
+                valid_ltsv_file(),
                 valid_markdown_file(),
                 valid_multibyte_char_file(),
             ]
@@ -154,6 +157,8 @@ class Test_sqlitebiter_file:
                 valid_html_file(),
                 invalid_html_file(),
 
+                valid_ltsv_file(),
+
                 valid_markdown_file(),
 
                 not_supported_format_file(),
@@ -167,6 +172,7 @@ class Test_sqlitebiter_file:
                 'singlejson_json1', 'multijson_table1', 'multijson_table2',
                 'csv_a', "rename_insert",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
+                "valid_ltsv_a",
                 'testtitle_tablename', 'testtitle_html2',
                 'tsv_a',
                 'valid_mdtable_markdown1',
@@ -189,7 +195,7 @@ class Test_sqlitebiter_file:
                     (1, 55, 'D Sam', 31, 'Raven'),
                     (2, 36, 'J Ifdgg', 30, 'Raven'),
                     (3, 91, 'K Wedfb', 28, 'Raven'),
-                    ],
+                ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
@@ -198,6 +204,12 @@ class Test_sqlitebiter_file:
                     [(1.0, '1.1', 'a'), (2.0, '', 'bb'), (3.0, '3.3', '')],
                 "testtitle_tablename":
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
+
+                "valid_ltsv_a": [
+                    (1, 123.1, u'ltsv0', 1.0, u'1'),
+                    (2, 2.2, u'ltsv1', 2.2, u'2.2'),
+                    (3, 3.3, u'ltsv2', 3.0, u'cccc'),
+                ],
                 "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
                 "tsv_a":

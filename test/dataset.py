@@ -249,6 +249,17 @@ def invalid_html_file():
     return file_path
 
 
+def valid_ltsv_file():
+    file_path = "valid_ltsv_a.ltsv"
+    with open(file_path, "w") as f:
+        f.write("""a.0:1\tb-1:123.1\tc_2:"ltsv0"\t"dd":1.0\te.f-g_4:"1"
+a.0:2\tb-1:2.2\tc_2:"ltsv1"\t"dd":2.2\te.f-g_4:"2.2"
+a.0:3\tb-1:3.3\tc_2:"ltsv2"\t"dd":3.0\te.f-g_4:"cccc"
+""")
+
+    return file_path
+
+
 def valid_markdown_file():
     file_path = "valid_mdtable.md"
     with open(file_path, "w") as f:
