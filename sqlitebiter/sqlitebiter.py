@@ -25,7 +25,8 @@ CONTEXT_SETTINGS = dict(
     help_option_names=["-h", "--help"],
     obj={},
 )
-SQLITE_TABLE_VERBOSE_LEVEL = 2
+MAX_VERBOSITY_LEVEL = 2
+COMPLETION_MESSAGE = u"----- sqlitebiter completed: created tables -----"
 
 handler = logbook.StderrHandler()
 handler.push_application()
@@ -82,25 +83,23 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
     ctx.obj["LOG_LEVEL"] = log_level
 
 
-def get_schema_extractor(ctx, con):
-    verbosity_level = ctx.obj.get("verbosity_level")
+def get_schema_extractor(source, verbosity_level):
+    if verbosity_level >= MAX_VERBOSITY_LEVEL:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=0, output_format="table")
+
+    if verbosity_level >= 1:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=3, output_format="text")
 
     if verbosity_level == 0:
         return SqliteSchemaExtractor(
-            con, verbosity_level=0, output_format="text")
+            source, verbosity_level=0, output_format="text")
 
-    if verbosity_level == 1:
-        return SqliteSchemaExtractor(
-            con, verbosity_level=3, output_format="text")
-
-    if verbosity_level >= 2:
-        return SqliteSchemaExtractor(
-            con, verbosity_level=0, output_format="table")
+    raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
 
 
-def get_success_log_format(ctx):
-    verbosity_level = ctx.obj.get("verbosity_level")
-
+def get_success_log_format(verbosity_level):
     if verbosity_level <= 1:
         return u"convert '{:s}' to '{:s}' table"
 
@@ -123,7 +122,8 @@ def file(ctx, files, output_path):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
-    extractor = get_schema_extractor(ctx, con)
+    verbosity_level = ctx.obj.get("verbosity_level")
+    extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
@@ -184,8 +184,9 @@ def file(ctx, files, output_path):
                     _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
-    logger.debug(SqliteSchemaExtractor(
-        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
+    logger.debug(COMPLETION_MESSAGE)
+    logger.debug(
+        get_schema_extractor(output_path, MAX_VERBOSITY_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
 
@@ -215,7 +216,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
-    extractor = get_schema_extractor(ctx, con)
+    verbosity_level = ctx.obj.get("verbosity_level")
+    extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
@@ -265,8 +267,9 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
 
-    logger.debug(SqliteSchemaExtractor(
-        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
+    logger.debug(COMPLETION_MESSAGE)
+    logger.debug(
+        get_schema_extractor(output_path, MAX_VERBOSITY_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
 
@@ -320,8 +323,9 @@ def gs(ctx, credentials, title, output_path):
                 credentials, str(e)))
         result_counter.inc_fail()
 
-    logger.debug(SqliteSchemaExtractor(
-        output_path, SQLITE_TABLE_VERBOSE_LEVEL).dumps())
+    logger.debug(COMPLETION_MESSAGE)
+    logger.debug(
+        get_schema_extractor(output_path, MAX_VERBOSITY_LEVEL).dumps())
 
     sys.exit(result_counter.get_return_code())
 
