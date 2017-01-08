@@ -5,7 +5,7 @@
 
     Usage: sqlitebiter gs [OPTIONS] CREDENTIALS TITLE
     
-      Convert Google Sheets to a SQLite database file.
+      Convert a spreadsheet in Google Sheets to a SQLite database file.
     
       CREDENTIALS: OAuth2 Google credentials file. TITLE: Title of the Google
       Sheets to convert.

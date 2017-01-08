@@ -15,22 +15,22 @@ sqlitebiter
 Summary
 -------
 
-sqlitebiter is a CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets to a SQLite database file.
+A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets to a SQLite database file.
 
 Features
 --------
 
 - Create a SQLite database file from:
-    - file(s):
+    - File(s):
         - CSV
         - Microsoft Excel :superscript:`TM`
-        - HTML: extract table tag data
+        - HTML
         - JSON
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
-        - Markdown: extract Markdown table
+        - Markdown
         - Tab separated values (TSV)
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
-    - URL (fetch data from the Internet)
+    - URL (scrape data from web pages)
 - Multi-byte character support
 
 Usage

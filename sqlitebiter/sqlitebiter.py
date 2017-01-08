@@ -62,7 +62,7 @@ def write_completion_message(logger, database_path, result_counter):
         get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
 
 
-def _setup_logger_from_context(logger, log_level):
+def _setup_logger(logger, log_level):
     if log_level == QUIET_LOG_LEVEL:
         logger.disable()
         ptr.logger.disable()
@@ -139,7 +139,7 @@ def file(ctx, files, output_path):
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter file")
-    _setup_logger_from_context(logger, ctx.obj[Context.LOG_LEVEL])
+    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -218,7 +218,7 @@ def file(ctx, files, output_path):
 @click.pass_context
 def url(ctx, url, format_name, output_path, encoding, proxy):
     """
-    Fetch data from a URL and convert data to a SQLite database file.
+    Scrape tabular data from a URL and convert data to a SQLite database file.
     """
 
     if dataproperty.is_empty_sequence(url):
@@ -230,7 +230,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter url")
-    _setup_logger_from_context(logger, ctx.obj[Context.LOG_LEVEL])
+    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     proxies = {}
     if dataproperty.is_not_empty_string(proxy):
@@ -291,7 +291,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
     """
-    Convert Google Sheets to a SQLite database file.
+    Convert a spreadsheet in Google Sheets to a SQLite database file.
 
     CREDENTIALS: OAuth2 Google credentials file.
     TITLE: Title of the Google Sheets to convert.
@@ -301,7 +301,7 @@ def gs(ctx, credentials, title, output_path):
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter gs")
-    _setup_logger_from_context(ctx, logger)
+    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     loader = simplesqlite.loader.GoogleSheetsTableLoader()
     loader.source = credentials
