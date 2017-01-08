@@ -218,7 +218,7 @@ def file(ctx, files, output_path):
 @click.pass_context
 def url(ctx, url, format_name, output_path, encoding, proxy):
     """
-    Fetch data from a URL and convert data to a SQLite database file.
+    Scrape tabular data from a URL and convert data to a SQLite database file.
     """
 
     if dataproperty.is_empty_sequence(url):
