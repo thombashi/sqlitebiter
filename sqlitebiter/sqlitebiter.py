@@ -291,7 +291,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
     """
-    Convert Google Sheets to a SQLite database file.
+    Convert a spreadsheet in Google Sheets to a SQLite database file.
 
     CREDENTIALS: OAuth2 Google credentials file.
     TITLE: Title of the Google Sheets to convert.
