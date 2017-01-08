@@ -5,7 +5,7 @@
 
     Usage: sqlitebiter url [OPTIONS] URL
 
-      Fetch data from a URL and convert data to a SQLite database file.
+      Scrape tabular data from a URL and convert data to a SQLite database file.
 
     Options:
       --format [csv|excel|html|json|ltsv|markdown|mediawiki|tsv]
