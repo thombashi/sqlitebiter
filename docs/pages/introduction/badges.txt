@@ -2,9 +2,13 @@
    :target: https://pypi.python.org/pypi/sqlitebiter
 
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
-    :target: https://travis-ci.org/thombashi/sqlitebiter
-    :alt: Linux CI test status
+   :target: https://travis-ci.org/thombashi/sqlitebiter
+   :alt: Linux CI test status
 
 .. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows
-    :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
-    :alt: Windows CI test status
+   :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
+   :alt: Windows CI test status
+
+.. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
+   :target: https://github.com/thombashi/sqlitebiter
+   :alt: GitHub repository
