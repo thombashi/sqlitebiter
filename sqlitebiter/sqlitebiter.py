@@ -6,15 +6,17 @@
 """
 
 from __future__ import absolute_import
+
 import sys
 
 import click
 import dataproperty
 import logbook
 import path
-import pytablereader as ptr
 import simplesqlite
 from sqliteschema import SqliteSchemaExtractor
+
+import pytablereader as ptr
 
 from ._counter import ResultCounter
 from ._enum import (
@@ -63,12 +65,13 @@ def write_completion_message(logger, database_path, result_counter):
 
 
 def _setup_logger(logger, log_level):
+    ptr.set_log_level(log_level)
+    simplesqlite.set_log_level(log_level)
+
     if log_level == QUIET_LOG_LEVEL:
         logger.disable()
-        ptr.logger.disable()
 
     logger.level = log_level
-    ptr.logger.level = log_level
 
 
 def _get_format_type_from_path(file_path):
