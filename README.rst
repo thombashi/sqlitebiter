@@ -5,12 +5,16 @@ sqlitebiter
    :target: https://pypi.python.org/pypi/sqlitebiter
 
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
-    :target: https://travis-ci.org/thombashi/sqlitebiter
-    :alt: Linux CI test status
+   :target: https://travis-ci.org/thombashi/sqlitebiter
+   :alt: Linux CI test status
 
 .. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows
-    :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
-    :alt: Windows CI test status
+   :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
+   :alt: Windows CI test status
+
+.. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
+   :target: https://github.com/thombashi/sqlitebiter
+   :alt: GitHub repository
 
 Summary
 -------
@@ -84,12 +88,12 @@ Mandatory Python packages are automatically installed during
 ``sqlitebiter`` installation via ``pip``.
 
 - `click <http://click.pocoo.org/>`__
-- `DataPropery <https://github.com/thombashi/DataProperty>`__
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
+- `typepy <https://github.com/thombashi/typepy>`__
 
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
