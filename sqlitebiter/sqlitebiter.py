@@ -10,11 +10,11 @@ from __future__ import absolute_import
 import sys
 
 import click
-import dataproperty
 import logbook
 import path
 import simplesqlite
 from sqliteschema import SqliteSchemaExtractor
+import typepy
 
 import pytablereader as ptr
 
@@ -43,7 +43,7 @@ def create_database(ctx, database_path):
 
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
-    if dataproperty.is_not_empty_string(dir_path):
+    if typepy.is_not_null_string(dir_path):
         dir_path.makedirs_p()
 
     if is_append_table:
@@ -133,7 +133,7 @@ def file(ctx, files, output_path):
     to a SQLite database file.
     """
 
-    if dataproperty.is_empty_sequence(files):
+    if typepy.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
@@ -224,7 +224,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     Scrape tabular data from a URL and convert data to a SQLite database file.
     """
 
-    if dataproperty.is_empty_sequence(url):
+    if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
@@ -236,7 +236,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     proxies = {}
-    if dataproperty.is_not_empty_string(proxy):
+    if typepy.is_not_null_string(proxy):
         proxies = {
             "http": proxy,
             "https": proxy,
