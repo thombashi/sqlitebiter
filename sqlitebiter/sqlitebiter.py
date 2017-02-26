@@ -35,7 +35,8 @@ QUIET_LOG_LEVEL = logbook.NOTSET
 
 logbook.StderrHandler(
     level=logbook.DEBUG,
-    format_string='[{record.level_name}] {record.message}').push_application()
+    format_string="[{record.level_name}] {record.channel}: {record.message}"
+).push_application()
 
 
 def create_database(ctx, database_path):
