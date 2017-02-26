@@ -7,6 +7,7 @@
 
 from __future__ import absolute_import
 
+import errno
 import sys
 
 import click
@@ -256,6 +257,9 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     except ptr.HTTPError as e:
         logger.error(e)
         sys.exit(ExitCode.FAILED_HTTP)
+    except ptr.ProxyError as e:
+        logger.error(e)
+        sys.exit(errno.ECONNABORTED)
 
     try:
         for tabledata in loader.load():
