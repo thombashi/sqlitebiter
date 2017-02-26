@@ -34,7 +34,6 @@ setuptools.setup(
     name="sqlitebiter",
     version=sqlitebiter.VERSION,
     url="https://github.com/thombashi/sqlitebiter",
-    bugtrack_url="https://github.com/thombashi/sqlitebiter/issues",
 
     author="Tsuyoshi Hombashi",
     author_email="gogogo.vm@gmail.com",
