@@ -19,12 +19,12 @@ Mandatory Python packages are automatically installed during
 ``sqlitebiter`` installation via ``pip``.
 
 - `click <http://click.pocoo.org/>`__
-- `DataPropery <https://github.com/thombashi/DataProperty>`__
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
+- `typepy <https://github.com/thombashi/typepy>`__
 
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
