@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 import sys
 
+from path import Path
 import readmemaker
 
 
@@ -20,6 +21,8 @@ def write_examples(maker):
     maker.set_indent_level(0)
     maker.write_chapter("Usage")
 
+    usage_root = Path("pages").joinpath("usage")
+
     maker.inc_indent_level()
     maker.write_chapter("Create SQLite database from files")
 
@@ -28,7 +31,7 @@ def write_examples(maker):
     ])
 
     maker.write_chapter("Create SQLite database from URL")
-    maker.write_example_file("url/usage.txt")
+    maker.write_file(usage_root.joinpath("url", "usage.txt"))
 
     maker.inc_indent_level()
     maker.write_chapter("For more information")

@@ -1,3 +1,4 @@
-readmemaker
+path.py
+readmemaker>=0.3.0
 sphinx_rtd_theme
 Sphinx

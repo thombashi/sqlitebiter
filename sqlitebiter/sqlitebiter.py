@@ -6,15 +6,18 @@
 """
 
 from __future__ import absolute_import
+
+import errno
 import sys
 
 import click
-import dataproperty
 import logbook
 import path
-import pytablereader as ptr
 import simplesqlite
 from sqliteschema import SqliteSchemaExtractor
+import typepy
+
+import pytablereader as ptr
 
 from ._counter import ResultCounter
 from ._enum import (
@@ -33,7 +36,8 @@ QUIET_LOG_LEVEL = logbook.NOTSET
 
 logbook.StderrHandler(
     level=logbook.DEBUG,
-    format_string='[{record.level_name}] {record.message}').push_application()
+    format_string="[{record.level_name}] {record.channel}: {record.message}"
+).push_application()
 
 
 def create_database(ctx, database_path):
@@ -41,7 +45,7 @@ def create_database(ctx, database_path):
 
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
-    if dataproperty.is_not_empty_string(dir_path):
+    if typepy.is_not_null_string(dir_path):
         dir_path.makedirs_p()
 
     if is_append_table:
@@ -63,12 +67,13 @@ def write_completion_message(logger, database_path, result_counter):
 
 
 def _setup_logger(logger, log_level):
+    ptr.set_log_level(log_level)
+    simplesqlite.set_log_level(log_level)
+
     if log_level == QUIET_LOG_LEVEL:
         logger.disable()
-        ptr.logger.disable()
 
     logger.level = log_level
-    ptr.logger.level = log_level
 
 
 def _get_format_type_from_path(file_path):
@@ -130,7 +135,7 @@ def file(ctx, files, output_path):
     to a SQLite database file.
     """
 
-    if dataproperty.is_empty_sequence(files):
+    if typepy.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
@@ -221,7 +226,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     Scrape tabular data from a URL and convert data to a SQLite database file.
     """
 
-    if dataproperty.is_empty_sequence(url):
+    if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
     con = create_database(ctx, output_path)
@@ -233,7 +238,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     proxies = {}
-    if dataproperty.is_not_empty_string(proxy):
+    if typepy.is_not_null_string(proxy):
         proxies = {
             "http": proxy,
             "https": proxy,
@@ -252,6 +257,9 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     except ptr.HTTPError as e:
         logger.error(e)
         sys.exit(ExitCode.FAILED_HTTP)
+    except ptr.ProxyError as e:
+        logger.error(e)
+        sys.exit(errno.ECONNABORTED)
 
     try:
         for tabledata in loader.load():

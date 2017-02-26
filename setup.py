@@ -6,9 +6,9 @@
 """
 
 import os.path
-import setuptools
 import sys
 
+import setuptools
 import sqlitebiter
 
 
@@ -34,7 +34,6 @@ setuptools.setup(
     name="sqlitebiter",
     version=sqlitebiter.VERSION,
     url="https://github.com/thombashi/sqlitebiter",
-    bugtrack_url="https://github.com/thombashi/sqlitebiter/issues",
 
     author="Tsuyoshi Hombashi",
     author_email="gogogo.vm@gmail.com",
@@ -66,6 +65,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Topic :: Database",
     ],
     entry_points={
