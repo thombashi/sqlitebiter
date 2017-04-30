@@ -318,7 +318,7 @@ def gs(ctx, credentials, title, output_path):
     logger = logbook.Logger("sqlitebiter gs")
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
-    loader = simplesqlite.loader.GoogleSheetsTableLoader()
+    loader = ptr.GoogleSheetsTableLoader()
     loader.source = credentials
     loader.title = title
 
