@@ -56,11 +56,10 @@ def get_schema_extractor(source, verbosity_level):
     raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
 
 
-def get_success_log_format(verbosity_level):
-    if verbosity_level <= 1:
-        return u"convert '{:s}' to '{:s}' table"
+def get_success_message(verbosity_level, source, to_table_name):
+    message_template = u"convert '{:s}' to '{:s}' table"
 
-    return u"convert '{:s}' to {:s}"
+    return message_template.format(source, to_table_name)
 
 
 def create_database(ctx, database_path):
@@ -187,11 +186,10 @@ def file(ctx, files, output_path):
                     result_counter.inc_fail()
                     continue
 
-                log_message = get_success_log_format(verbosity_level).format(
-                    file_path,
+                logger.info(get_success_message(
+                    verbosity_level, file_path,
                     extractor.get_table_schema_text(
-                        sqlite_tabledata.table_name).strip())
-                logger.info(log_message)
+                        sqlite_tabledata.table_name).strip()))
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
                 file_path, str(e)))
@@ -282,11 +280,10 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_fail()
                 continue
 
-            log_message = get_success_log_format(verbosity_level).format(
-                url,
+            logger.info(get_success_message(
+                verbosity_level, url,
                 extractor.get_table_schema_text(
-                    sqlite_tabledata.table_name).strip())
-            logger.info(log_message)
+                    sqlite_tabledata.table_name).strip()))
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
@@ -314,6 +311,8 @@ def gs(ctx, credentials, title, output_path):
     """
 
     con = create_database(ctx, output_path)
+    verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
+    extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter gs")
@@ -325,14 +324,15 @@ def gs(ctx, credentials, title, output_path):
 
     try:
         for tabledata in loader.load():
-            click.echo(u"convert '{:s}' to '{:s}' table".format(
-                title, tabledata.table_name))
-
             try:
                 con.create_table_from_tabledata(tabledata)
                 result_counter.inc_success()
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
+
+            logger.info(get_success_message(
+                verbosity_level, "google sheets",
+                extractor.get_table_schema_text(tabledata.table_name).strip()))
     except ptr.OpenError as e:
         logger.error(e)
         result_counter.inc_fail()
