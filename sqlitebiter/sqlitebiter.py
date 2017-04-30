@@ -149,7 +149,7 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
-            logger.debug(u"file not found: {}".format(file_path))
+            logger.error(u"file not found: {}".format(file_path))
             result_counter.inc_fail()
             continue
 
