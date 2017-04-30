@@ -183,7 +183,8 @@ def file(ctx, files, output_path):
 
                 log_message = get_success_log_format(verbosity_level).format(
                     file_path,
-                    extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
+                    extractor.get_table_schema_text(
+                        sqlite_tabledata.table_name).strip())
                 logger.info(log_message)
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
@@ -277,7 +278,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
             log_message = get_success_log_format(verbosity_level).format(
                 url,
-                extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
+                extractor.get_table_schema_text(
+                    sqlite_tabledata.table_name).strip())
             logger.info(log_message)
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
