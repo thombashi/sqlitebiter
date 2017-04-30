@@ -1,7 +1,7 @@
 click>=6.7
 logbook
 path.py
-pytablereader>=0.8.10
-SimpleSQLite>=0.7.6
-sqliteschema>=0.7.5
-typepy>=0.0.4
+pytablereader>=0.9.0
+SimpleSQLite>=0.8.0
+sqliteschema>=0.7.7
+typepy>=0.0.8

@@ -1,6 +1,4 @@
 Create a SQLite database from URL
 -----------------------------------------------------------
-
 ``sqlitebiter url`` is a subcommand to 
 fetch table data from the Internet and convert to a SQLite database file.
-

@@ -9,7 +9,7 @@ Install via pip (recommended)
 
 .. code:: console
 
-    sudo pip install sqlitebiter
+    pip install sqlitebiter
 
 Python package dependencies are as follows.
 
@@ -28,7 +28,9 @@ Mandatory Python packages are automatically installed during
 
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-`Manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ required to use Google Sheets feature.
+Following Python packages are required to  
+`install manually <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ 
+when you use Google Sheets feature.
 
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
@@ -50,4 +52,24 @@ Installing executable file in Windows
 #. Navigate to https://github.com/thombashi/sqlitebiter/releases
 #. Download the latest version of the ``sqlitebiter_win_x64.zip``
 #. Unzip the file
+#. Execute ``sqlitebiter.exe`` in either Command Prompt or in PowerShell
+
+.. code-block:: batch
+
+    >cd sqlitebiter_win_x64
+    >sqlitebiter.exe -h
+    Usage: sqlitebiter.exe [OPTIONS] COMMAND [ARGS]...
+
+    Options:
+      --version      Show the version and exit.
+      --append       append table(s) to existing database.
+      -v, --verbose
+      --debug        for debug print.
+      --quiet        suppress execution log messages.
+      -h, --help     Show this message and exit.
+
+    Commands:
+      file  Convert tabular data within...
+      gs    Convert a spreadsheet in Google Sheets to a...
+      url   Scrape tabular data from a URL and convert...
 

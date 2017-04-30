@@ -6,7 +6,7 @@ Following python packages are required to use Google Sheets feature.
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/install.html>`_
 
-Installation:
+Dependency Python package installation:
 
 ::
 

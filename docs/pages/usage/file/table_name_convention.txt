@@ -1,0 +1,21 @@
+Table naming convention
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Table name will be automatically decided as follows for each format:
+
+    ========  =============================================================================
+     Format       Table Name                                                               
+    ========  =============================================================================
+    CSV       ``<filename>``                                                               
+    Excel     ``<Sheet name>``                                                             
+    HTML      | ``<title>_<key>``. ``<title>`` will bee replaced with title tag.           
+              | ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag.
+              | **(2)** unique string if ``id`` attribute not present in the table tag.    
+    JSON                                                                                   
+    LTSV      ``<filename>``                                                               
+    Markdown  ``<filename>``                                                               
+    TSV       ``<filename>``                                                               
+    ========  =============================================================================
+
+- ``<filename>`` is replaced with filename of converting file (without extensions)
+    - e.g. ``<filename>`` of the ``sample.csv`` is ``sample``
+- ``<title>_<key>``. ``<title>`` will bee replaced with title tag. ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag. **(2)** unique string if ``id`` attribute not present in the table tag.

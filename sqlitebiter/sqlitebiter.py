@@ -40,6 +40,28 @@ logbook.StderrHandler(
 ).push_application()
 
 
+def get_schema_extractor(source, verbosity_level):
+    if verbosity_level >= MAX_VERBOSITY_LEVEL:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=0, output_format="table")
+
+    if verbosity_level >= 1:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=3, output_format="text")
+
+    if verbosity_level == 0:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=0, output_format="text")
+
+    raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
+
+
+def get_success_message(verbosity_level, source, to_table_name):
+    message_template = u"convert '{:s}' to '{:s}' table"
+
+    return message_template.format(source, to_table_name)
+
+
 def create_database(ctx, database_path):
     is_append_table = ctx.obj.get(Context.IS_APPEND_TABLE)
 
@@ -100,39 +122,16 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
         logbook.INFO if log_level is None else log_level)
 
 
-def get_schema_extractor(source, verbosity_level):
-    if verbosity_level >= MAX_VERBOSITY_LEVEL:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=0, output_format="table")
-
-    if verbosity_level >= 1:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=3, output_format="text")
-
-    if verbosity_level == 0:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=0, output_format="text")
-
-    raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
-
-
-def get_success_log_format(verbosity_level):
-    if verbosity_level <= 1:
-        return u"convert '{:s}' to '{:s}' table"
-
-    return u"convert '{:s}' to {:s}"
-
-
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file")
+    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
 @click.pass_context
 def file(ctx, files, output_path):
     """
-    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/TSV file(s)
-    to a SQLite database file.
+    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV
+    file(s) to a SQLite database file.
     """
 
     if typepy.is_empty_sequence(files):
@@ -149,8 +148,14 @@ def file(ctx, files, output_path):
     for file_path in files:
         file_path = path.Path(file_path)
         if not file_path.isfile():
-            logger.debug(u"file not found: {}".format(file_path))
+            logger.error(u"file not found: {}".format(file_path))
             result_counter.inc_fail()
+            continue
+
+        if file_path == output_path:
+            logger.warn(
+                u"skip a file which same path as the output file ({})".format(
+                    file_path))
             continue
 
         logger.debug(u"converting '{}'".format(file_path))
@@ -181,10 +186,10 @@ def file(ctx, files, output_path):
                     result_counter.inc_fail()
                     continue
 
-                log_message = get_success_log_format(verbosity_level).format(
-                    file_path,
-                    extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
-                logger.info(log_message)
+                logger.info(get_success_message(
+                    verbosity_level, file_path,
+                    extractor.get_table_schema_text(
+                        sqlite_tabledata.table_name).strip()))
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
                 file_path, str(e)))
@@ -213,10 +218,10 @@ def file(ctx, files, output_path):
     help="Data format to loading (defaults to html).")
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file.")
+    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
 @click.option(
     "--encoding", type=str, metavar="ENCODING", default="utf-8",
-    help="Defaults to utf-8")
+    help="HTML page read encoding. Defaults to utf-8.")
 @click.option(
     "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
@@ -275,10 +280,10 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_fail()
                 continue
 
-            log_message = get_success_log_format(verbosity_level).format(
-                url,
-                extractor.get_table_schema_text(sqlite_tabledata.table_name).strip())
-            logger.info(log_message)
+            logger.info(get_success_message(
+                verbosity_level, url,
+                extractor.get_table_schema_text(
+                    sqlite_tabledata.table_name).strip()))
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
         result_counter.inc_fail()
@@ -295,7 +300,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     "title", type=str)
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="output path of the SQLite database file")
+    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
     """
@@ -306,25 +311,28 @@ def gs(ctx, credentials, title, output_path):
     """
 
     con = create_database(ctx, output_path)
+    verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
+    extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
     logger = logbook.Logger("sqlitebiter gs")
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
-    loader = simplesqlite.loader.GoogleSheetsTableLoader()
+    loader = ptr.GoogleSheetsTableLoader()
     loader.source = credentials
     loader.title = title
 
     try:
         for tabledata in loader.load():
-            click.echo(u"convert '{:s}' to '{:s}' table".format(
-                title, tabledata.table_name))
-
             try:
                 con.create_table_from_tabledata(tabledata)
                 result_counter.inc_success()
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
+
+            logger.info(get_success_message(
+                verbosity_level, "google sheets",
+                extractor.get_table_schema_text(tabledata.table_name).strip()))
     except ptr.OpenError as e:
         logger.error(e)
         result_counter.inc_fail()
