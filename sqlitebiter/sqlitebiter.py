@@ -127,7 +127,7 @@ def get_success_log_format(verbosity_level):
 @click.argument("files", type=str, nargs=-1)
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file")
+    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
 @click.pass_context
 def file(ctx, files, output_path):
     """
