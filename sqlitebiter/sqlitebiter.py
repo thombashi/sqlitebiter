@@ -130,8 +130,8 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
 @click.pass_context
 def file(ctx, files, output_path):
     """
-    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/TSV file(s)
-    to a SQLite database file.
+    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV
+    file(s) to a SQLite database file.
     """
 
     if typepy.is_empty_sequence(files):
@@ -300,7 +300,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     "title", type=str)
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="output path of the SQLite database file")
+    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
     """
