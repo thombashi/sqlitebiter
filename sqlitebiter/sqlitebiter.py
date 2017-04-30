@@ -40,6 +40,29 @@ logbook.StderrHandler(
 ).push_application()
 
 
+def get_schema_extractor(source, verbosity_level):
+    if verbosity_level >= MAX_VERBOSITY_LEVEL:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=0, output_format="table")
+
+    if verbosity_level >= 1:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=3, output_format="text")
+
+    if verbosity_level == 0:
+        return SqliteSchemaExtractor(
+            source, verbosity_level=0, output_format="text")
+
+    raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
+
+
+def get_success_log_format(verbosity_level):
+    if verbosity_level <= 1:
+        return u"convert '{:s}' to '{:s}' table"
+
+    return u"convert '{:s}' to {:s}"
+
+
 def create_database(ctx, database_path):
     is_append_table = ctx.obj.get(Context.IS_APPEND_TABLE)
 
@@ -98,29 +121,6 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = (
         logbook.INFO if log_level is None else log_level)
-
-
-def get_schema_extractor(source, verbosity_level):
-    if verbosity_level >= MAX_VERBOSITY_LEVEL:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=0, output_format="table")
-
-    if verbosity_level >= 1:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=3, output_format="text")
-
-    if verbosity_level == 0:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=0, output_format="text")
-
-    raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
-
-
-def get_success_log_format(verbosity_level):
-    if verbosity_level <= 1:
-        return u"convert '{:s}' to '{:s}' table"
-
-    return u"convert '{:s}' to {:s}"
 
 
 @cmd.command()
