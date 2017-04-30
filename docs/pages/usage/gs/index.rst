@@ -2,6 +2,6 @@
 
 .. include:: requirement.txt
 
-.. include:: help.txt
-
 .. include:: usage.txt
+
+.. include:: help.txt

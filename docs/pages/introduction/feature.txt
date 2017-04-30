@@ -9,6 +9,7 @@ Features
         - JSON
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - Markdown
+        - SQLite
         - Tab separated values (TSV)
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
     - URL (scrape data from web pages)

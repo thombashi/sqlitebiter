@@ -1,43 +1,22 @@
-Create a SQLite database from CSV/Excel/JSON/etc. files
+Create a SQLite database from CSV/Excel/JSON/SQLite/etc. files
 ------------------------------------------------------------------
 ``sqlitebiter file`` is a subcommand to convert tabular data file(s) to a SQLite database file.
-Following table show the acceptable data information:
-Format name and available file extensions corresponding format.
+Following table shows that the acceptable data format
+(format name and file extensions):
 
 .. table:: Available data formats
 
-    ========  ==================  =======================================================
+    ========  ========================  =================================================================
      Format     File Extension                       Remarks                         
-    ========  ==================  =======================================================
+    ========  ========================  =================================================================
     CSV       ``.csv``                                                               
-    Excel     ``.xlsx``/``.xls``  Create a table for each sheet.                       
-    HTML      ``.html``/``.htm``  | Scrape tabular data from ``<table>`` tags.           
-                                  | And create a table for each ``<table>`` tag data.    
-    JSON      ``.json``                                                                                                                                             
+    Excel     ``.xlsx``/``.xls``        Create table for each sheet in the Excel workbook.
+    HTML      ``.html``/``.htm``        | Scrape tabular data from ``<table>`` tags in the HTML file.
+                                        | And create table for each ``<table>`` tag data.
+    JSON      ``.json``                                                                  
     LTSV      ``.ltsv``                                                              
-    Markdown  ``.md``             | Extract tabular data in the Markdown.                
-                                  | And create a table for each ``<table>`` tabular data.
+    Markdown  ``.md``                   | Extract tabular data in the Markdown file.
+                                        | And create a table for each ``<table>`` tabular data.
+    SQLite    ``.sqlite``/``.sqlite3``  
     TSV       ``.tsv``                                                               
-    ========  ==================  =======================================================
-
-Table naming
-~~~~~~~~~~~~~~~~~~
-Table name will be generated automatically as follows for each format:
- 
-    ========  =============================================================================
-     Format       Table Name                                                               
-    ========  =============================================================================
-    CSV       ``<filename>``                                                               
-    Excel     ``<Sheet name>``                                                             
-    HTML      | ``<title>_<key>``. ``<title>`` will bee replaced with title tag.           
-              | ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag.
-              | **(2)** unique string if ``id`` attribute not present in the table tag.    
-    JSON                                                                                   
-    LTSV      ``<filename>``                                                               
-    Markdown  ``<filename>``                                                               
-    TSV       ``<filename>``                                                               
-    ========  =============================================================================
-
-- ``<filename>`` is replaced with filename of converting file (without extensions)
-    - e.g. ``<filename>`` of the ``sample.csv`` is ``sample``
-- ``<title>_<key>``. ``<title>`` will bee replaced with title tag. ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag. **(2)** unique string if ``id`` attribute not present in the table tag.
+    ========  ========================  =================================================================
