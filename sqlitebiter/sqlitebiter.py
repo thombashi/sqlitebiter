@@ -214,10 +214,10 @@ def file(ctx, files, output_path):
     help="Data format to loading (defaults to html).")
 @click.option(
     "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file.")
+    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
 @click.option(
     "--encoding", type=str, metavar="ENCODING", default="utf-8",
-    help="Defaults to utf-8")
+    help="HTML page read encoding. Defaults to utf-8.")
 @click.option(
     "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
