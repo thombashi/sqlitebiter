@@ -153,6 +153,12 @@ def file(ctx, files, output_path):
             result_counter.inc_fail()
             continue
 
+        if file_path == output_path:
+            logger.warn(
+                u"skip a file which same path as the output file ({})".format(
+                    file_path))
+            continue
+
         logger.debug(u"converting '{}'".format(file_path))
 
         try:
