@@ -94,14 +94,17 @@ def write_completion_message(logger, database_path, result_counter):
         get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
 
 
-def _setup_logger(logger, log_level):
-    ptr.set_log_level(log_level)
-    simplesqlite.set_log_level(log_level)
+def make_logger(channel_name, log_level):
+    logger = logbook.Logger(channel_name)
 
     if log_level == QUIET_LOG_LEVEL:
         logger.disable()
 
     logger.level = log_level
+    ptr.set_log_level(log_level)
+    simplesqlite.set_log_level(log_level)
+
+    return logger
 
 
 def _get_format_type_from_path(file_path):
@@ -148,9 +151,8 @@ def file(ctx, files, output_path):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-
-    logger = logbook.Logger("{:s} file".format(PROGRAM_NAME))
-    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} file".format(
+        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -246,9 +248,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-
-    logger = logbook.Logger("{:s} url".format(PROGRAM_NAME))
-    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} url".format(
+        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     proxies = {}
     if typepy.is_not_null_string(proxy):
@@ -323,9 +324,8 @@ def gs(ctx, credentials, title, output_path):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-
-    logger = logbook.Logger("{:s} gs".format(PROGRAM_NAME))
-    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} gs".format(
+        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     loader = ptr.GoogleSheetsTableLoader()
     loader.source = credentials
