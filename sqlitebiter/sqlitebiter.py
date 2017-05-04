@@ -19,6 +19,7 @@ import typepy
 
 import pytablereader as ptr
 
+from ._const import PROGRAM_NAME
 from ._counter import ResultCounter
 from ._enum import (
     Context,
@@ -32,7 +33,6 @@ CONTEXT_SETTINGS = dict(
     obj={},
 )
 MAX_VERBOSITY_LEVEL = 2
-PROGRAM_NAME = "sqlitebiter"
 QUIET_LOG_LEVEL = logbook.NOTSET
 
 logbook.StderrHandler(
