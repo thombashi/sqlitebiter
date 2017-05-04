@@ -32,6 +32,7 @@ CONTEXT_SETTINGS = dict(
     obj={},
 )
 MAX_VERBOSITY_LEVEL = 2
+PROGRAM_NAME = "sqlitebiter"
 QUIET_LOG_LEVEL = logbook.NOTSET
 
 logbook.StderrHandler(
@@ -77,7 +78,7 @@ def create_database(ctx, database_path):
 
 
 def write_completion_message(logger, database_path, result_counter):
-    logger.debug(u"----- sqlitebiter completed -----")
+    logger.debug(u"----- {:s} completed -----".format(PROGRAM_NAME))
     logger.debug(u"database path: {:s}".format(database_path))
     logger.debug(u"number of created table: {:d}".format(
         result_counter.success_count))
@@ -142,7 +143,7 @@ def file(ctx, files, output_path):
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
-    logger = logbook.Logger("sqlitebiter file")
+    logger = logbook.Logger("{:s} file".format(PROGRAM_NAME))
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
@@ -239,7 +240,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
-    logger = logbook.Logger("sqlitebiter url")
+    logger = logbook.Logger("{:s} url".format(PROGRAM_NAME))
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     proxies = {}
@@ -315,7 +316,7 @@ def gs(ctx, credentials, title, output_path):
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
 
-    logger = logbook.Logger("sqlitebiter gs")
+    logger = logbook.Logger("{:s} gs".format(PROGRAM_NAME))
     _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
 
     loader = ptr.GoogleSheetsTableLoader()
