@@ -41,6 +41,11 @@ logbook.StderrHandler(
 ).push_application()
 
 
+class Default(object):
+    OUTPUT_FILE = "out.sqlite"
+    ENCODING = "utf-8"
+
+
 def get_schema_extractor(source, verbosity_level):
     if verbosity_level >= MAX_VERBOSITY_LEVEL:
         return SqliteSchemaExtractor(
@@ -126,8 +131,9 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
-    "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
 @click.pass_context
 def file(ctx, files, output_path):
     """
@@ -218,11 +224,12 @@ def file(ctx, files, output_path):
     type=click.Choice(ptr.TableUrlLoader.get_format_name_list()),
     help="Data format to loading (defaults to html).")
 @click.option(
-    "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
 @click.option(
-    "--encoding", type=str, metavar="ENCODING", default="utf-8",
-    help="HTML page read encoding. Defaults to utf-8.")
+    "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
+    help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
     "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
@@ -300,8 +307,9 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 @click.argument(
     "title", type=str)
 @click.option(
-    "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
     """
