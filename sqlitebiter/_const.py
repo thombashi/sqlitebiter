@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # encoding: utf-8
 
 """
@@ -5,5 +6,7 @@
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
-VERSION = "0.8.0"
+
+PROGRAM_NAME = "sqlitebiter"

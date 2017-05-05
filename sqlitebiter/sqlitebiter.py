@@ -19,6 +19,11 @@ import typepy
 
 import pytablereader as ptr
 
+from ._config import (
+    ConfigKey,
+    app_config_manager,
+)
+from ._const import PROGRAM_NAME
 from ._counter import ResultCounter
 from ._enum import (
     Context,
@@ -38,6 +43,11 @@ logbook.StderrHandler(
     level=logbook.DEBUG,
     format_string="[{record.level_name}] {record.channel}: {record.message}"
 ).push_application()
+
+
+class Default(object):
+    OUTPUT_FILE = "out.sqlite"
+    ENCODING = "utf-8"
 
 
 def get_schema_extractor(source, verbosity_level):
@@ -77,7 +87,7 @@ def create_database(ctx, database_path):
 
 
 def write_completion_message(logger, database_path, result_counter):
-    logger.debug(u"----- sqlitebiter completed -----")
+    logger.debug(u"----- {:s} completed -----".format(PROGRAM_NAME))
     logger.debug(u"database path: {:s}".format(database_path))
     logger.debug(u"number of created table: {:d}".format(
         result_counter.success_count))
@@ -88,14 +98,32 @@ def write_completion_message(logger, database_path, result_counter):
         get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
 
 
-def _setup_logger(logger, log_level):
-    ptr.set_log_level(log_level)
-    simplesqlite.set_log_level(log_level)
+def make_logger(channel_name, log_level):
+    import appconfigpy
+
+    logger = logbook.Logger(channel_name)
 
     if log_level == QUIET_LOG_LEVEL:
         logger.disable()
 
     logger.level = log_level
+    ptr.set_log_level(log_level)
+    simplesqlite.set_log_level(log_level)
+    appconfigpy.set_log_level(log_level)
+
+    return logger
+
+
+def create_url_loader(logger, url, format_name, encoding, proxies):
+    try:
+        return ptr.TableUrlLoader(
+            url, format_name, encoding=encoding, proxies=proxies)
+    except ptr.HTTPError as e:
+        logger.error(e)
+        sys.exit(ExitCode.FAILED_HTTP)
+    except ptr.ProxyError as e:
+        logger.error(e)
+        sys.exit(errno.ECONNABORTED)
 
 
 def _get_format_type_from_path(file_path):
@@ -125,8 +153,9 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
-    "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
 @click.pass_context
 def file(ctx, files, output_path):
     """
@@ -141,9 +170,8 @@ def file(ctx, files, output_path):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-
-    logger = logbook.Logger("sqlitebiter file")
-    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} file".format(
+        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -217,11 +245,12 @@ def file(ctx, files, output_path):
     type=click.Choice(ptr.TableUrlLoader.get_format_name_list()),
     help="Data format to loading (defaults to html).")
 @click.option(
-    "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
 @click.option(
-    "--encoding", type=str, metavar="ENCODING", default="utf-8",
-    help="HTML page read encoding. Defaults to utf-8.")
+    "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
+    help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
     "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
@@ -238,33 +267,25 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
+    logger = make_logger("{:s} url".format(
+        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
-    logger = logbook.Logger("sqlitebiter url")
-    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
+    if typepy.is_null_string(proxy):
+        proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
 
-    proxies = {}
-    if typepy.is_not_null_string(proxy):
-        proxies = {
-            "http": proxy,
-            "https": proxy,
-        }
+    proxies = {
+        "http": proxy,
+        "https": proxy,
+    }
 
     try:
-        loader = ptr.TableUrlLoader(
-            url, format_name, encoding=encoding, proxies=proxies)
+        loader = create_url_loader(logger, url, format_name, encoding, proxies)
     except ptr.LoaderNotFoundError as e:
         try:
-            loader = ptr.TableUrlLoader(
-                url, "html", encoding=encoding, proxies=proxies)
-        except (ptr.LoaderNotFoundError, ptr.HTTPError):
+            loader = create_url_loader(logger, url, "html", encoding, proxies)
+        except ptr.LoaderNotFoundError as e:
             logger.error(e)
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
-    except ptr.HTTPError as e:
-        logger.error(e)
-        sys.exit(ExitCode.FAILED_HTTP)
-    except ptr.ProxyError as e:
-        logger.error(e)
-        sys.exit(errno.ECONNABORTED)
 
     try:
         for tabledata in loader.load():
@@ -299,8 +320,9 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 @click.argument(
     "title", type=str)
 @click.option(
-    "-o", "--output-path", metavar="PATH", default="out.sqlite",
-    help="Output path of the SQLite database file. Defaults to 'out.sqlite'.")
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
 @click.pass_context
 def gs(ctx, credentials, title, output_path):
     """
@@ -314,13 +336,16 @@ def gs(ctx, credentials, title, output_path):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-
-    logger = logbook.Logger("sqlitebiter gs")
-    _setup_logger(logger, ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} gs".format(
+        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     loader = ptr.GoogleSheetsTableLoader()
     loader.source = credentials
     loader.title = title
+
+    # if typepy.is_null_string(loader.source):
+    #     loader.source = app_config_manager.load().get(
+    #         ConfigKey.GS_CREDENTIALS_FILE_PATH)
 
     try:
         for tabledata in loader.load():
@@ -348,6 +373,31 @@ def gs(ctx, credentials, title, output_path):
     write_completion_message(logger, output_path, result_counter)
 
     sys.exit(result_counter.get_return_code())
+
+
+@cmd.command()
+@click.pass_context
+def configure(ctx):
+    """
+    Configure the following application settings:
+
+    (1) HTTP/HTTPS proxy server URI (for url sub-command).
+
+    Configurations will be written to '~/.sqlitebiter'.
+    You can remove these settings by deleting '~/.sqlitebiter'.
+    """
+
+    logger = make_logger(
+        "{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
+    logger.debug("{} configuration file existence: {}".format(
+        PROGRAM_NAME, app_config_manager.exists))
+
+    try:
+        sys.exit(app_config_manager.configure())
+    except KeyboardInterrupt:
+        click.echo()
+        sys.exit(errno.EINTR)
 
 
 if __name__ == '__main__':
