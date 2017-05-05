@@ -107,6 +107,18 @@ def make_logger(channel_name, log_level):
     return logger
 
 
+def create_url_loader(logger, url, format_name, encoding, proxies):
+    try:
+        return ptr.TableUrlLoader(
+            url, format_name, encoding=encoding, proxies=proxies)
+    except ptr.HTTPError as e:
+        logger.error(e)
+        sys.exit(ExitCode.FAILED_HTTP)
+    except ptr.ProxyError as e:
+        logger.error(e)
+        sys.exit(errno.ECONNABORTED)
+
+
 def _get_format_type_from_path(file_path):
     return file_path.ext.lstrip(".")
 
