@@ -1,14 +1,15 @@
 ``sqlitebiter`` command help
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``sqlitebiter`` has three subcommands:
+``sqlitebiter`` has following subcommands:
 
-- ``file``: Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/TSV file(s) to a SQLite database file.
+- ``file``: Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV file(s) to a SQLite database file.
     - :doc:`file/index`
 - ``url``: Scrape tabular data from a URL and convert data to a SQLite database file.
     - :doc:`url/index`
 - ``gs``: Convert a spreadsheet in Google Sheets to a SQLite database file.
     - :doc:`gs/index`
+- ``configure``: Configure the application settings
 
 ::
 
@@ -23,6 +24,7 @@
       -h, --help     Show this message and exit.
 
     Commands:
-      file  Convert tabular data within...
-      gs    Convert Google Sheets to a SQLite database...
-      url   Fetch data from a URL and convert data to a...
+      configure  Configure the following application settings:...
+      file       Convert tabular data within...
+      gs         Convert a spreadsheet in Google Sheets to a...
+      url        Scrape tabular data from a URL and convert...
