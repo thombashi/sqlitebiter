@@ -271,21 +271,13 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         }
 
     try:
-        loader = ptr.TableUrlLoader(
-            url, format_name, encoding=encoding, proxies=proxies)
+        loader = create_url_loader(logger, url, format_name, encoding, proxies)
     except ptr.LoaderNotFoundError as e:
         try:
-            loader = ptr.TableUrlLoader(
-                url, "html", encoding=encoding, proxies=proxies)
-        except (ptr.LoaderNotFoundError, ptr.HTTPError):
+            loader = create_url_loader(logger, url, "html", encoding, proxies)
+        except ptr.LoaderNotFoundError as e:
             logger.error(e)
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
-    except ptr.HTTPError as e:
-        logger.error(e)
-        sys.exit(ExitCode.FAILED_HTTP)
-    except ptr.ProxyError as e:
-        logger.error(e)
-        sys.exit(errno.ECONNABORTED)
 
     try:
         for tabledata in loader.load():
