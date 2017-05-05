@@ -19,7 +19,7 @@ sqlitebiter
 Summary
 -------
 
-A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/TSV/Google-Sheets to a SQLite database file.
+A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV/Google-Sheets to a SQLite database file.
 
 Features
 --------
