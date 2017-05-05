@@ -4,17 +4,16 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-from __future__ import unicode_literals
 from __future__ import print_function
+from __future__ import unicode_literals
 
 from click.testing import CliRunner
 import path
+from pytablereader.interface import TableLoader
 import pytest
 import simplesqlite
-
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
-from pytablereader.interface import TableLoader
 
 from .dataset import (
     valid_json_single_file,
@@ -258,9 +257,9 @@ class Test_sqlitebiter_file:
                     [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
 
                 "valid_ltsv_a": [
-                    (1, 123.1, u'ltsv0', 1.0, u'1'),
-                    (2, 2.2, u'ltsv1', 2.2, u'2.2'),
-                    (3, 3.3, u'ltsv2', 3.0, u'cccc'),
+                    (1, 123.1, u'"ltsv0"', 1.0, u'"1"'),
+                    (2, 2.2, u'"ltsv1"', 2.2, u'"2.2"'),
+                    (3, 3.3, u'"ltsv2"', 3.0, u'"cccc"'),
                 ],
                 "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
