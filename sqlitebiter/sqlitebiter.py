@@ -19,6 +19,10 @@ import typepy
 
 import pytablereader as ptr
 
+from ._config import (
+    ConfigKey,
+    app_config_manager,
+)
 from ._const import PROGRAM_NAME
 from ._counter import ResultCounter
 from ._enum import (
@@ -95,6 +99,8 @@ def write_completion_message(logger, database_path, result_counter):
 
 
 def make_logger(channel_name, log_level):
+    import appconfigpy
+
     logger = logbook.Logger(channel_name)
 
     if log_level == QUIET_LOG_LEVEL:
@@ -103,6 +109,7 @@ def make_logger(channel_name, log_level):
     logger.level = log_level
     ptr.set_log_level(log_level)
     simplesqlite.set_log_level(log_level)
+    appconfigpy.set_log_level(log_level)
 
     return logger
 
@@ -263,12 +270,13 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     logger = make_logger("{:s} url".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
-    proxies = {}
-    if typepy.is_not_null_string(proxy):
-        proxies = {
-            "http": proxy,
-            "https": proxy,
-        }
+    if typepy.is_null_string(proxy):
+        proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
+
+    proxies = {
+        "http": proxy,
+        "https": proxy,
+    }
 
     try:
         loader = create_url_loader(logger, url, format_name, encoding, proxies)
@@ -335,6 +343,10 @@ def gs(ctx, credentials, title, output_path):
     loader.source = credentials
     loader.title = title
 
+    # if typepy.is_null_string(loader.source):
+    #     loader.source = app_config_manager.load().get(
+    #         ConfigKey.GS_CREDENTIALS_FILE_PATH)
+
     try:
         for tabledata in loader.load():
             try:
@@ -361,6 +373,31 @@ def gs(ctx, credentials, title, output_path):
     write_completion_message(logger, output_path, result_counter)
 
     sys.exit(result_counter.get_return_code())
+
+
+@cmd.command()
+@click.pass_context
+def configure(ctx):
+    """
+    Configure the following application settings:
+
+    (1) HTTP/HTTPS proxy server URI (for url sub-command).
+
+    Configurations will be written to '~/.sqlitebiter'.
+    You can remove these settings by deleting '~/.sqlitebiter'.
+    """
+
+    logger = make_logger(
+        "{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
+    logger.debug("{} configuration file existence: {}".format(
+        PROGRAM_NAME, app_config_manager.exists))
+
+    try:
+        sys.exit(app_config_manager.configure())
+    except KeyboardInterrupt:
+        click.echo()
+        sys.exit(errno.EINTR)
 
 
 if __name__ == '__main__':

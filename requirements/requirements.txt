@@ -1,3 +1,4 @@
+appconfigpy>=0.0.2
 click>=6.7
 logbook
 path.py
