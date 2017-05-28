@@ -15,13 +15,18 @@ import simplesqlite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 
+from .common import print_traceback
 from .dataset import (
     valid_json_single_file,
     invalid_json_single_file,
-    valid_json_multi_file,
+    valid_json_multi_file_1,
+    valid_json_multi_file_2_1,
+    valid_json_multi_file_2_2,
+    valid_json_multi_file_2_3,
     invalid_json_multi_file,
-    valid_csv_file_1,
-    valid_csv_file_2,
+    valid_csv_file_1_1,
+    valid_csv_file_1_2,
+    valid_csv_file_2_1,
     invalid_csv_file,
     valid_tsv_file,
     invalid_tsv_file,
@@ -55,9 +60,9 @@ class Test_sqlitebiter_file:
 
     @pytest.mark.parametrize(["file_creator", "expected"], [
         [valid_json_single_file, ExitCode.SUCCESS],
-        [valid_json_multi_file, ExitCode.SUCCESS],
-        [valid_csv_file_1, ExitCode.SUCCESS],
-        [valid_csv_file_2, ExitCode.SUCCESS],
+        [valid_json_multi_file_1, ExitCode.SUCCESS],
+        [valid_csv_file_1_1, ExitCode.SUCCESS],
+        [valid_csv_file_2_1, ExitCode.SUCCESS],
         [valid_tsv_file, ExitCode.SUCCESS],
         [valid_excel_file, ExitCode.SUCCESS],
         [valid_html_file, ExitCode.SUCCESS],
@@ -75,7 +80,7 @@ class Test_sqlitebiter_file:
         [invalid_tsv_file, ExitCode.FAILED_CONVERT],
         [not_supported_format_file, ExitCode.FAILED_CONVERT],
     ])
-    def test_normal_one_file(self, file_creator, expected):
+    def test_smoke_one_file(self, file_creator, expected):
         db_path = "test.sqlite"
         runner = CliRunner()
 
@@ -83,18 +88,19 @@ class Test_sqlitebiter_file:
             file_path = file_creator()
             result = runner.invoke(
                 cmd, ["file", file_path, "-o", db_path])
+
             assert result.exit_code == expected, file_path
 
-    def test_normal_multi_file(self):
+    def test_smoke_multi_file(self):
         db_path = "test.sqlite"
         runner = CliRunner()
 
         with runner.isolated_filesystem():
             file_list = [
                 valid_json_single_file(),
-                valid_json_multi_file(),
-                valid_csv_file_1(),
-                valid_csv_file_2(),
+                valid_json_multi_file_1(),
+                valid_csv_file_1_1(),
+                valid_csv_file_2_1(),
                 valid_tsv_file(),
                 valid_excel_file(),
                 valid_html_file(),
@@ -110,9 +116,9 @@ class Test_sqlitebiter_file:
     @pytest.mark.parametrize(
         ["file_creator", "verbosity_option", "expected"],
         [
-            [valid_csv_file_1, "-v", ExitCode.SUCCESS],
-            [valid_csv_file_1, "-vv", ExitCode.SUCCESS],
-            [valid_csv_file_1, "-vvv", ExitCode.SUCCESS],
+            [valid_csv_file_1_1, "-v", ExitCode.SUCCESS],
+            [valid_csv_file_1_1, "-vv", ExitCode.SUCCESS],
+            [valid_csv_file_1_1, "-vvv", ExitCode.SUCCESS],
         ]
     )
     def test_smoke_verbose(self, file_creator, verbosity_option, expected):
@@ -161,19 +167,20 @@ class Test_sqlitebiter_file:
                 assert result.exit_code in (
                     ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
 
-    def test_normal_multi(self):
+    def test_normal_multi_file_different_table(self):
         db_path = "test.sqlite"
         runner = CliRunner()
+
         with runner.isolated_filesystem():
             file_list = [
                 valid_json_single_file(),
                 invalid_json_single_file(),
 
-                valid_json_multi_file(),
+                valid_json_multi_file_1(),
                 invalid_json_multi_file(),
 
-                valid_csv_file_1(),
-                valid_csv_file_2(),
+                valid_csv_file_1_1(),
+                valid_csv_file_2_1(),
                 invalid_csv_file(),
 
                 valid_tsv_file(),
@@ -226,7 +233,7 @@ class Test_sqlitebiter_file:
                     (1, 55, 'D Sam', 31, 'Raven'),
                     (2, 36, 'J Ifdgg', 30, 'Raven'),
                     (3, 91, 'K Wedfb', 28, 'Raven'),
-                ],
+                        ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
@@ -240,7 +247,7 @@ class Test_sqlitebiter_file:
                     (1, 123.1, u'"ltsv0"', 1.0, u'"1"'),
                     (2, 2.2, u'"ltsv1"', 2.2, u'"2.2"'),
                     (3, 3.3, u'"ltsv2"', 3.0, u'"cccc"'),
-                ],
+                        ],
                 "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
                 "tsv_a":
@@ -252,6 +259,190 @@ class Test_sqlitebiter_file:
                 result = con.select("*", table_name=table)
                 expected_data = expected_data_table.get(table)
                 actual_data = result.fetchall()
+
+                message = "table={}, expected={}, actual={}".format(
+                    table, expected_data, actual_data)
+
+                print("--- table: {} ---".format(table))
+                print("[expected]\n{}\n".format(expected_data))
+                print("[actual]\n{}\n".format(actual_data))
+
+                assert expected_data == actual_data, message
+
+    def test_normal_append(self):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_list = [
+                valid_json_multi_file_2_1(),
+            ]
+            table_name = "multij2"
+            expected_table_list = [table_name]
+
+            # first execution without --append option (new) ---
+            result = runner.invoke(
+                cmd, ["file"] + file_list + ["-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = simplesqlite.SimpleSQLite(db_path, "r")
+
+            actual_table_list = con.get_table_name_list()
+            print("[expected]\n{}\n".format(expected_table_list))
+            print("[actual]\n{}\n".format(actual_table_list))
+            assert set(actual_table_list) == set(expected_table_list)
+
+            actual_data = con.select("*", table_name=table_name).fetchall()
+            expected_data = [
+                (1, 4.0, 'a'),
+                (2, 2.1, 'bb'),
+                (3, 120.9, 'ccc'),
+            ]
+
+            print("[expected]\n{}\n".format(expected_data))
+            print("[actual]\n{}\n".format(actual_data))
+            assert expected_data == actual_data
+
+            # second execution with --append option ---
+            result = runner.invoke(
+                cmd, ["--append", "file"] + file_list + ["-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = simplesqlite.SimpleSQLite(db_path, "r")
+
+            actual_table_list = con.get_table_name_list()
+            print("[expected]\n{}\n".format(expected_table_list))
+            print("[actual]\n{}\n".format(actual_table_list))
+            assert set(actual_table_list) == set(expected_table_list)
+
+            actual_data = con.select("*", table_name=table_name).fetchall()
+            expected_data = [
+                (1, 4.0, 'a'),
+                (2, 2.1, 'bb'),
+                (3, 120.9, 'ccc'),
+                (1, 4.0, 'a'),
+                (2, 2.1, 'bb'),
+                (3, 120.9, 'ccc'),
+            ]
+
+            print("[expected]\n{}\n".format(expected_data))
+            print("[actual]\n{}\n".format(actual_data))
+            assert expected_data == actual_data
+
+            # third execution without --append option (overwrite) ---
+            result = runner.invoke(
+                cmd, ["file"] + file_list + ["-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = simplesqlite.SimpleSQLite(db_path, "r")
+
+            actual_table_list = con.get_table_name_list()
+            print("[expected]\n{}\n".format(expected_table_list))
+            print("[actual]\n{}\n".format(actual_table_list))
+            assert set(actual_table_list) == set(expected_table_list)
+
+            actual_data = con.select("*", table_name=table_name).fetchall()
+            expected_data = [
+                (1, 4.0, 'a'),
+                (2, 2.1, 'bb'),
+                (3, 120.9, 'ccc'),
+            ]
+
+            print("[expected]\n{}\n".format(expected_data))
+            print("[actual]\n{}\n".format(actual_data))
+            assert expected_data == actual_data
+
+    def test_normal_multi_file_same_table_same_structure(self):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_list = [
+                valid_json_multi_file_2_1(),
+                valid_json_multi_file_2_2(),
+            ]
+
+            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = simplesqlite.SimpleSQLite(db_path, "r")
+            expected_table_list = ['multij2']
+            actual_table_list = con.get_table_name_list()
+
+            print("[expected]\n{}\n".format(expected_table_list))
+            print("[actual]\n{}\n".format(actual_table_list))
+
+            assert set(actual_table_list) == set(expected_table_list)
+
+            expected_data_table = {
+                "multij2": [
+                    (1, 4.0, 'a'),
+                    (2, 2.1, 'bb'),
+                    (3, 120.9, 'ccc'),
+                    (1, 4.0, 'a'),
+                    (2, 2.1, 'bb'),
+                    (3, 120.9, 'ccc'),
+                ],
+            }
+
+            for table in con.get_table_name_list():
+                expected_data = expected_data_table.get(table)
+                actual_data = con.select("*", table_name=table).fetchall()
+
+                message = "table={}, expected={}, actual={}".format(
+                    table, expected_data, actual_data)
+
+                print("--- table: {} ---".format(table))
+                print("[expected]\n{}\n".format(expected_data))
+                print("[actual]\n{}\n".format(actual_data))
+
+                assert expected_data == actual_data, message
+
+    def test_normal_multi_file_same_table_different_structure(self):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_list = [
+                valid_json_multi_file_2_2(),
+                valid_json_multi_file_2_3(),
+            ]
+
+            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = simplesqlite.SimpleSQLite(db_path, "r")
+            expected_table_list = [
+                'multij2', 'multij2_1',
+            ]
+            actual_table_list = con.get_table_name_list()
+
+            print("[expected]\n{}\n".format(expected_table_list))
+            print("[actual]\n{}\n".format(actual_table_list))
+
+            assert set(actual_table_list) == set(expected_table_list)
+
+            expected_data_table = {
+                "multij2": [
+                    (1, 4.0, 'a'),
+                    (2, 2.1, 'bb'),
+                    (3, 120.9, 'ccc'),
+                ],
+                "multij2_1": [
+                    (u'abc', u'a', 4.0),
+                    (u'abc', u'bb', 2.1),
+                    (u'abc', u'ccc', 120.9),
+                ],
+            }
+
+            for table in con.get_table_name_list():
+                expected_data = expected_data_table.get(table)
+                actual_data = con.select("*", table_name=table).fetchall()
 
                 message = "table={}, expected={}, actual={}".format(
                     table, expected_data, actual_data)

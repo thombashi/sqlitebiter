@@ -4,6 +4,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
+from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
@@ -27,6 +28,7 @@ def valid_json_single_file():
 
 def invalid_json_single_file():
     file_path = "invalid_json_a.json"
+
     with open(file_path, "w") as f:
         f.write("""[
             {"attr_b": 4, "attr_c": "a", "attr_a": [1]},
@@ -37,8 +39,9 @@ def invalid_json_single_file():
     return file_path
 
 
-def valid_json_multi_file():
+def valid_json_multi_file_1():
     file_path = "multijson.json"
+
     with open(file_path, "w") as f:
         f.write("""{
             "multij1" : [
@@ -56,8 +59,54 @@ def valid_json_multi_file():
     return file_path
 
 
+def valid_json_multi_file_2_1():
+    file_path = "multijson_2_1.json"
+
+    with open(file_path, "w") as f:
+        f.write("""{
+            "multij2" : [
+                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+            ]
+        }""")
+
+    return file_path
+
+
+def valid_json_multi_file_2_2():
+    file_path = "multijson_2_2.json"
+
+    with open(file_path, "w") as f:
+        f.write("""{
+            "multij2" : [
+                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+            ]
+        }""")
+
+    return file_path
+
+
+def valid_json_multi_file_2_3():
+    file_path = "multijson_2_3.json"
+
+    with open(file_path, "w") as f:
+        f.write("""{
+            "multij2" : [
+                {"attr_b": "a", "attr_c": 4, "attr_a": "abc"},
+                {"attr_b": "bb", "attr_c": 2.1, "attr_a": "abc"},
+                {"attr_b": "ccc", "attr_c": 120.9, "attr_a": "abc"}
+            ]
+        }""")
+
+    return file_path
+
+
 def invalid_json_multi_file():
     file_path = "invalid_multi.json"
+
     with open(file_path, "w") as f:
         f.write("""{
             "json_b" : "hoge",
@@ -67,7 +116,7 @@ def invalid_json_multi_file():
     return file_path
 
 
-def valid_csv_file_1():
+def valid_csv_file_1_1():
     file_path = "csv_a.csv"
     with open(file_path, "w") as f:
         f.write("\n".join([
@@ -80,10 +129,21 @@ def valid_csv_file_1():
     return file_path
 
 
-def valid_csv_file_2():
-    # reserved keywod of SQLite
+def valid_csv_file_1_2():
+    file_path = "csv_a.csv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"attr_a","attr_b","attr_c"',
+            '4,1,"a"',
+            '2.1,2,2.1,"bb"',
+            '120.9,3,"ccc"',
+        ]))
 
+
+def valid_csv_file_2_1():
+    # filename that include a reserved keyword of SQLite
     file_path = "insert.csv"
+
     with open(file_path, "w") as f:
         f.write("\n".join([
             "index,No,Player_last_name,Age,Team",
@@ -97,6 +157,7 @@ def valid_csv_file_2():
 
 def invalid_csv_file():
     file_path = "invalid_csv.csv"
+
     with open(file_path, "w") as f:
         f.write("\n".join([
             '"attr_a"\t"attr_b"\t"attr_c"',
@@ -123,6 +184,7 @@ def valid_tsv_file():
 
 def invalid_tsv_file():
     file_path = "invalid_tsv.tsv"
+
     with open(file_path, "w") as f:
         f.write("\n".join([
             '"attr_a","attr_b","attr_c"',
@@ -212,6 +274,7 @@ def invalid_excel_file_2():
 
 def valid_html_file():
     file_path = "htmltable.html"
+
     with open(file_path, "w") as f:
         f.write("""<title>testtitle</title>
 <table id="tablename">
@@ -262,6 +325,7 @@ def valid_html_file():
 
 def invalid_html_file():
     file_path = "invalid_html.html"
+
     with open(file_path, "w") as f:
         f.write("""<html>
   <head>
@@ -278,6 +342,7 @@ def invalid_html_file():
 
 def valid_ltsv_file():
     file_path = "valid_ltsv_a.ltsv"
+
     with open(file_path, "w") as f:
         f.write("""a.0:1\tb-1:123.1\tc_2:"ltsv0"\t"dd":1.0\te.f-g_4:"1"
 a.0:2\tb-1:2.2\tc_2:"ltsv1"\t"dd":2.2\te.f-g_4:"2.2"
@@ -289,6 +354,7 @@ a.0:3\tb-1:3.3\tc_2:"ltsv2"\t"dd":3.0\te.f-g_4:"cccc"
 
 def invalid_ltsv_file():
     file_path = "invalid_ltsv.ltsv"
+
     with open(file_path, "w") as f:
         f.write("\n".join([
             '"attr_a"\t"attr_b"\t"attr_c"',
@@ -302,6 +368,7 @@ def invalid_ltsv_file():
 
 def valid_markdown_file():
     file_path = "valid_mdtable.md"
+
     with open(file_path, "w") as f:
         f.write(""" a |  b  | c 
 --:|----:|---
@@ -315,6 +382,7 @@ def valid_markdown_file():
 
 def valid_multibyte_char_file():
     file_path = "valid_multibyte_char.csv"
+
     with io.open(file_path, "w", encoding="utf-8") as f:
         f.write(""""姓","名","生年月日","郵便番号","住所","電話番号"
 "山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
@@ -326,6 +394,7 @@ def valid_multibyte_char_file():
 
 def not_supported_format_file():
     file_path = "invalid_format.txt"
+
     with open(file_path, "w") as f:
         f.write("invalid format")
 
