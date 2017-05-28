@@ -17,6 +17,8 @@ from simplesqlite import SimpleSQLite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 
+from .common import print_traceback
+
 
 TEST_TABLE_NAME_A = "test_table_a"
 TEST_TABLE_NAME_B = "test_table_b"
@@ -64,7 +66,7 @@ def con_b0():
     return con
 
 
-class Test_sqlitebiter_file_sqlite_merge:
+class Test_sqlitebiter_file_sqlite_merge(object):
 
     def test_normal_same_table(self, con_a0, con_a1):
         out_db_path = "test.sqlite"
@@ -77,6 +79,7 @@ class Test_sqlitebiter_file_sqlite_merge:
                     "file", con_a0.database_path, con_a1.database_path,
                     "-o", out_db_path,
                 ])
+            print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
             expected = TableData(
@@ -102,6 +105,7 @@ class Test_sqlitebiter_file_sqlite_merge:
                     "file", con_a0.database_path, con_b0.database_path,
                     "-o", out_db_path,
                 ])
+            print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
             expected_list = [

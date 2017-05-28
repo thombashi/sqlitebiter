@@ -150,6 +150,66 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
         logbook.INFO if log_level is None else log_level)
 
 
+class TableCreator(object):
+
+    def __init__(self, dst_con, tabledata):
+        self.__dst_con = dst_con
+        self.__tabledata = tabledata
+
+    def create(self):
+        is_rename, con_mem = self.__require_rename_table()
+        src_table_name = con_mem.get_table_name_list()[0]
+        dst_table_name = src_table_name
+
+        if is_rename:
+            dst_table_name = self.__make_unique_table_name(src_table_name)
+
+            simplesqlite.copy_table(
+                src_con=con_mem, dst_con=self.__dst_con,
+                src_table_name=src_table_name,
+                dst_table_name=dst_table_name)
+        else:
+            simplesqlite.append_table(
+                src_con=con_mem, dst_con=self.__dst_con,
+                table_name=dst_table_name)
+
+    def __require_rename_table(self):
+        con_mem = simplesqlite.connect_sqlite_db_mem()
+        con_mem.create_table_from_tabledata(tabledata=self.__tabledata)
+
+        if not self.__dst_con.has_table(self.__tabledata.table_name):
+            return (False, con_mem)
+
+        if self.__dst_con.get_attr_name_list(self.__tabledata.table_name) != self.__tabledata.header_list:
+            return (True, con_mem)
+
+        con_schema_extractor = SqliteSchemaExtractor(
+            self.__dst_con, verbosity_level=1)
+        con_mem_schema_extractor = SqliteSchemaExtractor(
+            con_mem, verbosity_level=1)
+
+        if con_schema_extractor.get_database_schema() == con_mem_schema_extractor.get_database_schema():
+            return (False, con_mem)
+
+        return (True, con_mem)
+
+    def __make_unique_table_name(self, table_name_base):
+        exist_table_name_list = self.__dst_con.get_table_name_list()
+
+        if table_name_base not in exist_table_name_list:
+            return table_name_base
+
+        suffix_id = 1
+        while True:
+            table_name_candidate = u"{:s}_{:d}".format(
+                table_name_base, suffix_id)
+
+            if table_name_candidate not in exist_table_name_list:
+                return table_name_candidate
+
+            suffix_id += 1
+
+
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
@@ -168,13 +228,14 @@ def file(ctx, files, output_path):
 
     con = create_database(ctx, output_path)
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
-    extractor = get_schema_extractor(con, verbosity_level)
+    schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
     logger = make_logger("{:s} file".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
         file_path = path.Path(file_path)
+
         if not file_path.isfile():
             logger.error(u"file not found: {}".format(file_path))
             result_counter.inc_fail()
@@ -182,7 +243,7 @@ def file(ctx, files, output_path):
 
         if file_path == output_path:
             logger.warn(
-                u"skip a file which same path as the output file ({})".format(
+                u"skip a file which has the same path as the output file ({})".format(
                     file_path))
             continue
 
@@ -206,7 +267,8 @@ def file(ctx, files, output_path):
                     tabledata).sanitize()
 
                 try:
-                    con.create_table_from_tabledata(sqlite_tabledata)
+                    TableCreator(
+                        dst_con=con, tabledata=sqlite_tabledata).create()
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
@@ -216,7 +278,7 @@ def file(ctx, files, output_path):
 
                 logger.info(get_success_message(
                     verbosity_level, file_path,
-                    extractor.get_table_schema_text(
+                    schema_extractor.get_table_schema_text(
                         sqlite_tabledata.table_name).strip()))
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
@@ -265,7 +327,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
     con = create_database(ctx, output_path)
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
-    extractor = get_schema_extractor(con, verbosity_level)
+    schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
     logger = make_logger("{:s} url".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
@@ -293,7 +355,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 tabledata).sanitize()
 
             try:
-                con.create_table_from_tabledata(sqlite_tabledata)
+                TableCreator(
+                    dst_con=con, tabledata=sqlite_tabledata).create()
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
@@ -303,7 +366,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
             logger.info(get_success_message(
                 verbosity_level, url,
-                extractor.get_table_schema_text(
+                schema_extractor.get_table_schema_text(
                     sqlite_tabledata.table_name).strip()))
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
@@ -334,7 +397,7 @@ def gs(ctx, credentials, title, output_path):
 
     con = create_database(ctx, output_path)
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
-    extractor = get_schema_extractor(con, verbosity_level)
+    schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
     logger = make_logger("{:s} gs".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
@@ -349,15 +412,19 @@ def gs(ctx, credentials, title, output_path):
 
     try:
         for tabledata in loader.load():
+            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
+                tabledata).sanitize()
+
             try:
-                con.create_table_from_tabledata(tabledata)
+                TableCreator(
+                    dst_con=con, tabledata=sqlite_tabledata).create()
                 result_counter.inc_success()
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
 
             logger.info(get_success_message(
                 verbosity_level, "google sheets",
-                extractor.get_table_schema_text(tabledata.table_name).strip()))
+                schema_extractor.get_table_schema_text(tabledata.table_name).strip()))
     except ptr.OpenError as e:
         logger.error(e)
         result_counter.inc_fail()
