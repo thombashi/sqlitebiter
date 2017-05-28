@@ -4,8 +4,9 @@
 .. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
 """
 
-from __future__ import unicode_literals
 from __future__ import print_function
+from __future__ import unicode_literals
+
 import io
 
 import path
@@ -40,12 +41,12 @@ def valid_json_multi_file():
     file_path = "multijson.json"
     with open(file_path, "w") as f:
         f.write("""{
-            "table1" : [
+            "multij1" : [
                 {"attr_b": 4, "attr_c": "a", "attr_a": 1},
                 {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
                 {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
             ],
-            "table2" : [
+            "multij2" : [
                 {"a": 1, "b": 4},
                 {"a": 2 },
                 {"a": 3, "b": 120.9}

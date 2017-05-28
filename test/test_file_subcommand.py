@@ -123,29 +123,8 @@ class Test_sqlitebiter_file:
             file_path = file_creator()
             result = runner.invoke(
                 cmd, [verbosity_option, "file", file_path, "-o", db_path])
-            assert result.exit_code == expected, file_path
-
-    @pytest.mark.parametrize(
-        ["file_creator", "verbosity_option", "expected"],
-        [
-            [valid_csv_file_1, "--quiet", ExitCode.SUCCESS],
-        ]
-    )
-    def test_smoke_quiet(
-            self, capsys, file_creator, verbosity_option, expected):
-        db_path = "test.sqlite"
-        runner = CliRunner()
-
-        with runner.isolated_filesystem():
-            file_path = file_creator()
-            result = runner.invoke(
-                cmd, [verbosity_option, "file", file_path, "-o", db_path])
 
             assert result.exit_code == expected, file_path
-
-            out, _err = capsys.readouterr()
-
-            assert out.strip() == ""
 
     def test_abnormal_empty(self):
         runner = CliRunner()
@@ -219,8 +198,8 @@ class Test_sqlitebiter_file:
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
-            expected_tables = [
-                'singlejson_json1', 'multijson_table1', 'multijson_table2',
+            expected_table_list = [
+                'singlejson', 'multij1', 'multij2',
                 'csv_a', "rename_insert",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
                 "valid_ltsv_a",
@@ -228,18 +207,19 @@ class Test_sqlitebiter_file:
                 'tsv_a',
                 'valid_mdtable_markdown1',
             ]
+            actual_table_list = con.get_table_name_list()
 
-            message = "expected-tables={}, actual-tables={}".format(
-                expected_tables, con.get_table_name_list())
-            assert set(con.get_table_name_list()) == set(
-                expected_tables), message
+            print("[expected]\n{}\n".format(expected_table_list))
+            print("[actual]\n{}\n".format(actual_table_list))
+
+            assert set(actual_table_list) == set(expected_table_list)
 
             expected_data_table = {
-                "singlejson_json1":
+                "singlejson":
                     [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "multijson_table1":
+                "multij1":
                     [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "multijson_table2":
+                "multij2":
                     [(1, 4.0), (2, None), (3, 120.9)],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "rename_insert": [
