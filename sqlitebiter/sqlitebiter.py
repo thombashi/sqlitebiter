@@ -168,13 +168,14 @@ def file(ctx, files, output_path):
 
     con = create_database(ctx, output_path)
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
-    extractor = get_schema_extractor(con, verbosity_level)
+    schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
     logger = make_logger("{:s} file".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     for file_path in files:
         file_path = path.Path(file_path)
+
         if not file_path.isfile():
             logger.error(u"file not found: {}".format(file_path))
             result_counter.inc_fail()
@@ -216,7 +217,7 @@ def file(ctx, files, output_path):
 
                 logger.info(get_success_message(
                     verbosity_level, file_path,
-                    extractor.get_table_schema_text(
+                    schema_extractor.get_table_schema_text(
                         sqlite_tabledata.table_name).strip()))
         except ptr.OpenError as e:
             logger.error(u"open error: file={}, message='{}'".format(
@@ -265,7 +266,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
     con = create_database(ctx, output_path)
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
-    extractor = get_schema_extractor(con, verbosity_level)
+    schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
     logger = make_logger("{:s} url".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
@@ -303,7 +304,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
             logger.info(get_success_message(
                 verbosity_level, url,
-                extractor.get_table_schema_text(
+                schema_extractor.get_table_schema_text(
                     sqlite_tabledata.table_name).strip()))
     except ptr.InvalidDataError as e:
         logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
@@ -334,7 +335,7 @@ def gs(ctx, credentials, title, output_path):
 
     con = create_database(ctx, output_path)
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
-    extractor = get_schema_extractor(con, verbosity_level)
+    schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
     logger = make_logger("{:s} gs".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
@@ -357,7 +358,7 @@ def gs(ctx, credentials, title, output_path):
 
             logger.info(get_success_message(
                 verbosity_level, "google sheets",
-                extractor.get_table_schema_text(tabledata.table_name).strip()))
+                schema_extractor.get_table_schema_text(tabledata.table_name).strip()))
     except ptr.OpenError as e:
         logger.error(e)
         result_counter.inc_fail()
