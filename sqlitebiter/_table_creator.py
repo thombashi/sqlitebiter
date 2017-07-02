@@ -17,7 +17,7 @@ class TableCreator(object):
         self.__logger = logger
         self.__dst_con = dst_con
 
-    def create(self, tabledata):
+    def create(self, tabledata, index_list):
         is_rename, con_mem = self.__require_rename_table(tabledata)
         src_table_name = con_mem.get_table_name_list()[0]
         dst_table_name = src_table_name
@@ -36,6 +36,11 @@ class TableCreator(object):
             simplesqlite.append_table(
                 src_con=con_mem, dst_con=self.__dst_con,
                 table_name=dst_table_name)
+
+        self.__dst_con.create_index_list(dst_table_name, [
+            simplesqlite.sqlquery.SqlQuery.sanitize_attr(index)
+            for index in index_list
+        ])
 
     def __require_rename_table(self, tabledata):
         con_mem = simplesqlite.connect_sqlite_db_mem()

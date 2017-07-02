@@ -137,6 +137,9 @@ def _get_format_type_from_path(file_path):
 @click.option(
     "-a", "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
+@click.option(
+    "-i", "--index", "index_list", default="",
+    help="comma separated attribute names to create indices.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option(
     "--debug", "log_level", flag_value=logbook.DEBUG,
@@ -145,8 +148,9 @@ def _get_format_type_from_path(file_path):
     "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL,
     help="suppress execution log messages.")
 @click.pass_context
-def cmd(ctx, is_append_table, verbosity_level, log_level):
+def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
+    ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = (
         logbook.INFO if log_level is None else log_level)
@@ -213,7 +217,8 @@ def file(ctx, files, output_path):
                     tabledata).sanitize()
 
                 try:
-                    table_creator.create(sqlite_tabledata)
+                    table_creator.create(
+                        sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
@@ -305,7 +310,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 tabledata).sanitize()
 
             try:
-                table_creator.create(sqlite_tabledata)
+                table_creator.create(
+                    sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
@@ -369,8 +375,8 @@ def gs(ctx, credentials, title, output_path):
                 tabledata).sanitize()
 
             try:
-                table_creator.create(sqlite_tabledata)
-                result_counter.inc_success()
+                table_creator.create(
+                    sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
 

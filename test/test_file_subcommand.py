@@ -13,6 +13,7 @@ import pytest
 import simplesqlite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
+from sqliteschema import SqliteSchemaExtractor
 
 from .common import print_traceback
 from .dataset import (
@@ -26,6 +27,7 @@ from .dataset import (
     valid_csv_file_1_1,
     valid_csv_file_1_2,
     valid_csv_file_2_1,
+    valid_csv_file_3_1,
     invalid_csv_file,
     valid_tsv_file,
     invalid_tsv_file,
@@ -232,7 +234,7 @@ class Test_sqlitebiter_file:
                     (1, 55, 'D Sam', 31, 'Raven'),
                     (2, 36, 'J Ifdgg', 30, 'Raven'),
                     (3, 91, 'K Wedfb', 28, 'Raven'),
-                        ],
+                ],
                 "excel_sheet_a":
                     [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
                 "excel_sheet_c":
@@ -246,7 +248,7 @@ class Test_sqlitebiter_file:
                     (1, 123.1, u'"ltsv0"', 1.0, u'"1"'),
                     (2, 2.2, u'"ltsv1"', 2.2, u'"2.2"'),
                     (3, 3.3, u'"ltsv2"', 3.0, u'"cccc"'),
-                        ],
+                ],
                 "testtitle_html2":
                     [(1, 123.1), (2, 2.2), (3, 3.3)],
                 "tsv_a":
@@ -267,6 +269,38 @@ class Test_sqlitebiter_file:
                 print("[actual]\n{}\n".format(actual_data))
 
                 assert expected_data == actual_data, message
+
+    @pytest.mark.parametrize(["file_creator", "index_list", "expected"], [
+        [
+            valid_csv_file_3_1, "aa,ac",
+            """.. table:: valid_csv_3_1 (3 records)
+
+    +--------------+---------+-----------+--------+------+-----+
+    |Attribute name|Data type|Primary key|Not NULL|Unique|Index|
+    +==============+=========+===========+========+======+=====+
+    |aa            |REAL     |           |        |      |X    |
+    +--------------+---------+-----------+--------+------+-----+
+    |ab            |INTEGER  |           |        |      |     |
+    +--------------+---------+-----------+--------+------+-----+
+    |ac            |TEXT     |           |        |      |X    |
+    +--------------+---------+-----------+--------+------+-----+
+
+"""],
+    ])
+    def test_normal_index(self, file_creator, index_list, expected):
+        db_path = "test_index.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            result = runner.invoke(
+                cmd, ["--index", index_list, "file", file_path, "-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            extractor = SqliteSchemaExtractor(db_path)
+
+            assert extractor.dumps() == expected
 
     def test_normal_append(self):
         db_path = "test.sqlite"
