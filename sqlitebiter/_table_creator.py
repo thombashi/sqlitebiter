@@ -13,13 +13,12 @@ from sqliteschema import SqliteSchemaExtractor
 
 class TableCreator(object):
 
-    def __init__(self, logger, dst_con, tabledata):
+    def __init__(self, logger, dst_con):
         self.__logger = logger
         self.__dst_con = dst_con
-        self.__tabledata = tabledata
 
-    def create(self):
-        is_rename, con_mem = self.__require_rename_table()
+    def create(self, tabledata):
+        is_rename, con_mem = self.__require_rename_table(tabledata)
         src_table_name = con_mem.get_table_name_list()[0]
         dst_table_name = src_table_name
 
@@ -38,14 +37,14 @@ class TableCreator(object):
                 src_con=con_mem, dst_con=self.__dst_con,
                 table_name=dst_table_name)
 
-    def __require_rename_table(self):
+    def __require_rename_table(self, tabledata):
         con_mem = simplesqlite.connect_sqlite_db_mem()
-        con_mem.create_table_from_tabledata(tabledata=self.__tabledata)
+        con_mem.create_table_from_tabledata(tabledata=tabledata)
 
-        if not self.__dst_con.has_table(self.__tabledata.table_name):
+        if not self.__dst_con.has_table(tabledata.table_name):
             return (False, con_mem)
 
-        if self.__dst_con.get_attr_name_list(self.__tabledata.table_name) != self.__tabledata.header_list:
+        if self.__dst_con.get_attr_name_list(tabledata.table_name) != tabledata.header_list:
             return (True, con_mem)
 
         con_schema_extractor = SqliteSchemaExtractor(

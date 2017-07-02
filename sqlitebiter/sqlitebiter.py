@@ -174,6 +174,7 @@ def file(ctx, files, output_path):
     result_counter = ResultCounter()
     logger = make_logger("{:s} file".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    table_creator = TableCreator(logger=logger, dst_con=con)
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -212,9 +213,7 @@ def file(ctx, files, output_path):
                     tabledata).sanitize()
 
                 try:
-                    TableCreator(
-                        logger=logger, dst_con=con,
-                        tabledata=sqlite_tabledata).create()
+                    table_creator.create(sqlite_tabledata)
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
@@ -295,6 +294,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
             logger.error(e)
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
 
+    table_creator = TableCreator(logger=logger, dst_con=con)
+
     try:
         for tabledata in loader.load():
             logger.debug(u"loaded tabledata: {}".format(
@@ -304,9 +305,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 tabledata).sanitize()
 
             try:
-                TableCreator(
-                    logger=logger, dst_con=con,
-                    tabledata=sqlite_tabledata).create()
+                table_creator.create(sqlite_tabledata)
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
@@ -351,6 +350,7 @@ def gs(ctx, credentials, title, output_path):
     result_counter = ResultCounter()
     logger = make_logger("{:s} gs".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    table_creator = TableCreator(logger=logger, dst_con=con)
 
     loader = ptr.GoogleSheetsTableLoader()
     loader.source = credentials
@@ -369,9 +369,7 @@ def gs(ctx, credentials, title, output_path):
                 tabledata).sanitize()
 
             try:
-                TableCreator(
-                    logger=logger, dst_con=con,
-                    tabledata=sqlite_tabledata).create()
+                table_creator.create(sqlite_tabledata)
                 result_counter.inc_success()
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
