@@ -153,7 +153,8 @@ def cmd(ctx, is_append_table, verbosity_level, log_level):
 
 class TableCreator(object):
 
-    def __init__(self, dst_con, tabledata):
+    def __init__(self, logger, dst_con, tabledata):
+        self.__logger = logger
         self.__dst_con = dst_con
         self.__tabledata = tabledata
 
@@ -164,6 +165,9 @@ class TableCreator(object):
 
         if is_rename:
             dst_table_name = self.__make_unique_table_name(src_table_name)
+
+            self.__logger.debug(u"rename table from '{}' to '{}'".format(
+                src_table_name, dst_table_name))
 
             simplesqlite.copy_table(
                 src_con=con_mem, dst_con=self.__dst_con,
@@ -272,7 +276,8 @@ def file(ctx, files, output_path):
 
                 try:
                     TableCreator(
-                        dst_con=con, tabledata=sqlite_tabledata).create()
+                        logger=logger, dst_con=con,
+                        tabledata=sqlite_tabledata).create()
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
@@ -363,7 +368,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
             try:
                 TableCreator(
-                    dst_con=con, tabledata=sqlite_tabledata).create()
+                    logger=logger, dst_con=con,
+                    tabledata=sqlite_tabledata).create()
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
@@ -427,7 +433,8 @@ def gs(ctx, credentials, title, output_path):
 
             try:
                 TableCreator(
-                    dst_con=con, tabledata=sqlite_tabledata).create()
+                    logger=logger, dst_con=con,
+                    tabledata=sqlite_tabledata).create()
                 result_counter.inc_success()
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
