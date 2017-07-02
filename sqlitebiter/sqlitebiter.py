@@ -14,6 +14,7 @@ import click
 import logbook
 import path
 import simplesqlite
+import six
 from sqliteschema import SqliteSchemaExtractor
 import typepy
 
@@ -263,6 +264,9 @@ def file(ctx, files, output_path):
 
         try:
             for tabledata in loader.load():
+                logger.debug(u"loaded tabledata: {}".format(
+                    six.text_type(tabledata)))
+
                 sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
                     tabledata).sanitize()
 
