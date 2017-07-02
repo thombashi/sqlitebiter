@@ -135,7 +135,7 @@ def _get_format_type_from_path(file_path):
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=VERSION)
 @click.option(
-    "--append", "is_append_table", is_flag=True,
+    "-a", "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option(
@@ -249,7 +249,7 @@ def file(ctx, files, output_path):
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
-    "--format", "format_name",
+    "-f", "--format", "format_name",
     type=click.Choice(ptr.TableUrlLoader.get_format_name_list()),
     help="Data format to loading (defaults to html).")
 @click.option(
@@ -257,10 +257,10 @@ def file(ctx, files, output_path):
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
         Default.OUTPUT_FILE))
 @click.option(
-    "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
+    "-e", "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
     help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
-    "--proxy", type=str, metavar="PROXY",
+    "-p", "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
 @click.pass_context
 def url(ctx, url, format_name, output_path, encoding, proxy):
