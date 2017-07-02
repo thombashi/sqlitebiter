@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 """
-.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+.. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
 from __future__ import absolute_import
@@ -14,6 +14,7 @@ import click
 import logbook
 import path
 import simplesqlite
+import six
 from sqliteschema import SqliteSchemaExtractor
 import typepy
 
@@ -29,6 +30,7 @@ from ._enum import (
     Context,
     ExitCode,
 )
+from ._table_creator import TableCreator
 from ._version import VERSION
 
 
@@ -133,8 +135,11 @@ def _get_format_type_from_path(file_path):
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=VERSION)
 @click.option(
-    "--append", "is_append_table", is_flag=True,
+    "-a", "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
+@click.option(
+    "-i", "--index", "index_list", default="",
+    help="comma separated attribute names to create indices.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option(
     "--debug", "log_level", flag_value=logbook.DEBUG,
@@ -143,71 +148,12 @@ def _get_format_type_from_path(file_path):
     "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL,
     help="suppress execution log messages.")
 @click.pass_context
-def cmd(ctx, is_append_table, verbosity_level, log_level):
+def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
+    ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = (
         logbook.INFO if log_level is None else log_level)
-
-
-class TableCreator(object):
-
-    def __init__(self, dst_con, tabledata):
-        self.__dst_con = dst_con
-        self.__tabledata = tabledata
-
-    def create(self):
-        is_rename, con_mem = self.__require_rename_table()
-        src_table_name = con_mem.get_table_name_list()[0]
-        dst_table_name = src_table_name
-
-        if is_rename:
-            dst_table_name = self.__make_unique_table_name(src_table_name)
-
-            simplesqlite.copy_table(
-                src_con=con_mem, dst_con=self.__dst_con,
-                src_table_name=src_table_name,
-                dst_table_name=dst_table_name)
-        else:
-            simplesqlite.append_table(
-                src_con=con_mem, dst_con=self.__dst_con,
-                table_name=dst_table_name)
-
-    def __require_rename_table(self):
-        con_mem = simplesqlite.connect_sqlite_db_mem()
-        con_mem.create_table_from_tabledata(tabledata=self.__tabledata)
-
-        if not self.__dst_con.has_table(self.__tabledata.table_name):
-            return (False, con_mem)
-
-        if self.__dst_con.get_attr_name_list(self.__tabledata.table_name) != self.__tabledata.header_list:
-            return (True, con_mem)
-
-        con_schema_extractor = SqliteSchemaExtractor(
-            self.__dst_con, verbosity_level=1)
-        con_mem_schema_extractor = SqliteSchemaExtractor(
-            con_mem, verbosity_level=1)
-
-        if con_schema_extractor.get_database_schema() == con_mem_schema_extractor.get_database_schema():
-            return (False, con_mem)
-
-        return (True, con_mem)
-
-    def __make_unique_table_name(self, table_name_base):
-        exist_table_name_list = self.__dst_con.get_table_name_list()
-
-        if table_name_base not in exist_table_name_list:
-            return table_name_base
-
-        suffix_id = 1
-        while True:
-            table_name_candidate = u"{:s}_{:d}".format(
-                table_name_base, suffix_id)
-
-            if table_name_candidate not in exist_table_name_list:
-                return table_name_candidate
-
-            suffix_id += 1
 
 
 @cmd.command()
@@ -232,6 +178,7 @@ def file(ctx, files, output_path):
     result_counter = ResultCounter()
     logger = make_logger("{:s} file".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    table_creator = TableCreator(logger=logger, dst_con=con)
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -263,12 +210,15 @@ def file(ctx, files, output_path):
 
         try:
             for tabledata in loader.load():
+                logger.debug(u"loaded tabledata: {}".format(
+                    six.text_type(tabledata)))
+
                 sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
                     tabledata).sanitize()
 
                 try:
-                    TableCreator(
-                        dst_con=con, tabledata=sqlite_tabledata).create()
+                    table_creator.create(
+                        sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
@@ -303,7 +253,7 @@ def file(ctx, files, output_path):
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
-    "--format", "format_name",
+    "-f", "--format", "format_name",
     type=click.Choice(ptr.TableUrlLoader.get_format_name_list()),
     help="Data format to loading (defaults to html).")
 @click.option(
@@ -311,10 +261,10 @@ def file(ctx, files, output_path):
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
         Default.OUTPUT_FILE))
 @click.option(
-    "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
+    "-e", "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
     help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
-    "--proxy", type=str, metavar="PROXY",
+    "-p", "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
 @click.pass_context
 def url(ctx, url, format_name, output_path, encoding, proxy):
@@ -349,14 +299,19 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
             logger.error(e)
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
 
+    table_creator = TableCreator(logger=logger, dst_con=con)
+
     try:
         for tabledata in loader.load():
+            logger.debug(u"loaded tabledata: {}".format(
+                six.text_type(tabledata)))
+
             sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
                 tabledata).sanitize()
 
             try:
-                TableCreator(
-                    dst_con=con, tabledata=sqlite_tabledata).create()
+                table_creator.create(
+                    sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                 result_counter.inc_success()
             except (ValueError) as e:
                 logger.debug(
@@ -401,6 +356,7 @@ def gs(ctx, credentials, title, output_path):
     result_counter = ResultCounter()
     logger = make_logger("{:s} gs".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    table_creator = TableCreator(logger=logger, dst_con=con)
 
     loader = ptr.GoogleSheetsTableLoader()
     loader.source = credentials
@@ -412,13 +368,15 @@ def gs(ctx, credentials, title, output_path):
 
     try:
         for tabledata in loader.load():
+            logger.debug(u"loaded tabledata: {}".format(
+                six.text_type(tabledata)))
+
             sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
                 tabledata).sanitize()
 
             try:
-                TableCreator(
-                    dst_con=con, tabledata=sqlite_tabledata).create()
-                result_counter.inc_success()
+                table_creator.create(
+                    sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
 

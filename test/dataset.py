@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 """
-.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+.. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
 from __future__ import absolute_import
@@ -135,9 +135,11 @@ def valid_csv_file_1_2():
         f.write("\n".join([
             '"attr_a","attr_b","attr_c"',
             '4,1,"a"',
-            '2.1,2,2.1,"bb"',
+            '2.1,2,"bb"',
             '120.9,3,"ccc"',
         ]))
+
+    return file_path
 
 
 def valid_csv_file_2_1():
@@ -150,6 +152,19 @@ def valid_csv_file_2_1():
             "1, 55,D Sam, 31,Raven",
             "2, 36,J Ifdgg, 30,Raven",
             "3, 91,K Wedfb, 28,Raven",
+        ]))
+
+    return file_path
+
+
+def valid_csv_file_3_1():
+    file_path = "valid_csv_3_1.csv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"aa","ab","ac"',
+            '4,1,"a"',
+            '2.1,2,"bb"',
+            '120.9,3,"ccc"',
         ]))
 
     return file_path

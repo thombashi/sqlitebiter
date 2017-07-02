@@ -53,7 +53,7 @@ Installing executable file in Windows
 #. Navigate to https://github.com/thombashi/sqlitebiter/releases
 #. Download the latest version of the ``sqlitebiter_win_x64.zip``
 #. Unzip the file
-#. Execute ``sqlitebiter.exe`` in either Command Prompt or in PowerShell
+#. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
 .. code-block:: batch
 
@@ -62,12 +62,13 @@ Installing executable file in Windows
     Usage: sqlitebiter.exe [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --version      Show the version and exit.
-      --append       append table(s) to existing database.
+      --version         Show the version and exit.
+      -a, --append      append table(s) to existing database.
+      -i, --index TEXT  comma separated attribute names to create indices.
       -v, --verbose
-      --debug        for debug print.
-      --quiet        suppress execution log messages.
-      -h, --help     Show this message and exit.
+      --debug           for debug print.
+      --quiet           suppress execution log messages.
+      -h, --help        Show this message and exit.
 
     Commands:
       configure  Configure the following application settings:...

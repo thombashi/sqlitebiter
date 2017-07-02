@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 """
-.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+.. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
 import os.path
@@ -36,7 +36,7 @@ setuptools.setup(
     url="https://github.com/thombashi/sqlitebiter",
 
     author="Tsuyoshi Hombashi",
-    author_email="gogogo.vm@gmail.com",
+    author_email="tsuyoshi.hombashi@gmail.com",
     description=summary,
     include_package_data=True,
     install_requires=install_requires,

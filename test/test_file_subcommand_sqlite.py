@@ -1,11 +1,10 @@
 # encoding: utf-8
 
 """
-.. codeauthor:: Tsuyoshi Hombashi <gogogo.vm@gmail.com>
+.. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
 from __future__ import print_function
-from __future__ import unicode_literals
 
 from click.testing import CliRunner
 from pytablereader import (
