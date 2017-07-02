@@ -53,7 +53,7 @@ Installing executable file in Windows
 #. Navigate to https://github.com/thombashi/sqlitebiter/releases
 #. Download the latest version of the ``sqlitebiter_win_x64.zip``
 #. Unzip the file
-#. Execute ``sqlitebiter.exe`` in either Command Prompt or in PowerShell
+#. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
 .. code-block:: batch
 

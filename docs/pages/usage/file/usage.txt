@@ -32,5 +32,5 @@ Example
 
 .. note::
 
-    - Available JSON Schema is limited, acceptable format is described in `here <http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes>`__
-    - Wildcards cannot be used in Windows
+    - Available JSON Schema is limited. Acceptable format described in `here <http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes>`__
+    - Wildcard characters cannot use in Windows

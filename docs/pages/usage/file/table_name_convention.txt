@@ -20,8 +20,8 @@ Table name will be automatically decided as follows for each format:
     - e.g. ``<filename>`` of the ``sample.csv`` is ``sample``
 - ``<title>_<key>``. ``<title>`` will bee replaced with title tag. ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag. **(2)** unique string if ``id`` attribute not present in the table tag.
 
-If a created table name already exist in the database, the behavior wil be differ depending on 
-the existing table (hereinafter referred to as ``A``) and creating table (hereinafter referred to as ``B``) structure:
+If a created table name already exists in the database, the behavior will differ depending on 
+the existing table (after this referred to as ``A``) and create table (after this referred to as ``B``) structure:
 
 1. ``A`` and ``B`` has the same table name and table structure
     - Append creating table data to the existing table data
