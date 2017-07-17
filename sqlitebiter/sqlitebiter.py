@@ -84,8 +84,8 @@ def create_database(ctx, database_path):
 
     if is_append_table:
         return simplesqlite.SimpleSQLite(db_path, "a")
-    else:
-        return simplesqlite.SimpleSQLite(db_path, "w")
+
+    return simplesqlite.SimpleSQLite(db_path, "w")
 
 
 def write_completion_message(logger, database_path, result_counter):
@@ -116,10 +116,10 @@ def make_logger(channel_name, log_level):
     return logger
 
 
-def create_url_loader(logger, url, format_name, encoding, proxies):
+def create_url_loader(logger, source_url, format_name, encoding, proxies):
     try:
         return ptr.TableUrlLoader(
-            url, format_name, encoding=encoding, proxies=proxies)
+            source_url, format_name, encoding=encoding, proxies=proxies)
     except ptr.HTTPError as e:
         logger.error(e)
         sys.exit(ExitCode.FAILED_HTTP)
@@ -408,7 +408,7 @@ def configure(ctx):
 
     (1) HTTP/HTTPS proxy server URI (for url sub-command).
 
-    Configurations will be written to '~/.sqlitebiter'.
+    Configurations are written to '~/.sqlitebiter'.
     You can remove these settings by deleting '~/.sqlitebiter'.
     """
 

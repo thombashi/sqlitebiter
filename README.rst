@@ -23,7 +23,6 @@ A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV/Google-Sheets
 
 Features
 --------
-
 - Create a SQLite database file from:
     - File(s):
         - CSV
@@ -82,7 +81,6 @@ Installation
 
 Install via pip (recommended)
 ------------------------------
-
 ``sqlitebiter`` can be installed via
 `pip <https://pip.pypa.io/en/stable/installing/>`__ (Python package manager).
 
@@ -94,8 +92,8 @@ Python package dependencies are as follows.
 
 Mandatory Python package dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Mandatory Python packages are automatically installed during
-``sqlitebiter`` installation via ``pip``.
+Following mandatory Python packages are automatically installed during
+``sqlitebiter`` installation process:
 
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
 - `click <http://click.pocoo.org/>`__
@@ -109,8 +107,8 @@ Mandatory Python packages are automatically installed during
 Google Sheets dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following Python packages are required to
-`install manually <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
-when you use Google Sheets feature.
+`manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
+when you use Google Sheets feature:
 
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
@@ -127,7 +125,7 @@ Misc
 - `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
 
 
-Installing executable file in Windows
+Installing executable files in Windows
 --------------------------------------------
 #. Navigate to https://github.com/thombashi/sqlitebiter/releases
 #. Download the latest version of the ``sqlitebiter_win_x64.zip``
@@ -154,7 +152,6 @@ Installing executable file in Windows
       file       Convert tabular data within...
       gs         Convert a spreadsheet in Google Sheets to a...
       url        Scrape tabular data from a URL and convert...
-
 
 
 Documentation

@@ -1,29 +1,29 @@
 Table naming convention
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Table name will be automatically decided as follows for each format:
+Table name automatically decided as follows for each format:
 
     ========  =============================================================================
-     Format       Table Name                                                               
+     Format       Table Name
     ========  =============================================================================
-    CSV       ``<filename>``                                                               
-    Excel     ``<Sheet name>``                                                             
-    HTML      | ``<title>_<key>``. ``<title>`` will bee replaced with title tag.           
-              | ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag.
-              | **(2)** unique string if ``id`` attribute not present in the table tag.    
+    CSV       ``<filename>``
+    Excel     ``<Sheet name>``
+    HTML      | ``<title>_<key>``. ``<title>`` replaced with a title tag.
+              | ``<key>`` replaced with: **(1)** ``id`` attribute of the table tag. 
+              | **(2)** unique string if ``id`` attribute not present in the table tag.
     JSON                                                                                   
-    LTSV      ``<filename>``                                                               
-    Markdown  ``<filename>``                                                               
-    TSV       ``<filename>``                                                               
+    LTSV      ``<filename>``
+    Markdown  ``<filename>``
+    TSV       ``<filename>``
     ========  =============================================================================
 
-- ``<filename>`` is replaced with filename of converting file (without extensions)
-    - e.g. ``<filename>`` of the ``sample.csv`` is ``sample``
-- ``<title>_<key>``. ``<title>`` will bee replaced with title tag. ``<key>`` will be replaced with: **(1)** ``id`` attribute of the table tag. **(2)** unique string if ``id`` attribute not present in the table tag.
+- Common behavior
+    - ``<filename>`` replaced with filename of converting file (without extensions)
+        - e.g. If the input file name is ``sample.csv``, ``<filename>`` is ``sample``
 
-If a created table name already exists in the database, the behavior will differ depending on 
+If a created table name already exists in the database, the behavior differs depending on 
 the existing table (after this referred to as ``A``) and create table (after this referred to as ``B``) structure:
 
 1. ``A`` and ``B`` has the same table name and table structure
     - Append creating table data to the existing table data
 2. ``A`` and ``B`` has the same table name, but different table structure
-    - ``sqlitebiter`` will try to create unique table name for ``B`` by appending suffix id number
+    - ``sqlitebiter`` try to create unique table name for ``B`` by appending suffix id number
