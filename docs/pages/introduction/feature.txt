@@ -1,6 +1,5 @@
 Features
 --------
-
 - Create a SQLite database file from:
     - File(s):
         - CSV
