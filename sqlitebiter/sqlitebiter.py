@@ -408,7 +408,7 @@ def configure(ctx):
 
     (1) HTTP/HTTPS proxy server URI (for url sub-command).
 
-    Configurations will be written to '~/.sqlitebiter'.
+    Configurations are written to '~/.sqlitebiter'.
     You can remove these settings by deleting '~/.sqlitebiter'.
     """
 
