@@ -43,7 +43,7 @@ class TableCreator(object):
         ])
 
     def __require_rename_table(self, tabledata):
-        con_mem = simplesqlite.connect_sqlite_db_mem()
+        con_mem = simplesqlite.connect_sqlite_memdb()
         con_mem.create_table_from_tabledata(tabledata=tabledata)
 
         if not self.__dst_con.has_table(tabledata.table_name):
