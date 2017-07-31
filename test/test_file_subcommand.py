@@ -44,7 +44,7 @@ from .dataset import (
 )
 
 
-class Test_sqlitebiter_file:
+class Test_sqlitebiter_file(object):
 
     def setup_method(self, method):
         TableLoader.clear_table_count()
