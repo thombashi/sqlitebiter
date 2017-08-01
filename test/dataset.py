@@ -385,11 +385,11 @@ def valid_markdown_file():
     file_path = "valid_mdtable.md"
 
     with open(file_path, "w") as f:
-        f.write(""" a |  b  | c 
---:|----:|---
-  1|123.1|a  
-  2|  2.2|bb 
-  3|  3.3|ccc
+        f.write("""| a |  b  | c |
+|--:|----:|---|
+|  1|123.1|a  |
+|  2|  2.2|bb |
+|  3|  3.3|ccc|
 """)
 
     return file_path
