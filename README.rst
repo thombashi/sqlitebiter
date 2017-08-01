@@ -1,9 +1,6 @@
 sqlitebiter
 ===========
 
-.. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
-   :target: https://pypi.python.org/pypi/sqlitebiter
-
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
    :target: https://travis-ci.org/thombashi/sqlitebiter
    :alt: Linux CI test status
