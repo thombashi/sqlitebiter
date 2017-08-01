@@ -81,5 +81,4 @@ setuptools.setup(
         "console_scripts": [
             "sqlitebiter=sqlitebiter.sqlitebiter:cmd",
         ],
-    }
-)
+    })
