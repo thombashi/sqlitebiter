@@ -44,7 +44,7 @@ from .dataset import (
 )
 
 
-class Test_sqlitebiter_file:
+class Test_sqlitebiter_file(object):
 
     def setup_method(self, method):
         TableLoader.clear_table_count()
@@ -120,8 +120,7 @@ class Test_sqlitebiter_file:
             [valid_csv_file_1_1, "-v", ExitCode.SUCCESS],
             [valid_csv_file_1_1, "-vv", ExitCode.SUCCESS],
             [valid_csv_file_1_1, "-vvv", ExitCode.SUCCESS],
-        ]
-    )
+        ])
     def test_smoke_verbose(self, file_creator, verbosity_option, expected):
         db_path = "test.sqlite"
         runner = CliRunner()
