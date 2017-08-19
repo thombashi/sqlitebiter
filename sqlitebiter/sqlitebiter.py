@@ -261,7 +261,7 @@ def file(ctx, files, output_path):
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
         Default.OUTPUT_FILE))
 @click.option(
-    "-e", "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
+    "-e", "--encoding", type=str, metavar="ENCODING",
     help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
     "-p", "--proxy", type=str, metavar="PROXY",
@@ -281,6 +281,10 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     result_counter = ResultCounter()
     logger = make_logger("{:s} url".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
+    if typepy.is_empty_sequence(encoding):
+        encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
+        logger.debug("use default encoding: {}".format(encoding))
 
     if typepy.is_null_string(proxy):
         proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
