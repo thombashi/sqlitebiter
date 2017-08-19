@@ -11,4 +11,5 @@
     Options:
       -o, --output-path PATH  Output path of the SQLite database file. Defaults to
                               'out.sqlite'.
+      --encoding ENCODING     Encoding to load files. Defaults to 'utf-8'.
       -h, --help              Show this message and exit.

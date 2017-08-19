@@ -162,8 +162,12 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
         Default.OUTPUT_FILE))
+@click.option(
+    "--encoding", metavar="ENCODING",
+    help="Encoding to load files. Defaults to '{:s}'.".format(
+        Default.ENCODING))
 @click.pass_context
-def file(ctx, files, output_path):
+def file(ctx, files, output_path, encoding):
     """
     Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV
     file(s) to a SQLite database file.
@@ -179,6 +183,10 @@ def file(ctx, files, output_path):
     logger = make_logger("{:s} file".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     table_creator = TableCreator(logger=logger, dst_con=con)
+
+    if typepy.is_empty_sequence(encoding):
+        encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
+        logger.debug("use default encoding: {}".format(encoding))
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -197,7 +205,7 @@ def file(ctx, files, output_path):
         logger.debug(u"converting '{}'".format(file_path))
 
         try:
-            loader = ptr.TableFileLoader(file_path)
+            loader = ptr.TableFileLoader(file_path, encoding=encoding)
         except ptr.InvalidFilePathError as e:
             logger.debug(e)
             result_counter.inc_fail()
@@ -261,7 +269,7 @@ def file(ctx, files, output_path):
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
         Default.OUTPUT_FILE))
 @click.option(
-    "-e", "--encoding", type=str, metavar="ENCODING", default=Default.ENCODING,
+    "-e", "--encoding", type=str, metavar="ENCODING",
     help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
     "-p", "--proxy", type=str, metavar="PROXY",
@@ -281,6 +289,10 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     result_counter = ResultCounter()
     logger = make_logger("{:s} url".format(
         PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
+    if typepy.is_empty_sequence(encoding):
+        encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
+        logger.debug("use default encoding: {}".format(encoding))
 
     if typepy.is_null_string(proxy):
         proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
@@ -406,7 +418,8 @@ def configure(ctx):
     """
     Configure the following application settings:
 
-    (1) HTTP/HTTPS proxy server URI (for url sub-command).
+    (1) Default encoding to load files.
+    (2) HTTP/HTTPS proxy server URI (for url sub-command).
 
     Configurations are written to '~/.sqlitebiter'.
     You can remove these settings by deleting '~/.sqlitebiter'.

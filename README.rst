@@ -1,6 +1,6 @@
-sqlitebiter
-===========
 
+sqlitebiter
+=============
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
    :target: https://travis-ci.org/thombashi/sqlitebiter
    :alt: Linux CI test status
@@ -13,9 +13,9 @@ sqlitebiter
    :target: https://github.com/thombashi/sqlitebiter
    :alt: GitHub repository
 
-Summary
--------
 
+Summary
+---------
 A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV/Google-Sheets to a SQLite database file.
 
 Features
@@ -34,45 +34,53 @@ Features
     - URL (scrape data from web pages)
 - Multi-byte character support
 
+
 Usage
-=====
+=======
 
 Create SQLite database from files
----------------------------------
-
+-----------------------------------
 .. image:: docs/gif/usage_example.gif
 
 Create SQLite database from URL
--------------------------------
-
+---------------------------------
 Following is an example that convert HTML table tags within a web page to SQLite tables.
 
-.. code:: console
+:Example:
+    .. code-block:: console
 
-    $ sqlitebiter -v url "https://en.wikipedia.org/wiki/Comparison_of_firewalls"
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html1 (Firewall TEXT, License TEXT, Costandusagelimits TEXT, OS TEXT)' table
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html2 (Firewall TEXT, License TEXT, Cost TEXT, OS TEXT)' table
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html3 (CanTarget TEXT, Changingdefaultpolicytoacceptrejectbyissuingasinglerule TEXT, IPdestinationaddresses TEXT, IPsourceaddresses TEXT, TCPUDPdestinationports TEXT, TCPUDPsourceports TEXT, EthernetMACdestinationaddress TEXT, EthernetMACsourceaddress TEXT, Inboundfirewallingress TEXT, Outboundfirewallegress TEXT)' table
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html4 (Can TEXT, [workatOSILayer4statefulfirewall] TEXT, [workatOSILayer7applicationinspection] TEXT, ChangeTTLTransparenttotraceroute TEXT, ConfigureREJECTwithanswer TEXT, DMZdemilitarizedzoneallowsforsingleseveralhostsnottobefirewalled TEXT, Filteraccordingtotimeofday TEXT, RedirectTCPUDPportsportforwarding TEXT, RedirectIPaddressesforwarding TEXT, FilteraccordingtoUserAuthorization TEXT, TrafficratelimitQoS TEXT, Tarpit TEXT, Log TEXT)' table
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html5 (Features TEXT, ConfigurationGUItextorbothmodes TEXT, [RemoteAccessWebHTTPTelnetSSHRDPSerialCOMRS232] TEXT, Changeruleswithoutrequiringrestart TEXT, Abilitytocentrallymanageallfirewallstogether TEXT)' table
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html6 (Features TEXT, Modularitysupportsthirdpartymodulestoextendfunctionality TEXT, [IPS : Intrusion prevention system] TEXT, OpenSourceLicense TEXT, [supports IPv6 ?] TEXT, ClassHomeProfessional TEXT, OperatingSystemsonwhichitruns TEXT)' table
-    [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html7 (Can TEXT, [NAT44staticdynamicwoportsPAT] TEXT, [NAT64NPTv6] TEXT, IDSIntrusionDetectionSystem TEXT, VPNVirtualPrivateNetwork TEXT, AVAntiVirus TEXT, Sniffer TEXT, Profileselection TEXT)' table
-    $ sqlite3 out.sqlite
-    sqlite> .schema
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html1' (Firewall TEXT, License TEXT, Costandusagelimits TEXT, OS TEXT);
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html2' (Firewall TEXT, License TEXT, Cost TEXT, OS TEXT);
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html3' (CanTarget TEXT, Changingdefaultpolicytoacceptrejectbyissuingasinglerule TEXT, IPdestinationaddresses TEXT, IPsourceaddresses TEXT, TCPUDPdestinationports TEXT, TCPUDPsourceports TEXT, EthernetMACdestinationaddress TEXT, EthernetMACsourceaddress TEXT, Inboundfirewallingress TEXT, Outboundfirewallegress TEXT);
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html4' (Can TEXT, [workatOSILayer4statefulfirewall] TEXT, [workatOSILayer7applicationinspection] TEXT, ChangeTTLTransparenttotraceroute TEXT, ConfigureREJECTwithanswer TEXT, DMZdemilitarizedzoneallowsforsingleseveralhostsnottobefirewalled TEXT, Filteraccordingtotimeofday TEXT, RedirectTCPUDPportsportforwarding TEXT, RedirectIPaddressesforwarding TEXT, FilteraccordingtoUserAuthorization TEXT, TrafficratelimitQoS TEXT, Tarpit TEXT, Log TEXT);
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html5' (Features TEXT, ConfigurationGUItextorbothmodes TEXT, [RemoteAccessWebHTTPTelnetSSHRDPSerialCOMRS232] TEXT, Changeruleswithoutrequiringrestart TEXT, Abilitytocentrallymanageallfirewallstogether TEXT);
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html6' (Features TEXT, Modularitysupportsthirdpartymodulestoextendfunctionality TEXT, [IPS : Intrusion prevention system] TEXT, OpenSourceLicense TEXT, [supports IPv6 ?] TEXT, ClassHomeProfessional TEXT, OperatingSystemsonwhichitruns TEXT);
-    CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html7' (Can TEXT, [NAT44staticdynamicwoportsPAT] TEXT, [NAT64NPTv6] TEXT, IDSIntrusionDetectionSystem TEXT, VPNVirtualPrivateNetwork TEXT, AVAntiVirus TEXT, Sniffer TEXT, Profileselection TEXT);
+        $ sqlitebiter -v url "https://en.wikipedia.org/wiki/Comparison_of_firewalls"
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html1 (Firewall TEXT, License TEXT, Costandusagelimits TEXT, OS TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html2 (Firewall TEXT, License TEXT, Cost TEXT, OS TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html3 (CanTarget TEXT, Changingdefaultpolicytoacceptrejectbyissuingasinglerule TEXT, IPdestinationaddresses TEXT, IPsourceaddresses TEXT, TCPUDPdestinationports TEXT, TCPUDPsourceports TEXT, EthernetMACdestinationaddress TEXT, EthernetMACsourceaddress TEXT, Inboundfirewallingress TEXT, Outboundfirewallegress TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html4 (Can TEXT, workatOSILayer4statefulfirewall TEXT, workatOSILayer7applicationinspection TEXT, ChangeTTLTransparenttotraceroute TEXT, ConfigureREJECTwithanswer TEXT, DMZdemilitarizedzoneallowsforsingleseveralhostsnottobefirewalled TEXT, Filteraccordingtotimeofday TEXT, RedirectTCPUDPportsportforwarding TEXT, RedirectIPaddressesforwarding TEXT, FilteraccordingtoUserAuthorization TEXT, TrafficratelimitQoS TEXT, Tarpit TEXT, Log TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html5 (Features TEXT, ConfigurationGUItextorbothmodes TEXT, RemoteAccessWebHTTPTelnetSSHRDPSerialCOMRS232 TEXT, Changeruleswithoutrequiringrestart TEXT, Abilitytocentrallymanageallfirewallstogether TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html6 (Features TEXT, Modularitysupportsthirdpartymodulestoextendfunctionality TEXT, IPS : Intrusion prevention system] TEXT, OpenSourceLicense TEXT, supports IPv6 ?] TEXT, ClassHomeProfessional TEXT, OperatingSystemsonwhichitruns TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html7 (Can TEXT, NAT44staticdynamicwoportsPAT TEXT, NAT64NPTv6 TEXT, IDSIntrusionDetectionSystem TEXT, VPNVirtualPrivateNetwork TEXT, AVAntiVirus TEXT, Sniffer TEXT, Profileselection TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html9 (A TEXT, B TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html10 (A TEXT, B TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html11 (A TEXT, B TEXT)' table
+
+:Output:
+    .. code-block:: console
+
+        sqlite> .schema
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html1' (Firewall TEXT, License TEXT, Costandusagelimits TEXT, OS TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html2' (Firewall TEXT, License TEXT, Cost TEXT, OS TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html3' (CanTarget TEXT, Changingdefaultpolicytoacceptrejectbyissuingasinglerule TEXT, IPdestinationaddresses TEXT, IPsourceaddresses TEXT, TCPUDPdestinationports TEXT, TCPUDPsourceports TEXT, EthernetMACdestinationaddress TEXT, EthernetMACsourceaddress TEXT, Inboundfirewallingress TEXT, Outboundfirewallegress TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html4' (Can TEXT, [workatOSILayer4statefulfirewall] TEXT, [workatOSILayer7applicationinspection] TEXT, ChangeTTLTransparenttotraceroute TEXT, ConfigureREJECTwithanswer TEXT, DMZdemilitarizedzoneallowsforsingleseveralhostsnottobefirewalled TEXT, Filteraccordingtotimeofday TEXT, RedirectTCPUDPportsportforwarding TEXT, RedirectIPaddressesforwarding TEXT, FilteraccordingtoUserAuthorization TEXT, TrafficratelimitQoS TEXT, Tarpit TEXT, Log TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html5' (Features TEXT, ConfigurationGUItextorbothmodes TEXT, [RemoteAccessWebHTTPTelnetSSHRDPSerialCOMRS232] TEXT, Changeruleswithoutrequiringrestart TEXT, Abilitytocentrallymanageallfirewallstogether TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html6' (Features TEXT, Modularitysupportsthirdpartymodulestoextendfunctionality TEXT, [IPS : Intrusion prevention system] TEXT, OpenSourceLicense TEXT, [supports IPv6 ?] TEXT, ClassHomeProfessional TEXT, OperatingSystemsonwhichitruns TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html7' (Can TEXT, [NAT44staticdynamicwoportsPAT] TEXT, [NAT64NPTv6] TEXT, IDSIntrusionDetectionSystem TEXT, VPNVirtualPrivateNetwork TEXT, AVAntiVirus TEXT, Sniffer TEXT, Profileselection TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html9' (A TEXT, B TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html10' (A TEXT, B TEXT);
+        CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html11' (A TEXT, B TEXT);
+
 
 For more information
-~~~~~~~~~~~~~~~~~~~~
-
+~~~~~~~~~~~~~~~~~~~~~~
 More examples are available at 
 http://sqlitebiter.rtfd.io/en/latest/pages/usage/index.html
-
 Installation
 ============
 
@@ -129,7 +137,7 @@ Installing executable files in Windows
 #. Unzip the file
 #. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
-.. code:: batch
+.. code-block:: batch
 
     >cd sqlitebiter_win_x64
     >sqlitebiter.exe -h
@@ -151,8 +159,7 @@ Installing executable files in Windows
       url        Scrape tabular data from a URL and convert...
 
 
+
 Documentation
-=============
-
+===============
 http://sqlitebiter.rtfd.io/
-

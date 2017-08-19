@@ -1,22 +1,3 @@
 Create a SQLite database from CSV/Excel/JSON/SQLite/etc. files
 ------------------------------------------------------------------
 ``sqlitebiter file`` is a subcommand to convert tabular data file(s) to a SQLite database file.
-Following table shows that the acceptable data format
-(format name and file extensions):
-
-.. table:: Available data formats
-
-    ========  ========================  =================================================================
-     Format     File Extension                       Remarks                         
-    ========  ========================  =================================================================
-    CSV       ``.csv``                                                               
-    Excel     ``.xlsx``/``.xls``        Create table for each sheet in the Excel workbook.
-    HTML      ``.html``/``.htm``        | Scrape tabular data from ``<table>`` tags in the HTML file.
-                                        | And create table for each ``<table>`` tag data.
-    JSON      ``.json``                                                                  
-    LTSV      ``.ltsv``                                                              
-    Markdown  ``.md``                   | Extract tabular data in the Markdown file.
-                                        | And create a table for each ``<table>`` tabular data.
-    SQLite    ``.sqlite``/``.sqlite3``  
-    TSV       ``.tsv``                                                               
-    ========  ========================  =================================================================
