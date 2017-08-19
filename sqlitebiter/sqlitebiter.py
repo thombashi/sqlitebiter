@@ -165,7 +165,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
 @click.option(
     "--encoding", metavar="ENCODING",
     help="Encoding to load files. Defaults to '{:s}'.".format(
-        Default.OUTPUT_FILE))
+        Default.ENCODING))
 @click.pass_context
 def file(ctx, files, output_path, encoding):
     """
