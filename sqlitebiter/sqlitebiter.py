@@ -406,7 +406,8 @@ def configure(ctx):
     """
     Configure the following application settings:
 
-    (1) HTTP/HTTPS proxy server URI (for url sub-command).
+    (1) Default encoding to load files.
+    (2) HTTP/HTTPS proxy server URI (for url sub-command).
 
     Configurations are written to '~/.sqlitebiter'.
     You can remove these settings by deleting '~/.sqlitebiter'.
