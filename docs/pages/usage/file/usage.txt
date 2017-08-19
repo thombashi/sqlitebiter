@@ -1,36 +1,43 @@
-Example
-~~~~~~~
+Examples
+~~~~~~~~
+Using wildcard to convert multiple files:
 
-.. code-block:: console
-    :caption: Using wildcard to designate multiple files
+:Example:
+    .. code-block:: console
 
-    $ ls
-    sample_data.csv  sample_data.xlsx  sample_data_multi.json  sample_data_single.json
-    $ sqlitebiter file * -o sample.sqlite
-    [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
-    [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
-    [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
-    [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'sample_data_multi_table_b' table
-    [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'sample_data_multi_table_a' table
-    [INFO] sqlitebiter file: convert 'sample_data_single.json' to 'sample_data_single_json3' table
-    $ sqlite3 sample.sqlite
-    sqlite> .schema
-    CREATE TABLE 'sample_data' (attra INTEGER, attrb REAL, attrc TEXT);
-    CREATE TABLE 'samplesheet1' (a INTEGER, b REAL, c TEXT);
-    CREATE TABLE 'samplesheet3' (aa INTEGER, ab TEXT, ac TEXT);
-    CREATE TABLE 'sample_data_multi_table_b' (a INTEGER, b REAL);
-    CREATE TABLE 'sample_data_multi_table_a' (attra INTEGER, attrb REAL, attrc TEXT);
-    CREATE TABLE 'sample_data_single_json3' (attra INTEGER, attrb REAL, attrc TEXT);
+        $ ls
+        sample_data.csv  sample_data.xlsx  sample_data_multi.json  sample_data_single.json
+        $ sqlitebiter file * -o sample.sqlite
+        [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
+        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
+        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
+        [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_b' table
+        [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_a' table
+        [INFO] sqlitebiter file: convert 'sample_data_single.json' to 'sample_data_single' table
 
-.. code-block:: console
-    :caption: Designate multiple file path
+:Output:
+    .. code-block:: console
 
-    $ sqlitebiter file hoge.csv sample_excel.xlsx
-    [INFO] sqlitebiter file: convert 'hoge.csv' to 'hoge' table
-    [INFO] sqlitebiter file: convert 'sample_excel.xlsx' to 'sheet3' table
-    [INFO] sqlitebiter file: convert 'sample_excel.xlsx' to 'sheet1' table
+        $ sqlite3 sample.sqlite
+        sqlite> .schema
+        CREATE TABLE 'sample_data' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+        CREATE TABLE 'samplesheet1' (a INTEGER, b REAL, c TEXT);
+        CREATE TABLE 'samplesheet3' (aa INTEGER, ab TEXT, ac TEXT);
+        CREATE TABLE 'table_b' (a INTEGER, b REAL);
+        CREATE TABLE 'table_a' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+        CREATE TABLE 'sample_data_single' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+
+Designate multiple file path to convert:
+
+:Example:
+    .. code-block:: console
+
+        $ sqlitebiter file hoge.csv sample_excel.xlsx
+        [INFO] sqlitebiter file: convert 'hoge.csv' to 'hoge' table
+        [INFO] sqlitebiter file: convert 'sample_excel.xlsx' to 'sheet3' table
+        [INFO] sqlitebiter file: convert 'sample_excel.xlsx' to 'sheet1' table
 
 .. note::
 
     - Available JSON Schema is limited. Acceptable format described in `here <http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes>`__
-    - Wildcard characters cannot use in Windows
+    - Wildcard characters cannot use in Windows environments
