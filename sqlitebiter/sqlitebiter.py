@@ -230,7 +230,8 @@ def file(ctx, files, output_path, encoding):
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
                     logger.debug(
-                        u"path={}, message={}".format(file_path, e))
+                        u"exception={:s}, path={}, message={}".format(
+                            type(e).__name__, file_path, e))
                     result_counter.inc_fail()
                     continue
 
