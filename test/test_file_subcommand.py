@@ -32,6 +32,7 @@ from .dataset import (
     valid_tsv_file,
     invalid_tsv_file,
     valid_excel_file,
+    valid_excel_file_1,
     invalid_excel_file_1,
     invalid_excel_file_2,
     valid_html_file,
@@ -166,6 +167,20 @@ class Test_sqlitebiter_file(object):
 
                 assert result.exit_code in (
                     ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
+
+    @pytest.mark.parametrize(["file_creator", "expected"], [
+        [valid_excel_file_1, ExitCode.SUCCESS],
+    ])
+    def test_normal_one_file(self, file_creator, expected):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            result = runner.invoke(
+                cmd, ["file", file_path, "-o", db_path])
+
+            assert result.exit_code == expected, file_path
 
     def test_normal_multi_file_different_table(self):
         db_path = "test.sqlite"

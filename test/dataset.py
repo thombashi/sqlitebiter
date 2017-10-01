@@ -258,6 +258,26 @@ def valid_excel_file():
     return str(file_path)
 
 
+def valid_excel_file_1():
+    file_path = "valid_underscore.xlsx"
+    workbook = xlsxwriter.Workbook(str(file_path))
+
+    worksheet = workbook.add_worksheet("sheet_a")
+    table = [
+        ["data", "_data", "da_ta", "data_"],
+        [1, 0.0, "a", "aaaa"],
+        [2, 0.1, "b", "bbbb"],
+        [3, 0.2, "c", "cccc"],
+    ]
+    for row_idx, row in enumerate(table):
+        for col_idx, item in enumerate(row):
+            worksheet.write(row_idx, col_idx, item)
+
+    workbook.close()
+
+    return str(file_path)
+
+
 def invalid_excel_file_1():
     file_path = "invalid.xlsx"
     workbook = xlsxwriter.Workbook(file_path)
