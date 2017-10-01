@@ -18,7 +18,9 @@ class TableCreator(object):
         self.__dst_con = dst_con
 
     def create(self, tabledata, index_list):
-        is_rename, con_mem = self.__require_rename_table(tabledata)
+        con_mem = simplesqlite.connect_sqlite_memdb()
+        con_mem.create_table_from_tabledata(tabledata=tabledata)
+        is_rename = self.__require_rename_table(con_mem, tabledata.table_name)
         src_table_name = con_mem.get_table_name_list()[0]
         dst_table_name = src_table_name
 
@@ -42,25 +44,24 @@ class TableCreator(object):
             for index in index_list
         ])
 
-    def __require_rename_table(self, tabledata):
-        con_mem = simplesqlite.connect_sqlite_memdb()
-        con_mem.create_table_from_tabledata(tabledata=tabledata)
+    def __require_rename_table(self, src_con, src_table_name):
+        if not self.__dst_con.has_table(src_table_name):
+            return False
 
-        if not self.__dst_con.has_table(tabledata.table_name):
-            return (False, con_mem)
-
-        if self.__dst_con.get_attr_name_list(tabledata.table_name) != tabledata.header_list:
-            return (True, con_mem)
+        if (self.__dst_con.get_attr_name_list(src_table_name) !=
+                src_con.get_attr_name_list(src_table_name)):
+            return True
 
         con_schema_extractor = SqliteSchemaExtractor(
             self.__dst_con, verbosity_level=1)
         con_mem_schema_extractor = SqliteSchemaExtractor(
-            con_mem, verbosity_level=1)
+            src_con, verbosity_level=1)
 
-        if con_schema_extractor.get_database_schema() == con_mem_schema_extractor.get_database_schema():
-            return (False, con_mem)
+        if (con_schema_extractor.get_database_schema() ==
+                con_mem_schema_extractor.get_database_schema()):
+            return False
 
-        return (True, con_mem)
+        return True
 
     def __make_unique_table_name(self, table_name_base):
         exist_table_name_list = self.__dst_con.get_table_name_list()
