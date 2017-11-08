@@ -81,6 +81,7 @@ For more information
 ~~~~~~~~~~~~~~~~~~~~~~
 More examples are available at 
 http://sqlitebiter.rtfd.io/en/latest/pages/usage/index.html
+
 Installation
 ============
 
