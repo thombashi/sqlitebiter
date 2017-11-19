@@ -217,12 +217,12 @@ def file(ctx, files, output_path, encoding):
             continue
 
         try:
-            for tabledata in loader.load():
+            for table_data in loader.load():
                 logger.debug(u"loaded tabledata: {}".format(
-                    six.text_type(tabledata)))
+                    six.text_type(table_data)))
 
                 sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
-                    tabledata).sanitize()
+                    table_data).sanitize()
 
                 try:
                     table_creator.create(
@@ -315,12 +315,12 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     table_creator = TableCreator(logger=logger, dst_con=con)
 
     try:
-        for tabledata in loader.load():
-            logger.debug(u"loaded tabledata: {}".format(
-                six.text_type(tabledata)))
+        for table_data in loader.load():
+            logger.debug(u"loaded table_data: {}".format(
+                six.text_type(table_data)))
 
             sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
-                tabledata).sanitize()
+                table_data).sanitize()
 
             try:
                 table_creator.create(
@@ -386,12 +386,12 @@ def gs(ctx, credentials, title, output_path):
     #         ConfigKey.GS_CREDENTIALS_FILE_PATH)
 
     try:
-        for tabledata in loader.load():
-            logger.debug(u"loaded tabledata: {}".format(
-                six.text_type(tabledata)))
+        for table_data in loader.load():
+            logger.debug(u"loaded table_data: {}".format(
+                six.text_type(table_data)))
 
             sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
-                tabledata).sanitize()
+                table_data).sanitize()
 
             try:
                 table_creator.create(
@@ -401,7 +401,7 @@ def gs(ctx, credentials, title, output_path):
 
             logger.info(get_success_message(
                 verbosity_level, "google sheets",
-                schema_extractor.get_table_schema_text(tabledata.table_name).strip()))
+                schema_extractor.get_table_schema_text(table_data.table_name).strip()))
     except ptr.OpenError as e:
         logger.error("{:s}: {}".format(e.__class__.__name__, e))
         result_counter.inc_fail()
