@@ -121,10 +121,10 @@ def create_url_loader(logger, source_url, format_name, encoding, proxies):
         return ptr.TableUrlLoader(
             source_url, format_name, encoding=encoding, proxies=proxies)
     except ptr.HTTPError as e:
-        logger.error(e)
+        logger.error("{:s}: {}".format(e.__class__.__name__, e))
         sys.exit(ExitCode.FAILED_HTTP)
     except ptr.ProxyError as e:
-        logger.error(e)
+        logger.error("{:s}: {}".format(e.__class__.__name__, e))
         sys.exit(errno.ECONNABORTED)
 
 
@@ -207,7 +207,7 @@ def file(ctx, files, output_path, encoding):
         try:
             loader = ptr.TableFileLoader(file_path, encoding=encoding)
         except ptr.InvalidFilePathError as e:
-            logger.debug(e)
+            logger.debug("{:s}: {}".format(e.__class__.__name__, e))
             result_counter.inc_fail()
             continue
         except ptr.LoaderNotFoundError:
@@ -309,7 +309,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         try:
             loader = create_url_loader(logger, url, "html", encoding, proxies)
         except ptr.LoaderNotFoundError as e:
-            logger.error(e)
+            logger.error("{:s}: {}".format(e.__class__.__name__, e))
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
 
     table_creator = TableCreator(logger=logger, dst_con=con)
@@ -397,7 +397,7 @@ def gs(ctx, credentials, title, output_path):
                 verbosity_level, "google sheets",
                 schema_extractor.get_table_schema_text(tabledata.table_name).strip()))
     except ptr.OpenError as e:
-        logger.error(e)
+        logger.error("{:s}: {}".format(e.__class__.__name__, e))
         result_counter.inc_fail()
     except AttributeError:
         logger.error(u"invalid credentials data: path={}".format(credentials))
