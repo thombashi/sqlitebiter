@@ -10,6 +10,11 @@ Install via pip (recommended)
 
     pip install sqlitebiter
 
+
+Dependencies
+============
+Python 2.7+ or 3.4+
+
 Python package dependencies are as follows.
 
 Mandatory Python package dependencies
@@ -26,12 +31,13 @@ Following mandatory Python packages are automatically installed during
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `typepy <https://github.com/thombashi/typepy>`__
 
-Google Sheets dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Google Sheets dependencies (Optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following Python packages are required to 
 `manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ 
 when you use Google Sheets feature:
 
+- `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
 

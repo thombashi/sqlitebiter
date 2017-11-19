@@ -3,6 +3,7 @@ Requirements
 
 Following python packages are required to use Google Sheets feature.
 
+- `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/install.html>`_
 
@@ -10,5 +11,5 @@ Dependency Python package installation:
 
 ::
 
-    pip install oauth2client
-    pip install pyopenssl
+    $ sudo pip install gspread
+    $ sudo pip install oauth2client pyopenssl
