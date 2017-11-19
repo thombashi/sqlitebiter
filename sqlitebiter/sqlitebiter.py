@@ -326,7 +326,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 table_creator.create(
                     sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                 result_counter.inc_success()
-            except (ValueError) as e:
+            except ValueError as e:
                 logger.debug(
                     u"url={}, message={}".format(url, str(e)))
                 result_counter.inc_fail()
