@@ -1,4 +1,3 @@
-
 sqlitebiter
 =============
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
@@ -13,6 +12,8 @@ sqlitebiter
    :target: https://github.com/thombashi/sqlitebiter
    :alt: GitHub repository
 
+.. contents:: Table of Contents
+   :depth: 2
 
 Summary
 ---------
@@ -34,10 +35,8 @@ Features
     - URL (scrape data from web pages)
 - Multi-byte character support
 
-
 Usage
 =======
-
 Create SQLite database from files
 -----------------------------------
 .. image:: docs/gif/usage_example.gif
@@ -76,7 +75,6 @@ Following is an example that convert HTML table tags within a web page to SQLite
         CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html10' (A TEXT, B TEXT);
         CREATE TABLE 'Comparison_of_firewalls_Wikipedia_html11' (A TEXT, B TEXT);
 
-
 For more information
 ~~~~~~~~~~~~~~~~~~~~~~
 More examples are available at 
@@ -94,6 +92,11 @@ Install via pip (recommended)
 
     pip install sqlitebiter
 
+
+Dependencies
+============
+Python 2.7+ or 3.4+
+
 Python package dependencies are as follows.
 
 Mandatory Python package dependencies
@@ -110,12 +113,13 @@ Following mandatory Python packages are automatically installed during
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `typepy <https://github.com/thombashi/typepy>`__
 
-Google Sheets dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Google Sheets dependencies (Optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following Python packages are required to
 `manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
 when you use Google Sheets feature:
 
+- `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
 
@@ -160,7 +164,7 @@ Installing executable files in Windows
       url        Scrape tabular data from a URL and convert...
 
 
-
 Documentation
 ===============
 http://sqlitebiter.rtfd.io/
+
