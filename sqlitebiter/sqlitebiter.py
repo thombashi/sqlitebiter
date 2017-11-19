@@ -326,6 +326,12 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 table_creator.create(
                     sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                 result_counter.inc_success()
+            except simplesqlite.OperationalError as e:
+                logger.error(
+                    u"failed to convert: url={}, message={}".format(
+                        url, e.message))
+                result_counter.inc_fail()
+                continue
             except ValueError as e:
                 logger.debug(
                     u"url={}, message={}".format(url, str(e)))
