@@ -17,10 +17,10 @@ class TableCreator(object):
         self.__logger = logger
         self.__dst_con = dst_con
 
-    def create(self, tabledata, index_list):
+    def create(self, table_data, index_list):
         con_mem = simplesqlite.connect_sqlite_memdb()
-        con_mem.create_table_from_tabledata(tabledata=tabledata)
-        is_rename = self.__require_rename_table(con_mem, tabledata.table_name)
+        con_mem.create_table_from_tabledata(table_data)
+        is_rename = self.__require_rename_table(con_mem, table_data.table_name)
         src_table_name = con_mem.get_table_name_list()[0]
         dst_table_name = src_table_name
 
