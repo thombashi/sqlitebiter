@@ -10,7 +10,37 @@ Install via pip (recommended)
 
     pip install sqlitebiter
 
+Installing executable files in Windows
+--------------------------------------------
+``sqlitebiter`` can be used in Windows environments without Python installation as follows:
 
+#. Navigate to https://github.com/thombashi/sqlitebiter/releases
+#. Download the latest version of the ``sqlitebiter_win_x64.zip``
+#. Unzip the file
+#. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
+
+.. code-block:: batch
+
+    >cd sqlitebiter_win_x64
+    >sqlitebiter.exe -h
+    Usage: sqlitebiter.exe [OPTIONS] COMMAND [ARGS]...
+
+    Options:
+      --version         Show the version and exit.
+      -a, --append      append table(s) to existing database.
+      -i, --index TEXT  comma separated attribute names to create indices.
+      -v, --verbose
+      --debug           for debug print.
+      --quiet           suppress execution log messages.
+      -h, --help        Show this message and exit.
+
+    Commands:
+      configure  Configure the following application settings:...
+      file       Convert tabular data within...
+      gs         Convert a spreadsheet in Google Sheets to a...
+      url        Scrape tabular data from a URL and convert...
+
+  
 Dependencies
 ============
 Python 2.7+ or 3.4+
@@ -51,33 +81,3 @@ Test dependencies
 Misc
 ------------------------------------------------------------
 - `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
-
-
-Installing executable files in Windows
---------------------------------------------
-#. Navigate to https://github.com/thombashi/sqlitebiter/releases
-#. Download the latest version of the ``sqlitebiter_win_x64.zip``
-#. Unzip the file
-#. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
-
-.. code-block:: batch
-
-    >cd sqlitebiter_win_x64
-    >sqlitebiter.exe -h
-    Usage: sqlitebiter.exe [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-      --version         Show the version and exit.
-      -a, --append      append table(s) to existing database.
-      -i, --index TEXT  comma separated attribute names to create indices.
-      -v, --verbose
-      --debug           for debug print.
-      --quiet           suppress execution log messages.
-      -h, --help        Show this message and exit.
-
-    Commands:
-      configure  Configure the following application settings:...
-      file       Convert tabular data within...
-      gs         Convert a spreadsheet in Google Sheets to a...
-      url        Scrape tabular data from a URL and convert...
-
