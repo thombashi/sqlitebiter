@@ -18,7 +18,7 @@ Python 2.7+ or 3.4+
 Python package dependencies are as follows.
 
 Mandatory Python package dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 Following mandatory Python packages are automatically installed during
 ``sqlitebiter`` installation process:
 
@@ -32,7 +32,7 @@ Following mandatory Python packages are automatically installed during
 - `typepy <https://github.com/thombashi/typepy>`__
 
 Google Sheets dependencies (Optional)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 Following Python packages are required to 
 `manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ 
 when you use Google Sheets feature:
@@ -42,14 +42,14 @@ when you use Google Sheets feature:
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
 
 Test dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 - `pytest <http://pytest.org/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
 - `XlsxWriter <http://xlsxwriter.readthedocs.io/>`__
 
 Misc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 - `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
 
 
