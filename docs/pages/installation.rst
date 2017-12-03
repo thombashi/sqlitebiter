@@ -6,9 +6,23 @@ Install via pip (recommended)
 ``sqlitebiter`` can be installed via
 `pip <https://pip.pypa.io/en/stable/installing/>`__ (Python package manager).
 
-.. code:: console
+:Example:
+    .. code:: console
 
-    pip install sqlitebiter
+        pip install sqlitebiter
+
+
+Install in Debian/Ubuntu from a deb package
+--------------------------------------------
+#. ``wget https://github.com/thombashi/sqlitebiter/releases/download/<version>/sqlitebiter_<version>_amd64.deb``
+#. ``dpkg -iv sqlitebiter_<version>_amd64.deb``
+
+:Example:
+    .. code:: console
+
+        $ wget https://github.com/thombashi/sqlitebiter/releases/download/v0.12.0/sqlitebiter_0.12.0_amd64.deb
+        $ sudo dpkg -i sqlitebiter_0.12.0_amd64.deb
+
 
 Installing executable files in Windows
 --------------------------------------------
@@ -40,7 +54,7 @@ Installing executable files in Windows
       gs         Convert a spreadsheet in Google Sheets to a...
       url        Scrape tabular data from a URL and convert...
 
-  
+
 Dependencies
 ============
 Python 2.7+ or 3.4+
