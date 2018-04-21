@@ -22,7 +22,7 @@ with open("README.rst") as fp:
     long_description = fp.read()
 
 with open(os.path.join("docs", "pages", "introduction", "summary.txt")) as f:
-    summary = f.read()
+    summary = f.read().strip()
 
 with open(os.path.join(REQUIREMENT_DIR, "requirements.txt")) as f:
     install_requires = [line.strip() for line in f if line.strip()]
