@@ -18,8 +18,12 @@ REPOSITORY_URL = "https://github.com/thombashi/{:s}".format(MODULE_NAME)
 REQUIREMENT_DIR = "requirements"
 ENCODING = "utf8"
 
-needs_pytest = set(["pytest", "test", "ptr"]).intersection(sys.argv)
-pytest_runner = ["pytest-runner"] if needs_pytest else []
+
+def need_pytest():
+    return set(["pytest", "test", "ptr"]).intersection(sys.argv)
+
+
+pytest_runner = ["pytest-runner"] if need_pytest() else []
 
 
 with io.open("README.rst", encoding=ENCODING) as fp:
