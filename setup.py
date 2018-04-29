@@ -25,6 +25,18 @@ def need_pytest():
     return set(["pytest", "test", "ptr"]).intersection(sys.argv)
 
 
+def get_release_command_class():
+    try:
+        from releasecmd import ReleaseCommand
+    except ImportError:
+        return {}
+
+    return {"release": ReleaseCommand}
+
+
+with open(os.path.join(MODULE_NAME, "__version__.py")) as f:
+    exec(f.read(), pkg_info)
+
 with io.open("README.rst", encoding=ENCODING) as fp:
     long_description = fp.read()
 
@@ -73,6 +85,7 @@ setuptools.setup(
     extras_require={
         "build": build_requires,
         "docs": docs_requires,
+        "release": "releasecmd>=0.0.9",
         "test": tests_requires,
     },
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
@@ -98,4 +111,5 @@ setuptools.setup(
         "console_scripts": [
             "sqlitebiter=sqlitebiter.sqlitebiter:cmd",
         ],
-    })
+    },
+    cmdclass=get_release_command_class())
