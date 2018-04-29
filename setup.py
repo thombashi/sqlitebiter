@@ -23,9 +23,6 @@ def need_pytest():
     return set(["pytest", "test", "ptr"]).intersection(sys.argv)
 
 
-pytest_runner = ["pytest-runner"] if need_pytest() else []
-
-
 with io.open("README.rst", encoding=ENCODING) as fp:
     long_description = fp.read()
 
@@ -45,6 +42,7 @@ with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
     docs_requires = [line.strip() for line in f if line.strip()]
 
 SETUPTOOLS_REQUIRES = ["setuptools>=38.3.0"]
+PYTEST_RUNNER_REQUIRES = ["pytest-runner"] if need_pytest() else []
 
 setuptools.setup(
     name=MODULE_NAME,
@@ -68,7 +66,7 @@ setuptools.setup(
     },
 
     install_requires=SETUPTOOLS_REQUIRES + install_requires,
-    setup_requires=SETUPTOOLS_REQUIRES + pytest_runner,
+    setup_requires=SETUPTOOLS_REQUIRES + PYTEST_RUNNER_REQUIRES,
     tests_require=tests_requires,
     extras_require={
         "build": build_requires,
