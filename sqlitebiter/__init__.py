@@ -6,4 +6,4 @@
 
 from __future__ import absolute_import
 
-from ._version import VERSION
+from .__version__ import __author__, __copyright__, __email__, __license__, __version__

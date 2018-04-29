@@ -18,6 +18,8 @@ REPOSITORY_URL = "https://github.com/thombashi/{:s}".format(MODULE_NAME)
 REQUIREMENT_DIR = "requirements"
 ENCODING = "utf8"
 
+pkg_info = {}
+
 
 def need_pytest():
     return set(["pytest", "test", "ptr"]).intersection(sys.argv)
@@ -46,18 +48,18 @@ PYTEST_RUNNER_REQUIRES = ["pytest-runner"] if need_pytest() else []
 
 setuptools.setup(
     name=MODULE_NAME,
-    version=sqlitebiter.VERSION,
+    version=pkg_info["__version__"],
     url=REPOSITORY_URL,
 
-    author="Tsuyoshi Hombashi",
-    author_email="tsuyoshi.hombashi@gmail.com",
+    author=pkg_info["__author__"],
+    author_email=pkg_info["__email__"],
     description=summary,
     include_package_data=True,
     keywords=[
         "SQLite", "converter",
         "CSV", "Excel", "Google Sheets", "HTML", "JSON", "LTSV", "TSV",
     ],
-    license="MIT License",
+    license=pkg_info["__license__"],
     long_description=long_description,
     packages=setuptools.find_packages(exclude=['test*']),
     project_urls={
