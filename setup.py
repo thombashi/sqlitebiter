@@ -13,6 +13,8 @@ import setuptools
 import sqlitebiter
 
 
+MODULE_NAME = "sqlitebiter"
+REPOSITORY_URL = "https://github.com/thombashi/{:s}".format(MODULE_NAME)
 REQUIREMENT_DIR = "requirements"
 ENCODING = "utf8"
 
@@ -38,10 +40,12 @@ with open(os.path.join(REQUIREMENT_DIR, "build_requirements.txt")) as f:
 with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
     docs_requires = [line.strip() for line in f if line.strip()]
 
+SETUPTOOLS_REQUIRES = ["setuptools>=38.3.0"]
+
 setuptools.setup(
-    name="sqlitebiter",
+    name=MODULE_NAME,
     version=sqlitebiter.VERSION,
-    url="https://github.com/thombashi/sqlitebiter",
+    url=REPOSITORY_URL,
 
     author="Tsuyoshi Hombashi",
     author_email="tsuyoshi.hombashi@gmail.com",
@@ -54,14 +58,18 @@ setuptools.setup(
     license="MIT License",
     long_description=long_description,
     packages=setuptools.find_packages(exclude=['test*']),
+    project_urls={
+        "Documentation": "http://{:s}.rtfd.io/".format(MODULE_NAME),
+        "Tracker": "{:s}/issues".format(REPOSITORY_URL),
+    },
 
-    install_requires=install_requires,
-    setup_requires=pytest_runner,
+    install_requires=SETUPTOOLS_REQUIRES + install_requires,
+    setup_requires=SETUPTOOLS_REQUIRES + pytest_runner,
     tests_require=tests_requires,
     extras_require={
-        "test": tests_requires,
         "build": build_requires,
         "docs": docs_requires,
+        "test": tests_requires,
     },
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
 
