@@ -4,24 +4,24 @@ set -eu
 
 DIST_DIR_NAME="dist"
 INSTALL_DIR_PATH="/usr/bin"
-DIST_PATH="./${DIST_DIR_NAME}/${INSTALL_DIR_PATH}"
-BIN_NAME="sqlitebiter"
+DIST_DIR_PATH="./${DIST_DIR_NAME}/${INSTALL_DIR_PATH}"
+PKG_NAME="sqlitebiter"
 
 # initialize
 rm -rf $DIST_DIR_NAME
 mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 
 pip install --upgrade .
-PKG_VERSION=$(python -c "import pkg_resources; print(pkg_resources.get_distribution('${BIN_NAME}').version)")
+PKG_VERSION=$(python -c "import pkg_resources; print(pkg_resources.get_distribution('${PKG_NAME}').version)")
 
-echo $BIN_NAME $PKG_VERSION
+echo $PKG_NAME $PKG_VERSION
 
 # build an executable binary file
-pyinstaller cli.py --clean --onefile --distpath $DIST_PATH --name $BIN_NAME
+pyinstaller cli.py --clean --onefile --distpath $DIST_DIR_PATH --name $PKG_NAME
 
 # build a deb package
 cat << _CONTROL_ > "${DIST_DIR_NAME}/DEBIAN/control"
-Package: $BIN_NAME
+Package: $PKG_NAME
 Version: $PKG_VERSION
 Maintainer: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 Architecture: amd64
