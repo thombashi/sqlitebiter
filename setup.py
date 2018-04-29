@@ -55,6 +55,7 @@ setuptools.setup(
     tests_require=tests_requires,
     extras_require={
         "test": tests_requires,
+        "build": build_requires,
         "docs": docs_requires,
     },
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
