@@ -7,6 +7,7 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import io
+from textwrap import dedent
 
 import path
 import xlsxwriter
@@ -309,49 +310,50 @@ def valid_html_file():
     file_path = "htmltable.html"
 
     with open(file_path, "w") as f:
-        f.write("""<title>testtitle</title>
-<table id="tablename">
-    <caption>caption</caption>
-    <tr>
-      <th>a</th>
-      <th>b</th>
-      <th>c</th>
-    </tr>
-    <tr>
-      <td align="right">1</td>
-      <td align="right">123.1</td>
-      <td align="left">a</td>
-    </tr>
-    <tr>
-      <td align="right">2</td>
-      <td align="right">2.2</td>
-      <td align="left">bb</td>
-    </tr>
-    <tr>
-      <td align="right">3</td>
-      <td align="right">3.3</td>
-      <td align="left">ccc</td>
-    </tr>
-</table>
-<table>
-    <tr>
-      <th>a</th>
-      <th>b</th>
-    </tr>
-    <tr>
-      <td align="right">1</td>
-      <td align="right">123.1</td>
-    </tr>
-    <tr>
-      <td align="right">2</td>
-      <td align="right">2.2</td>
-    </tr>
-    <tr>
-      <td align="right">3</td>
-      <td align="right">3.3</td>
-    </tr>
-</table>
-""")
+        f.write(dedent("""\
+            <title>testtitle</title>
+            <table id="tablename">
+                <caption>caption</caption>
+                <tr>
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                </tr>
+                <tr>
+                <td align="right">1</td>
+                <td align="right">123.1</td>
+                <td align="left">a</td>
+                </tr>
+                <tr>
+                <td align="right">2</td>
+                <td align="right">2.2</td>
+                <td align="left">bb</td>
+                </tr>
+                <tr>
+                <td align="right">3</td>
+                <td align="right">3.3</td>
+                <td align="left">ccc</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                <th>a</th>
+                <th>b</th>
+                </tr>
+                <tr>
+                <td align="right">1</td>
+                <td align="right">123.1</td>
+                </tr>
+                <tr>
+                <td align="right">2</td>
+                <td align="right">2.2</td>
+                </tr>
+                <tr>
+                <td align="right">3</td>
+                <td align="right">3.3</td>
+                </tr>
+            </table>
+            """))
 
     return file_path
 
@@ -360,15 +362,16 @@ def invalid_html_file():
     file_path = "invalid_html.html"
 
     with open(file_path, "w") as f:
-        f.write("""<html>
-  <head>
-    header
-  </head>
-  <body>
-    hogehoge
-  </body>
-</html>
-""")
+        f.write(dedent("""\
+            <html>
+            <head>
+                header
+            </head>
+            <body>
+                hogehoge
+            </body>
+            </html>
+            """))
 
     return file_path
 
@@ -377,10 +380,11 @@ def valid_ltsv_file():
     file_path = "valid_ltsv_a.ltsv"
 
     with open(file_path, "w") as f:
-        f.write("""a.0:1\tb-1:123.1\tc_2:"ltsv0"\t"dd":1.0\te.f-g_4:"1"
-a.0:2\tb-1:2.2\tc_2:"ltsv1"\t"dd":2.2\te.f-g_4:"2.2"
-a.0:3\tb-1:3.3\tc_2:"ltsv2"\t"dd":3.0\te.f-g_4:"cccc"
-""")
+        f.write(dedent("""\
+            a.0:1\tb-1:123.1\tc_2:"ltsv0"\t"dd":1.0\te.f-g_4:"1"
+            a.0:2\tb-1:2.2\tc_2:"ltsv1"\t"dd":2.2\te.f-g_4:"2.2"
+            a.0:3\tb-1:3.3\tc_2:"ltsv2"\t"dd":3.0\te.f-g_4:"cccc"
+            """))
 
     return file_path
 
@@ -403,12 +407,13 @@ def valid_markdown_file():
     file_path = "valid_mdtable.md"
 
     with open(file_path, "w") as f:
-        f.write("""| a |  b  | c |
-|--:|----:|---|
-|  1|123.1|a  |
-|  2|  2.2|bb |
-|  3|  3.3|ccc|
-""")
+        f.write(dedent("""\
+            | a |  b  | c |
+            |--:|----:|---|
+            |  1|123.1|a  |
+            |  2|  2.2|bb |
+            |  3|  3.3|ccc|
+            """))
 
     return file_path
 
@@ -417,10 +422,11 @@ def valid_utf8_csv_file():
     file_path = "valid_utf8.csv"
 
     with io.open(file_path, "w", encoding="utf-8") as f:
-        f.write(""""姓","名","生年月日","郵便番号","住所","電話番号"
-"山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
-"山田","次郎","2001/1/2","251-0036","神奈川県藤沢市江の島１丁目","03-9999-9999"
-""")
+        f.write(dedent("""\
+            "姓","名","生年月日","郵便番号","住所","電話番号"
+            "山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
+            "山田","次郎","2001/1/2","251-0036","神奈川県藤沢市江の島１丁目","03-9999-9999"
+            """))
 
     return file_path
 
