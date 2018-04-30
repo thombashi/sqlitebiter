@@ -12,6 +12,7 @@ import sys
 
 import click
 import logbook
+import msgfy
 import path
 import simplesqlite
 import six
@@ -121,10 +122,10 @@ def create_url_loader(logger, source_url, format_name, encoding, proxies):
         return ptr.TableUrlLoader(
             source_url, format_name, encoding=encoding, proxies=proxies)
     except ptr.HTTPError as e:
-        logger.error("{:s}: {}".format(e.__class__.__name__, e))
+        logger.error(msgfy.to_error_message(e))
         sys.exit(ExitCode.FAILED_HTTP)
     except ptr.ProxyError as e:
-        logger.error("{:s}: {}".format(e.__class__.__name__, e))
+        logger.error(msgfy.to_error_message(e))
         sys.exit(errno.ECONNABORTED)
 
 
@@ -186,7 +187,7 @@ def file(ctx, files, output_path, encoding):
 
     if typepy.is_empty_sequence(encoding):
         encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
-        logger.debug("use default encoding: {}".format(encoding))
+        logger.debug(u"use default encoding: {}".format(encoding))
 
     for file_path in files:
         file_path = path.Path(file_path)
@@ -207,7 +208,7 @@ def file(ctx, files, output_path, encoding):
         try:
             loader = ptr.TableFileLoader(file_path, encoding=encoding)
         except ptr.InvalidFilePathError as e:
-            logger.debug("{:s}: {}".format(e.__class__.__name__, e))
+            logger.debug(msgfy.to_debug_message(e))
             result_counter.inc_fail()
             continue
         except ptr.LoaderNotFoundError:
@@ -240,18 +241,18 @@ def file(ctx, files, output_path, encoding):
                     schema_extractor.get_table_schema_text(
                         sqlite_tabledata.table_name).strip()))
         except ptr.OpenError as e:
-            logger.error(u"open error: file={}, message='{}'".format(
-                file_path, str(e)))
+            logger.error(u"{:s}: open error: file={}, message='{}'".format(
+                e.__class__.__name__, file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             logger.error(
-                u"invalid {} data format: path={}, message={}".format(
-                    _get_format_type_from_path(file_path), file_path, str(e)))
+                u"{:s}: invalid {} data format: path={}, message={}".format(
+                    e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
         except ptr.InvalidDataError as e:
             logger.error(
-                u"invalid {} data: path={}, message={}".format(
-                    _get_format_type_from_path(file_path), file_path, str(e)))
+                u"{:s}: invalid {} data: path={}, message={}".format(
+                    e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
     write_completion_message(logger, output_path, result_counter)
@@ -309,7 +310,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         try:
             loader = create_url_loader(logger, url, "html", encoding, proxies)
         except ptr.LoaderNotFoundError as e:
-            logger.error("{:s}: {}".format(e.__class__.__name__, e))
+            logger.error(msgfy.to_error_message(e))
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
 
     table_creator = TableCreator(logger=logger, dst_con=con)
@@ -328,13 +329,13 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 result_counter.inc_success()
             except simplesqlite.OperationalError as e:
                 logger.error(
-                    u"failed to convert: url={}, message={}".format(
-                        url, e.message))
+                    u"{:s}: failed to convert: url={}, message={}".format(
+                        e.__class__.__name__, url, e.message))
                 result_counter.inc_fail()
                 continue
             except ValueError as e:
                 logger.debug(
-                    u"url={}, message={}".format(url, str(e)))
+                    u"{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()
                 continue
 
@@ -343,7 +344,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 schema_extractor.get_table_schema_text(
                     sqlite_tabledata.table_name).strip()))
     except ptr.InvalidDataError as e:
-        logger.error(u"invalid data: url={}, message={}".format(url, str(e)))
+        logger.error(u"{:s}: invalid data: url={}, message={}".format(
+            e.__class__.__name__, url, str(e)))
         result_counter.inc_fail()
 
     write_completion_message(logger, output_path, result_counter)
@@ -403,7 +405,7 @@ def gs(ctx, credentials, title, output_path):
                 verbosity_level, "google sheets",
                 schema_extractor.get_table_schema_text(table_data.table_name).strip()))
     except ptr.OpenError as e:
-        logger.error("{:s}: {}".format(e.__class__.__name__, e))
+        logger.error(msgfy.to_error_message(e))
         result_counter.inc_fail()
     except AttributeError:
         logger.error(u"invalid credentials data: path={}".format(credentials))
