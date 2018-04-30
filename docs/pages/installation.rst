@@ -87,10 +87,10 @@ when you use Google Sheets feature:
 
 Test dependencies
 ------------------------------------------------------------
+- `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <http://pytest.org/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
-- `XlsxWriter <http://xlsxwriter.readthedocs.io/>`__
 
 Misc
 ------------------------------------------------------------

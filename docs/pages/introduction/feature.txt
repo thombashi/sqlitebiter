@@ -13,3 +13,4 @@ Features
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
     - URL (scrape data from web pages)
 - Multi-byte character support
+- Automatic file encoding detection
