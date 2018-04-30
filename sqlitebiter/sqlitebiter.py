@@ -31,7 +31,7 @@ from ._enum import (
     ExitCode,
 )
 from ._table_creator import TableCreator
-from ._version import VERSION
+from .__version__ import __version__
 
 
 CONTEXT_SETTINGS = dict(
@@ -133,7 +133,7 @@ def _get_format_type_from_path(file_path):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(version=VERSION)
+@click.version_option(version=__version__)
 @click.option(
     "-a", "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
