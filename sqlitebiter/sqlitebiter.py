@@ -85,13 +85,11 @@ def create_database(ctx, database_path):
 def write_completion_message(logger, database_path, result_counter):
     logger.debug(u"----- {:s} completed -----".format(PROGRAM_NAME))
     logger.debug(u"database path: {:s}".format(database_path))
-    logger.debug(u"number of created table: {:d}".format(
-        result_counter.success_count))
+    logger.debug(u"number of created table: {:d}".format(result_counter.success_count))
     logger.debug(u"")
 
     logger.debug(u"----- database schema -----")
-    logger.debug(
-        get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
+    logger.debug(get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
 
 
 def make_logger(channel_name, log_level):
@@ -112,8 +110,7 @@ def make_logger(channel_name, log_level):
 
 def create_url_loader(logger, source_url, format_name, encoding, proxies):
     try:
-        return ptr.TableUrlLoader(
-            source_url, format_name, encoding=encoding, proxies=proxies)
+        return ptr.TableUrlLoader(source_url, format_name, encoding=encoding, proxies=proxies)
     except ptr.HTTPError as e:
         logger.error(msgfy.to_error_message(e))
         sys.exit(ExitCode.FAILED_HTTP)
@@ -146,8 +143,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
-    ctx.obj[Context.LOG_LEVEL] = (
-        logbook.INFO if log_level is None else log_level)
+    ctx.obj[Context.LOG_LEVEL] = (logbook.INFO if log_level is None else log_level)
 
 
 @cmd.command()
@@ -158,8 +154,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
         Default.OUTPUT_FILE))
 @click.option(
     "--encoding", metavar="ENCODING",
-    help="Encoding to load files. Defaults to '{:s}'.".format(
-        Default.ENCODING))
+    help="Encoding to load files. Defaults to '{:s}'.".format(Default.ENCODING))
 @click.pass_context
 def file(ctx, files, output_path, encoding):
     """
@@ -174,8 +169,7 @@ def file(ctx, files, output_path, encoding):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-    logger = make_logger("{:s} file".format(
-        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     table_creator = TableCreator(logger=logger, dst_con=con)
 
     if typepy.is_empty_sequence(encoding):
@@ -192,8 +186,7 @@ def file(ctx, files, output_path, encoding):
 
         if file_path == output_path:
             logger.warn(
-                u"skip a file which has the same path as the output file ({})".format(
-                    file_path))
+                u"skip a file which has the same path as the output file ({})".format(file_path))
             continue
 
         logger.debug(u"converting '{}'".format(file_path))
@@ -205,47 +198,39 @@ def file(ctx, files, output_path, encoding):
             result_counter.inc_fail()
             continue
         except ptr.LoaderNotFoundError:
-            logger.debug(
-                u"loader not found that coincide with '{}'".format(file_path))
+            logger.debug(u"loader not found that coincide with '{}'".format(file_path))
             result_counter.inc_fail()
             continue
 
         try:
             for table_data in loader.load():
-                logger.debug(u"loaded tabledata: {}".format(
-                    six.text_type(table_data)))
+                logger.debug(u"loaded tabledata: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
-                    table_data).sanitize()
+                sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
 
                 try:
-                    table_creator.create(
-                        sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
+                    table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                     result_counter.inc_success()
                 except (ValueError, IOError) as e:
-                    logger.debug(
-                        u"exception={:s}, path={}, message={}".format(
-                            type(e).__name__, file_path, e))
+                    logger.debug(u"exception={:s}, path={}, message={}".format(
+                        type(e).__name__, file_path, e))
                     result_counter.inc_fail()
                     continue
 
                 logger.info(get_success_message(
                     verbosity_level, file_path,
-                    schema_extractor.get_table_schema_text(
-                        sqlite_tabledata.table_name).strip()))
+                    schema_extractor.get_table_schema_text(sqlite_tabledata.table_name).strip()))
         except ptr.OpenError as e:
             logger.error(u"{:s}: open error: file={}, message='{}'".format(
                 e.__class__.__name__, file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
-            logger.error(
-                u"{:s}: invalid {} data format: path={}, message={}".format(
-                    e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
+            logger.error(u"{:s}: invalid {} data format: path={}, message={}".format(
+                e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
         except ptr.InvalidDataError as e:
-            logger.error(
-                u"{:s}: invalid {} data: path={}, message={}".format(
-                    e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
+            logger.error(u"{:s}: invalid {} data: path={}, message={}".format(
+                e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
     write_completion_message(logger, output_path, result_counter)
@@ -282,8 +267,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-    logger = make_logger("{:s} url".format(
-        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(encoding):
         encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
@@ -310,32 +294,26 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
     try:
         for table_data in loader.load():
-            logger.debug(u"loaded table_data: {}".format(
-                six.text_type(table_data)))
+            logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
-                table_data).sanitize()
+            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
 
             try:
-                table_creator.create(
-                    sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
+                table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
                 result_counter.inc_success()
             except simplesqlite.OperationalError as e:
-                logger.error(
-                    u"{:s}: failed to convert: url={}, message={}".format(
-                        e.__class__.__name__, url, e.message))
+                logger.error(u"{:s}: failed to convert: url={}, message={}".format(
+                    e.__class__.__name__, url, e.message))
                 result_counter.inc_fail()
                 continue
             except ValueError as e:
-                logger.debug(
-                    u"{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
+                logger.debug(u"{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()
                 continue
 
             logger.info(get_success_message(
                 verbosity_level, url,
-                schema_extractor.get_table_schema_text(
-                    sqlite_tabledata.table_name).strip()))
+                schema_extractor.get_table_schema_text(sqlite_tabledata.table_name).strip()))
     except ptr.InvalidDataError as e:
         logger.error(u"{:s}: invalid data: url={}, message={}".format(
             e.__class__.__name__, url, str(e)))
@@ -368,8 +346,7 @@ def gs(ctx, credentials, title, output_path):
     verbosity_level = ctx.obj.get(Context.VERBOSITY_LEVEL)
     schema_extractor = get_schema_extractor(con, verbosity_level)
     result_counter = ResultCounter()
-    logger = make_logger("{:s} gs".format(
-        PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     table_creator = TableCreator(logger=logger, dst_con=con)
 
     loader = ptr.GoogleSheetsTableLoader()
@@ -382,15 +359,12 @@ def gs(ctx, credentials, title, output_path):
 
     try:
         for table_data in loader.load():
-            logger.debug(u"loaded table_data: {}".format(
-                six.text_type(table_data)))
+            logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(
-                table_data).sanitize()
+            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
 
             try:
-                table_creator.create(
-                    sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
+                table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
             except (ptr.ValidationError, ptr.InvalidDataError):
                 result_counter.inc_fail()
 
@@ -404,9 +378,8 @@ def gs(ctx, credentials, title, output_path):
         logger.error(u"invalid credentials data: path={}".format(credentials))
         result_counter.inc_fail()
     except (ptr.ValidationError, ptr.InvalidDataError) as e:
-        logger.error(
-            u"invalid credentials data: path={}, message={}".format(
-                credentials, str(e)))
+        logger.error(u"invalid credentials data: path={}, message={}".format(
+            credentials, str(e)))
         result_counter.inc_fail()
 
     write_completion_message(logger, output_path, result_counter)
@@ -427,8 +400,7 @@ def configure(ctx):
     You can remove these settings by deleting '~/.sqlitebiter'.
     """
 
-    logger = make_logger(
-        "{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     logger.debug("{} configuration file existence: {}".format(
         PROGRAM_NAME, app_config_manager.exists))

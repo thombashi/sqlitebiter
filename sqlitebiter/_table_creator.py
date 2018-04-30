@@ -36,13 +36,10 @@ class TableCreator(object):
                 dst_table_name=dst_table_name)
         else:
             simplesqlite.append_table(
-                src_con=con_mem, dst_con=self.__dst_con,
-                table_name=dst_table_name)
+                src_con=con_mem, dst_con=self.__dst_con, table_name=dst_table_name)
 
         self.__dst_con.create_index_list(dst_table_name, [
-            simplesqlite.sqlquery.SqlQuery.sanitize_attr(index)
-            for index in index_list
-        ])
+            simplesqlite.sqlquery.SqlQuery.sanitize_attr(index) for index in index_list])
 
     def __require_rename_table(self, src_con, src_table_name):
         if not self.__dst_con.has_table(src_table_name):
@@ -52,10 +49,8 @@ class TableCreator(object):
                 src_con.get_attr_name_list(src_table_name)):
             return True
 
-        con_schema_extractor = SqliteSchemaExtractor(
-            self.__dst_con, verbosity_level=1)
-        con_mem_schema_extractor = SqliteSchemaExtractor(
-            src_con, verbosity_level=1)
+        con_schema_extractor = SqliteSchemaExtractor(self.__dst_con, verbosity_level=1)
+        con_mem_schema_extractor = SqliteSchemaExtractor(src_con, verbosity_level=1)
 
         if (con_schema_extractor.get_database_schema() ==
                 con_mem_schema_extractor.get_database_schema()):
@@ -71,8 +66,7 @@ class TableCreator(object):
 
         suffix_id = 1
         while True:
-            table_name_candidate = u"{:s}_{:d}".format(
-                table_name_base, suffix_id)
+            table_name_candidate = u"{:s}_{:d}".format(table_name_base, suffix_id)
 
             if table_name_candidate not in exist_table_name_list:
                 return table_name_candidate
