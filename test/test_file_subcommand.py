@@ -6,11 +6,11 @@
 
 from __future__ import print_function
 
-from click.testing import CliRunner
 import path
-from pytablereader.interface import TableLoader
 import pytest
 import simplesqlite
+from click.testing import CliRunner
+from pytablereader.interface import TableLoader
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqliteschema import SqliteSchemaExtractor

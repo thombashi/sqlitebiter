@@ -6,12 +6,9 @@
 
 from __future__ import print_function
 
-from click.testing import CliRunner
-from pytablereader import (
-    TableData,
-    SqliteFileLoader,
-)
 import pytest
+from click.testing import CliRunner
+from pytablereader import SqliteFileLoader, TableData
 from simplesqlite import SimpleSQLite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd

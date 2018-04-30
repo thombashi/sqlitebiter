@@ -14,25 +14,18 @@ import click
 import logbook
 import msgfy
 import path
+import pytablereader as ptr
 import simplesqlite
 import six
-from sqliteschema import SqliteSchemaExtractor
 import typepy
+from sqliteschema import SqliteSchemaExtractor
 
-import pytablereader as ptr
-
-from ._config import (
-    ConfigKey,
-    app_config_manager,
-)
+from .__version__ import __version__
+from ._config import ConfigKey, app_config_manager
 from ._const import PROGRAM_NAME
 from ._counter import ResultCounter
-from ._enum import (
-    Context,
-    ExitCode,
-)
+from ._enum import Context, ExitCode
 from ._table_creator import TableCreator
-from .__version__ import __version__
 
 
 CONTEXT_SETTINGS = dict(

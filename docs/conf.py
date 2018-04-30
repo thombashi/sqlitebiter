@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import os
-import pkg_resources
+import sys
 
+import pkg_resources
 import sphinx_rtd_theme
+
 
 # -- General configuration ------------------------------------------------
 
