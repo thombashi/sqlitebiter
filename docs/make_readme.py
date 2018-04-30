@@ -43,21 +43,17 @@ def write_examples(maker):
 
 
 def main():
-    maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR)
+    maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR, is_make_toc=True)
     maker.examples_dir_name = "usage"
 
-    maker.write_introduction_file("badges.txt")
-    maker.write_toc()
-
-    maker.inc_indent_level()
     maker.write_chapter("Summary")
     maker.write_introduction_file("summary.txt")
+    maker.write_introduction_file("badges.txt")
     maker.write_introduction_file("feature.txt")
 
     write_examples(maker)
 
-    maker.write_file(
-        maker.doc_page_root_dir_path.joinpath("installation.rst"))
+    maker.write_file(maker.doc_page_root_dir_path.joinpath("installation.rst"))
 
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")

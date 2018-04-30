@@ -1,4 +1,4 @@
 path.py
-readmemaker>=0.5.0
+readmemaker>=0.6.0
 sphinx_rtd_theme
 Sphinx

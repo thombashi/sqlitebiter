@@ -1,5 +1,12 @@
-sqlitebiter
-=============
+**sqlitebiter**
+
+.. contents:: Table of Contents
+   :depth: 2
+
+Summary
+=========
+A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV/Google-Sheets to a SQLite database file.
+
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
    :target: https://travis-ci.org/thombashi/sqlitebiter
    :alt: Linux CI test status
@@ -11,13 +18,6 @@ sqlitebiter
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
    :target: https://github.com/thombashi/sqlitebiter
    :alt: GitHub repository
-
-.. contents:: Table of Contents
-   :depth: 2
-
-Summary
----------
-A CLI tool to convert CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV/Google-Sheets to a SQLite database file.
 
 Features
 --------
@@ -34,6 +34,7 @@ Features
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
     - URL (scrape data from web pages)
 - Multi-byte character support
+- Automatic file encoding detection
 
 Usage
 =======
@@ -169,10 +170,10 @@ when you use Google Sheets feature:
 
 Test dependencies
 ------------------------------------------------------------
+- `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <http://pytest.org/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `tox <https://testrun.org/tox/latest/>`__
-- `XlsxWriter <http://xlsxwriter.readthedocs.io/>`__
 
 Misc
 ------------------------------------------------------------
