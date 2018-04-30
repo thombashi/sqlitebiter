@@ -23,7 +23,7 @@ from .dataset import (
     valid_csv_file_3_1, valid_excel_file, valid_excel_file_1, valid_html_file,
     valid_json_multi_file_1, valid_json_multi_file_2_1, valid_json_multi_file_2_2,
     valid_json_multi_file_2_3, valid_json_single_file, valid_ltsv_file, valid_markdown_file,
-    valid_utf8_csv_file, valid_tsv_file)
+    valid_tsv_file, valid_utf8_csv_file, valid_utf16_csv_file)
 
 
 class Test_sqlitebiter_file(object):
@@ -90,6 +90,7 @@ class Test_sqlitebiter_file(object):
                 valid_ltsv_file(),
                 valid_markdown_file(),
                 valid_utf8_csv_file(),
+                valid_utf16_csv_file(),
             ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
@@ -295,6 +296,9 @@ class Test_sqlitebiter_file(object):
 
             extractor = SqliteSchemaExtractor(db_path)
 
+            print("[expected]\n{}\n".format(expected))
+            print("[actual]\n{}\n".format(extractor.dumps()))
+
             assert extractor.dumps() == expected
 
     def test_normal_append(self):
@@ -330,6 +334,7 @@ class Test_sqlitebiter_file(object):
 
             print("[expected]\n{}\n".format(expected_data))
             print("[actual]\n{}\n".format(actual_data))
+
             assert expected_data == actual_data
 
             # second execution with --append option ---
@@ -341,8 +346,10 @@ class Test_sqlitebiter_file(object):
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
             actual_table_list = con.get_table_name_list()
+
             print("[expected]\n{}\n".format(expected_table_list))
             print("[actual]\n{}\n".format(actual_table_list))
+
             assert set(actual_table_list) == set(expected_table_list)
 
             actual_data = con.select("*", table_name=table_name).fetchall()

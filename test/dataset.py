@@ -419,9 +419,24 @@ def valid_markdown_file():
 
 
 def valid_utf8_csv_file():
-    file_path = "valid_utf8.csv"
+    encoding = "utf8"
+    file_path = "valid_{:s}.csv".format(encoding)
 
-    with io.open(file_path, "w", encoding="utf-8") as f:
+    with io.open(file_path, "w", encoding=encoding) as f:
+        f.write(dedent("""\
+            "姓","名","生年月日","郵便番号","住所","電話番号"
+            "山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
+            "山田","次郎","2001/1/2","251-0036","神奈川県藤沢市江の島１丁目","03-9999-9999"
+            """))
+
+    return file_path
+
+
+def valid_utf16_csv_file():
+    encoding = "utf16"
+    file_path = "valid_{:s}.csv".format(encoding)
+
+    with io.open(file_path, "w", encoding=encoding) as f:
         f.write(dedent("""\
             "姓","名","生年月日","郵便番号","住所","電話番号"
             "山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
