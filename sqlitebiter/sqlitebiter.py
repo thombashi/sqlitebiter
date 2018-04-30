@@ -47,7 +47,13 @@ class Default(object):
 
 
 def get_schema_extractor(source, verbosity_level):
-    if verbosity_level >= MAX_VERBOSITY_LEVEL:
+    found_ptw = True
+    try:
+        import pytablewriter
+    except ImportError:
+        found_ptw = False
+
+    if verbosity_level >= MAX_VERBOSITY_LEVEL and found_ptw:
         return SqliteSchemaExtractor(
             source, verbosity_level=0, output_format="table")
 

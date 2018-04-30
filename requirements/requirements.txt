@@ -5,5 +5,5 @@ msgfy>=0.0.2
 path.py
 pytablereader>=0.15.0
 SimpleSQLite>=0.18.0
-sqliteschema>=0.9.5
 typepy>=0.0.20
+sqliteschema>=0.9.6
