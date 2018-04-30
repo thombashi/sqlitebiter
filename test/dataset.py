@@ -413,8 +413,8 @@ def valid_markdown_file():
     return file_path
 
 
-def valid_multibyte_char_file():
-    file_path = "valid_multibyte_char.csv"
+def valid_utf8_csv_file():
+    file_path = "valid_utf8.csv"
 
     with io.open(file_path, "w", encoding="utf-8") as f:
         f.write(""""姓","名","生年月日","郵便番号","住所","電話番号"

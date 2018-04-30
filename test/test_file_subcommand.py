@@ -17,32 +17,13 @@ from sqliteschema import SqliteSchemaExtractor
 
 from .common import print_traceback
 from .dataset import (
-    valid_json_single_file,
-    invalid_json_single_file,
-    valid_json_multi_file_1,
-    valid_json_multi_file_2_1,
-    valid_json_multi_file_2_2,
-    valid_json_multi_file_2_3,
-    invalid_json_multi_file,
-    valid_csv_file_1_1,
-    valid_csv_file_1_2,
-    valid_csv_file_2_1,
-    valid_csv_file_3_1,
-    invalid_csv_file,
-    valid_tsv_file,
-    invalid_tsv_file,
-    valid_excel_file,
-    valid_excel_file_1,
-    invalid_excel_file_1,
-    invalid_excel_file_2,
-    valid_html_file,
-    invalid_html_file,
-    valid_ltsv_file,
-    invalid_ltsv_file,
-    valid_markdown_file,
-    valid_multibyte_char_file,
-    not_supported_format_file,
-)
+    invalid_csv_file, invalid_excel_file_1, invalid_excel_file_2, invalid_html_file,
+    invalid_json_multi_file, invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file,
+    not_supported_format_file, valid_csv_file_1_1, valid_csv_file_1_2, valid_csv_file_2_1,
+    valid_csv_file_3_1, valid_excel_file, valid_excel_file_1, valid_html_file,
+    valid_json_multi_file_1, valid_json_multi_file_2_1, valid_json_multi_file_2_2,
+    valid_json_multi_file_2_3, valid_json_single_file, valid_ltsv_file, valid_markdown_file,
+    valid_utf8_csv_file, valid_tsv_file)
 
 
 class Test_sqlitebiter_file(object):
@@ -70,7 +51,7 @@ class Test_sqlitebiter_file(object):
         [valid_html_file, ExitCode.SUCCESS],
         [valid_ltsv_file, ExitCode.SUCCESS],
         [valid_markdown_file, ExitCode.SUCCESS],
-        [valid_multibyte_char_file, ExitCode.SUCCESS],
+        [valid_utf8_csv_file, ExitCode.SUCCESS],
 
         [invalid_csv_file, ExitCode.FAILED_CONVERT],
         [invalid_json_single_file, ExitCode.FAILED_CONVERT],
@@ -108,7 +89,7 @@ class Test_sqlitebiter_file(object):
                 valid_html_file(),
                 valid_ltsv_file(),
                 valid_markdown_file(),
-                valid_multibyte_char_file(),
+                valid_utf8_csv_file(),
             ]
 
             result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
