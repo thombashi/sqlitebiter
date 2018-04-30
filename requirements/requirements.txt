@@ -1,9 +1,9 @@
-appconfigpy>=0.0.3
+appconfigpy>=0.0.4
 click>=6.7
 logbook
 msgfy>=0.0.2
 path.py
-pytablereader>=0.15.0
-SimpleSQLite>=0.18.0
-typepy>=0.0.20
+pytablereader>=0.16.1
+SimpleSQLite>=0.20.3
 sqliteschema>=0.9.6
+typepy>=0.0.27

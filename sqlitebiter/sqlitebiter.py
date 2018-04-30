@@ -178,10 +178,6 @@ def file(ctx, files, output_path, encoding):
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     table_creator = TableCreator(logger=logger, dst_con=con)
 
-    if typepy.is_empty_sequence(encoding):
-        encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
-        logger.debug(u"use default encoding: {}".format(encoding))
-
     for file_path in files:
         file_path = path.Path(file_path)
 
