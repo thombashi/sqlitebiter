@@ -2,12 +2,8 @@
 
 set BIN_NAME=sqlitebiter
 
-echo "----- start clean -----"
-pyinstaller cli.py --clean --noconfirm
-echo "----- complete clean -----"
-
 echo "----- start build -----"
-pyinstaller cli.py --onefile --name %BIN_NAME% --noconfirm
+pyinstaller cli.py --onefile --name %BIN_NAME% --clean --noconfirm --specpath build
 echo "----- complete build -----"
 
 echo "----- start compress -----"
