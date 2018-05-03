@@ -11,9 +11,11 @@ Using wildcard to convert multiple files:
         [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
-        [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_b' table
         [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_a' table
+        [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_b' table
         [INFO] sqlitebiter file: convert 'sample_data_single.json' to 'sample_data_single' table
+        [INFO] sqlitebiter file: number of created tables: 6
+        [INFO] sqlitebiter file: database path: sample.sqlite
 
 :Output:
     .. code-block:: console
@@ -32,10 +34,12 @@ Designate multiple file path to convert:
 :Example:
     .. code-block:: console
 
-        $ sqlitebiter file hoge.csv sample_excel.xlsx
-        [INFO] sqlitebiter file: convert 'hoge.csv' to 'hoge' table
-        [INFO] sqlitebiter file: convert 'sample_excel.xlsx' to 'sheet3' table
-        [INFO] sqlitebiter file: convert 'sample_excel.xlsx' to 'sheet1' table
+        $ sqlitebiter file sample_data.csv sample_data.xlsx
+        [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
+        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
+        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
+        [INFO] sqlitebiter file: number of created tables: 3
+        [INFO] sqlitebiter file: database path: out.sqlite
 
 .. note::
 
