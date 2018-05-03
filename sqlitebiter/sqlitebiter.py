@@ -89,13 +89,16 @@ def create_database(ctx, database_path):
 
 
 def write_completion_message(logger, database_path, result_counter):
-    logger.debug(u"----- {:s} completed -----".format(PROGRAM_NAME))
-    logger.debug(u"database path: {:s}".format(database_path))
-    logger.debug(u"number of created table: {:d}".format(result_counter.success_count))
-    logger.debug(u"")
+    database_path_msg = u"database path: {:s}".format(database_path)
 
-    logger.debug(u"----- database schema -----")
-    logger.debug(get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
+    logger.debug(u"----- {:s} completed -----".format(PROGRAM_NAME))
+    logger.info(u"number of created tables: {:d}".format(result_counter.success_count))
+    if result_counter.success_count > 0:
+        logger.info(database_path_msg)
+        logger.debug(u"----- database schema -----")
+        logger.debug(get_schema_extractor(database_path, MAX_VERBOSITY_LEVEL).dumps())
+    else:
+        logger.debug(database_path_msg)
 
 
 def make_logger(channel_name, log_level):
