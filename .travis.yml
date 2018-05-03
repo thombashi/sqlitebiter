@@ -14,6 +14,10 @@ matrix:
 os:
   - linux
 
+before_install:
+  - sudo apt -qq update
+  - sudo apt install -y fakeroot
+
 install:
   - pip install setuptools --upgrade
   - pip install tox
@@ -24,3 +28,18 @@ script:
 notifications:
   slack:
     secure: EHpNEhPxWbvByJouszVg5JIU9BBURFQnHlMEJDudWnK8i0hF37OYKkC8oSbvi2Hz+/bCW4eFStwuTu17RA9diUI6F4ZQ+H0OygI5NqlGSlty0sQpfpxOTSVlqGupKJtZRG5yeqzCVEdXYLZOQH8q54yUADxpjaPkdvCoOrcPB/xBe8vxpUc4uPtYQVeCJCOij0y+3nEwOOu/A8JBk0Uhx9690qKHzYwv3V93M4OjYeWntEcmcbJaLj+BCVV+DT3rPoUeweoZHwd/0euyKR/NmjR/y0uIsIkcjKpwDACaPIzzoQUD7VMf+91yebqI42t5ukg4fDArGE8jkQrRPsTKBdBP7n32n8PShWVypXR/CN/qYZvWwoVkuyYp2KudJIXm9SzWuW0sYjL4BaI9/sQs8iZfXOW2UJfErwNn5gybkxc/59hgtR955ceYWjKSm++KzG9AYb3c7MqY2HHWGdGxNHD6dv2tnTQJ1FUNC5wuOwmOsg0EjHD+o67zYuvOOsjA2EfgjFVqsWLBy7Uh9fQVBOUpb3NCFA0ZDK02xaBtuZSzhT2vCviUkRsvgIy51yzPt6ldeadKtogCUKrQU3U9M0R3ZkoJSZaN74ZHA33IFtCKfnIkZaoJ1w+DRGPLw8D31CI/dxIoeVUjsCYhDuPLxcF/L1x5GS/8tJHXcZEGK/c=
+
+before_deploy:
+  - bash build_deb_package.sh
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: "cMeMAo5Sot8OU4BZ+9LqQfN8MYNueQnyQfFzlkALIIjLJZk5bD4oA9CKRwi33pVpwq+XlDa8Sok/CTZXYQ/b7cExZuW/pYVGwk+oNLxM5wfT1jU3nWfvymykKU6U/Lv9i2MsZiPWbciDzzBg9WAEicSCEi1Qh/mKYiPvF8F5AmSVQnEtXwhR6xbbOuJDd2zLLEuJFKtmP9hq7CPAmUksT6brIHDaVyaF8BH7Zd12KCbZlPtuNe+biDPPUwFJj+lLgtG29mO0nrulS9/E/LcDKnlQ0SJDMB8+I3EuVh+ftW/+ExgN5eSC9p6SLDlzMfpY3tHBywhWkhCviiRmKoP99eKnM33zix6UxKvc6E8ewwAoZfjhCo4jPkTDHVs43lJV1aVMcyaXtLWJwij3Q0EZRy+wH8rumvkK30r8lPvQ2UOi0y/Py22Jkj/VbewYuO7NTH1S6why0vPQEL1RlbxG3RXSM3MiUCspDTwedGvvfrHUrWcZXJB+44J1kD/eWBWB5RwLR5HBlSRgJ1+H5RpnQovCkgydM1DECjsxBFy6Xs1SwpnZ5SSYmfZTzy3SSb2KVd1uzvpko6kwranE5ccPdSzxfnVYT+08/q9It34gHfdBsmdXu4LDNxmAROFHlmekQ0xHY9qn8cpuTvjxmqpYjIZHcGNV8UaxjkqIhv0BpB4="
+  file_glob: true
+  file: 'dist/sqlitebiter_*.deb'
+  on:
+    tags: true
+    branch: master
+    python: 3.6
