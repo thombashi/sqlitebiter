@@ -160,7 +160,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
         Default.OUTPUT_FILE))
 @click.option(
     "--encoding", metavar="ENCODING",
-    help="Encoding to load files. Auto-detection from files in default.)
+    help="Encoding to load files. Auto-detection from files in default.")
 @click.pass_context
 def file(ctx, files, output_path, encoding):
     """
