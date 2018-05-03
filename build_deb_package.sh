@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -eux
 
 DIST_DIR_NAME="dist"
 INSTALL_DIR_PATH="/usr/bin"
@@ -11,8 +11,14 @@ PKG_NAME="sqlitebiter"
 rm -rf $DIST_DIR_NAME
 mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 
-pip install --upgrade .
-PKG_VERSION=$(python -c "import pkg_resources; print(pkg_resources.get_distribution('${PKG_NAME}').version)")
+pip install --upgrade pip
+pip install --upgrade .[build]
+PKG_VERSION=$(python -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
+
+if [ "$PKG_VERSION" = "" ]; then
+    echo 'failed to get the package version' 1>&2
+    exit 1
+fi
 
 echo $PKG_NAME $PKG_VERSION
 
