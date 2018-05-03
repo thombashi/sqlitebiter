@@ -3,7 +3,7 @@ click>=6.7
 logbook
 msgfy>=0.0.2
 path.py
-pytablereader>=0.16.1
+pytablereader>=0.17.0
 SimpleSQLite>=0.20.3
 sqliteschema>=0.9.6
-typepy>=0.0.27
+typepy>=0.1.0
