@@ -57,9 +57,12 @@ Following is an example that convert HTML table tags within a web page to SQLite
         [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html5 (Features TEXT, ConfigurationGUItextorbothmodes TEXT, RemoteAccessWebHTTPTelnetSSHRDPSerialCOMRS232 TEXT, Changeruleswithoutrequiringrestart TEXT, Abilitytocentrallymanageallfirewallstogether TEXT)' table
         [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html6 (Features TEXT, Modularitysupportsthirdpartymodulestoextendfunctionality TEXT, IPS : Intrusion prevention system] TEXT, OpenSourceLicense TEXT, supports IPv6 ?] TEXT, ClassHomeProfessional TEXT, OperatingSystemsonwhichitruns TEXT)' table
         [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html7 (Can TEXT, NAT44staticdynamicwoportsPAT TEXT, NAT64NPTv6 TEXT, IDSIntrusionDetectionSystem TEXT, VPNVirtualPrivateNetwork TEXT, AVAntiVirus TEXT, Sniffer TEXT, Profileselection TEXT)' table
+        [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html8 (vteFirewallsoftware TEXT)' table
         [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html9 (A TEXT, B TEXT)' table
         [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html10 (A TEXT, B TEXT)' table
         [INFO] sqlitebiter url: convert 'https://en.wikipedia.org/wiki/Comparison_of_firewalls' to 'Comparison_of_firewalls_Wikipedia_html11 (A TEXT, B TEXT)' table
+        [INFO] sqlitebiter url: number of created tables: 11
+        [INFO] sqlitebiter url: database path: out.sqlite
 
 :Output:
     .. code-block:: console
