@@ -98,8 +98,8 @@ Install via pip (recommended)
         pip install sqlitebiter
 
 
-Install in Debian/Ubuntu from a deb package
---------------------------------------------
+Installation for Debian/Ubuntu from a deb package
+----------------------------------------------------------
 #. ``wget https://github.com/thombashi/sqlitebiter/releases/download/<version>/sqlitebiter_<version>_amd64.deb``
 #. ``dpkg -iv sqlitebiter_<version>_amd64.deb``
 
@@ -111,7 +111,7 @@ Install in Debian/Ubuntu from a deb package
 
 
 Installing executable files in Windows
---------------------------------------------
+----------------------------------------------------------
 ``sqlitebiter`` can be used in Windows environments without Python installation as follows:
 
 #. Navigate to https://github.com/thombashi/sqlitebiter/releases
@@ -139,6 +139,17 @@ Installing executable files in Windows
       file       Convert tabular data within...
       gs         Convert a spreadsheet in Google Sheets to a...
       url        Scrape tabular data from a URL and convert...
+
+
+Installation for macOS via Homebrew
+----------------------------------------------------------
+
+.. code:: console
+
+    $ brew tap thombashi/sqlitebiter
+    $ brew install sqlitebiter
+
+- `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
 Dependencies
