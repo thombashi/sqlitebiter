@@ -158,6 +158,10 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
+    "-f", "--format", "format_name",
+    type=click.Choice(ptr.TableFileLoader.get_format_name_list()),
+    help="Data format to loading (auto-detect from file extensions in default).")
+@click.option(
     "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
         Default.OUTPUT_FILE))
@@ -165,7 +169,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     "--encoding", metavar="ENCODING",
     help="Encoding to load files. Auto-detection from files in default.")
 @click.pass_context
-def file(ctx, files, output_path, encoding):
+def file(ctx, files, format_name, output_path, encoding):
     """
     Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV
     file(s) to a SQLite database file.
@@ -197,7 +201,7 @@ def file(ctx, files, output_path, encoding):
         logger.debug(u"converting '{}'".format(file_path))
 
         try:
-            loader = ptr.TableFileLoader(file_path, encoding=encoding)
+            loader = ptr.TableFileLoader(file_path, format_name=format_name, encoding=encoding)
         except ptr.InvalidFilePathError as e:
             logger.debug(msgfy.to_debug_message(e))
             result_counter.inc_fail()

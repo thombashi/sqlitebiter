@@ -6,6 +6,7 @@
 
 from __future__ import print_function
 
+import os
 import path
 import pytest
 import simplesqlite
@@ -69,8 +70,24 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
+            result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+
+            assert result.exit_code == expected, file_path
+
+    @pytest.mark.parametrize(["file_creator", "test_path", "file_format", "expected"], [
+        [valid_csv_file_1_1, "without_ext", "csv", ExitCode.SUCCESS],
+        [valid_csv_file_1_1, "without_ext", "excel", ExitCode.FAILED_CONVERT],
+        [valid_csv_file_1_1, "unmatch_ext.json", "csv", ExitCode.SUCCESS],
+    ])
+    def test_smoke_format(self, test_path, file_creator, file_format, expected):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = file_creator()
+            os.rename(file_path, test_path)
             result = runner.invoke(
-                cmd, ["file", file_path, "-o", db_path])
+                cmd, ["file", test_path, "--format", file_format, "-o", db_path])
 
             assert result.exit_code == expected, file_path
 
