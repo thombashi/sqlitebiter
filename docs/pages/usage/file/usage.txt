@@ -1,6 +1,7 @@
 Examples
 ~~~~~~~~
-Using wildcard to convert multiple files:
+Using wildcard to convert multiple files.
+File formats are automatically detected from the extensions.
 
 :Example:
     .. code-block:: console
@@ -45,3 +46,13 @@ Designate multiple file path to convert:
 
     - Available JSON Schema is limited. Acceptable format described in `here <http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes>`__
     - Wildcard characters cannot use in Windows environments
+
+You could specify converting file format with the ``--format`` option
+
+:Example:
+    .. code-block:: console
+
+        $ sqlitebiter file --format csv sample_data
+        [INFO] sqlitebiter file: convert 'sample_data' to 'sample_data' table
+        [INFO] sqlitebiter file: number of created tables: 1
+        [INFO] sqlitebiter file: database path: out.sqlite
