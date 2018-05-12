@@ -103,8 +103,8 @@ def valid_json_multi_file_2_3():
     return file_path
 
 
-def invalid_json_multi_file():
-    file_path = "invalid_multi.json"
+def valid_json_kv_file():
+    file_path = "valid_kv.json"
 
     with open(file_path, "w") as f:
         f.write("""{

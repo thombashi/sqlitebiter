@@ -19,7 +19,7 @@ from sqliteschema import SqliteSchemaExtractor
 from .common import print_traceback
 from .dataset import (
     invalid_csv_file, invalid_excel_file_1, invalid_excel_file_2, invalid_html_file,
-    invalid_json_multi_file, invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file,
+    valid_json_kv_file, invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file,
     not_supported_format_file, valid_csv_file_1_1, valid_csv_file_1_2, valid_csv_file_2_1,
     valid_csv_file_3_1, valid_excel_file, valid_excel_file_1, valid_html_file,
     valid_json_multi_file_1, valid_json_multi_file_2_1, valid_json_multi_file_2_2,
@@ -45,6 +45,7 @@ class Test_sqlitebiter_file(object):
     @pytest.mark.parametrize(["file_creator", "expected"], [
         [valid_json_single_file, ExitCode.SUCCESS],
         [valid_json_multi_file_1, ExitCode.SUCCESS],
+        [valid_json_kv_file, ExitCode.SUCCESS],
         [valid_csv_file_1_1, ExitCode.SUCCESS],
         [valid_csv_file_2_1, ExitCode.SUCCESS],
         [valid_tsv_file, ExitCode.SUCCESS],
@@ -56,7 +57,6 @@ class Test_sqlitebiter_file(object):
 
         [invalid_csv_file, ExitCode.FAILED_CONVERT],
         [invalid_json_single_file, ExitCode.FAILED_CONVERT],
-        [invalid_json_multi_file, ExitCode.FAILED_CONVERT],
         [invalid_excel_file_1, ExitCode.NO_INPUT],
         [invalid_excel_file_2, ExitCode.FAILED_CONVERT],
         [invalid_html_file, ExitCode.NO_INPUT],
@@ -151,7 +151,6 @@ class Test_sqlitebiter_file(object):
             file_list = [
                 invalid_csv_file(),
                 invalid_json_single_file(),
-                invalid_json_multi_file(),
                 invalid_excel_file_1(),
                 invalid_excel_file_2(),
                 invalid_html_file(),
@@ -191,7 +190,7 @@ class Test_sqlitebiter_file(object):
                 invalid_json_single_file(),
 
                 valid_json_multi_file_1(),
-                invalid_json_multi_file(),
+                valid_json_kv_file(),
 
                 valid_csv_file_1_1(),
                 valid_csv_file_2_1(),
@@ -220,7 +219,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_table_list = [
-                'singlejson', 'multij1', 'multij2',
+                'singlejson', 'multij1', 'multij2', "valid_kv",
                 'csv_a', "rename_insert",
                 'excel_sheet_a', 'excel_sheet_c', 'excel_sheet_d',
                 "valid_ltsv_a",
@@ -242,6 +241,7 @@ class Test_sqlitebiter_file(object):
                     [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "multij2":
                     [(1, 4.0), (2, None), (3, 120.9)],
+                "valid_kv": [('json_b', 'hoge'), ('json_c', 'bar')],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "rename_insert": [
                     (1, 55, 'D Sam', 31, 'Raven'),
