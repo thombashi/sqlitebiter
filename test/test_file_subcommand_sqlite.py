@@ -22,7 +22,7 @@ TEST_TABLE_NAME_B = "test_table_b"
 
 @pytest.fixture
 def con_a0():
-    con = SimpleSQLite("tmp.sqlite", "w")
+    con = SimpleSQLite("tmp_a0.sqlite", "w")
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME_A,
         attr_name_list=["attr_a", "attr_b"],
@@ -36,7 +36,7 @@ def con_a0():
 
 @pytest.fixture
 def con_a1():
-    con = SimpleSQLite("tmp_dup.sqlite", "w")
+    con = SimpleSQLite("tmp_a1.sqlite", "w")
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME_A,
         attr_name_list=["attr_a", "attr_b"],
@@ -50,7 +50,7 @@ def con_a1():
 
 @pytest.fixture
 def con_b0():
-    con = SimpleSQLite("tmp.sqlite", "w")
+    con = SimpleSQLite("tmp_b0.sqlite", "w")
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME_B,
         attr_name_list=["ba", "bb"],
@@ -121,6 +121,8 @@ class Test_sqlitebiter_file_sqlite_merge(object):
                     ]),
             ]
             for tabledata in SqliteFileLoader(out_db_path).load():
-                print("[actual]   {}".format(tabledata))
+                print("[actual]\n{}".format(tabledata))
+                for record in tabledata.value_matrix:
+                    print("  {}".format(record))
 
                 assert tabledata in expected_list
