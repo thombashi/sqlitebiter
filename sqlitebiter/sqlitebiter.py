@@ -68,7 +68,7 @@ def get_schema_extractor(source, verbosity_level):
 def get_success_message(verbosity_level, source, to_table_name):
     message_template = u"convert '{:s}' to '{:s}' table"
 
-    return message_template.format(source, to_table_name)
+    return message_template.format(source, to_table_name.strip())
 
 
 def create_database(ctx, database_path):
@@ -225,7 +225,7 @@ def file(ctx, files, format_name, output_path, encoding):
 
                 logger.info(get_success_message(
                     verbosity_level, file_path,
-                    schema_extractor.get_table_schema_text(sqlite_tabledata.table_name).strip()))
+                    schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
         except ptr.OpenError as e:
             logger.error(u"{:s}: open error: file={}, message='{}'".format(
                 e.__class__.__name__, file_path, str(e)))
@@ -319,7 +319,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
 
             logger.info(get_success_message(
                 verbosity_level, url,
-                schema_extractor.get_table_schema_text(sqlite_tabledata.table_name).strip()))
+                schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
     except ptr.InvalidDataError as e:
         logger.error(u"{:s}: invalid data: url={}, message={}".format(
             e.__class__.__name__, url, str(e)))
@@ -376,7 +376,7 @@ def gs(ctx, credentials, title, output_path):
 
             logger.info(get_success_message(
                 verbosity_level, "google sheets",
-                schema_extractor.get_table_schema_text(table_data.table_name).strip()))
+                schema_extractor.get_table_schema_text(table_data.table_name)))
     except ptr.OpenError as e:
         logger.error(msgfy.to_error_message(e))
         result_counter.inc_fail()
