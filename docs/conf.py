@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sphinx_rtd_theme
-from pytablereader import __author__, __copyright__, __version__
+from pytablereader import __author__, __copyright__, __name__, __version__
 
 
 # -- General configuration ------------------------------------------------
@@ -33,7 +33,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'sqlitebiter'
+project = __name__
 copyright = __copyright__
 author = __author__
 

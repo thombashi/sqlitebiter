@@ -8,6 +8,8 @@ Features
         - JSON
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - Markdown
+        - Mediawiki
+        - Space separated values (SSV)
         - SQLite
         - Tab separated values (TSV)
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_

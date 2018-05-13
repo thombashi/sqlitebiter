@@ -5,11 +5,12 @@
 
     Usage: sqlitebiter file [OPTIONS] [FILES]...
 
-      Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV
-      file(s) to a SQLite database file.
+      Convert tabular data within
+      CSV/Excel/HTML/JSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV file(s) to a
+      SQLite database file.
 
     Options:
-      -f, --format [csv|excel|html|json|ltsv|markdown|mediawiki|sqlite|tsv]
+      -f, --format [csv|excel|html|json|ltsv|markdown|mediawiki|sqlite|ssv|tsv]
                                       Data format to loading (auto-detect from
                                       file extensions in default).
       -o, --output-path PATH          Output path of the SQLite database file.
