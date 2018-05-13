@@ -29,6 +29,8 @@ Features
         - JSON
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - Markdown
+        - Mediawiki
+        - Space separated values (SSV)
         - SQLite
         - Tab separated values (TSV)
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
@@ -187,6 +189,7 @@ Test dependencies
 - `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <http://pytest.org/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
+- `responses <https://github.com/getsentry/responses>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
 Misc
