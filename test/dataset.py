@@ -588,7 +588,7 @@ complex_json = dedent("""\
 def valid_complex_json_file():
     file_path = "valid_complex_json.json"
 
-    with open(file_path, "w") as f:
+    with io.open(file_path, "w", encoding="utf8") as f:
         f.write(complex_json)
 
     return file_path
