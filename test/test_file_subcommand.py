@@ -318,8 +318,7 @@ class Test_sqlitebiter_file(object):
             expected_table_list = [table_name]
 
             # first execution without --append option (new) ---
-            result = runner.invoke(
-                cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -372,8 +371,7 @@ class Test_sqlitebiter_file(object):
             assert expected_data == actual_data
 
             # third execution without --append option (overwrite) ---
-            result = runner.invoke(
-                cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -457,9 +455,7 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
-            expected_table_list = [
-                'multij2', 'multij2_1',
-            ]
+            expected_table_list = ['multij2', 'multij2_1']
             actual_table_list = con.get_table_name_list()
 
             print("[expected]\n{}\n".format(expected_table_list))

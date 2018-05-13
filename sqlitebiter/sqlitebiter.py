@@ -54,16 +54,13 @@ def get_schema_extractor(source, verbosity_level):
         found_ptw = False
 
     if verbosity_level >= MAX_VERBOSITY_LEVEL and found_ptw:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=0, output_format="table")
+        return SqliteSchemaExtractor(source, verbosity_level=0, output_format="table")
 
     if verbosity_level >= 1:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=3, output_format="text")
+        return SqliteSchemaExtractor(source, verbosity_level=3, output_format="text")
 
     if verbosity_level == 0:
-        return SqliteSchemaExtractor(
-            source, verbosity_level=0, output_format="text")
+        return SqliteSchemaExtractor(source, verbosity_level=0, output_format="text")
 
     raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
 

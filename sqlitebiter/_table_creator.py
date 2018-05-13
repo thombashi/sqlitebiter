@@ -32,8 +32,7 @@ class TableCreator(object):
 
             simplesqlite.copy_table(
                 src_con=con_mem, dst_con=self.__dst_con,
-                src_table_name=src_table_name,
-                dst_table_name=dst_table_name)
+                src_table_name=src_table_name, dst_table_name=dst_table_name)
         else:
             simplesqlite.append_table(
                 src_con=con_mem, dst_con=self.__dst_con, table_name=dst_table_name)
