@@ -16,11 +16,12 @@ import xlsxwriter
 def valid_json_single_file():
     file_path = "singlejson.json"
     with open(file_path, "w") as f:
-        f.write("""[
-            {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-            {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-            {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-        ]""")
+        f.write(dedent("""\
+            [
+                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+            ]"""))
 
     return file_path
 
@@ -29,11 +30,12 @@ def invalid_json_single_file():
     file_path = "invalid_json_a.json"
 
     with open(file_path, "w") as f:
-        f.write("""[
-            {"attr_b": 4, "attr_c": "a", "attr_a": [1]},
-            {"attr_b": 2.1, "attr_c": "bb", "attr_a": [2]},
-            {"attr_b": 120.9, "attr_c": "ccc", "attr_a": [3]}
-        ]""")
+        f.write(dedent("""\
+            [
+                {"attr_b": 4, "attr_c": "a", "attr_a": [1]},
+                {"attr_b": 2.1, "attr_c": "bb", "attr_a": [2]},
+                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": [3]}
+            ]"""))
 
     return file_path
 
@@ -42,18 +44,19 @@ def valid_json_multi_file_1():
     file_path = "multijson.json"
 
     with open(file_path, "w") as f:
-        f.write("""{
-            "multij1" : [
-                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-            ],
-            "multij2" : [
-                {"a": 1, "b": 4},
-                {"a": 2 },
-                {"a": 3, "b": 120.9}
-            ]
-        }""")
+        f.write(dedent("""\
+            {
+                "multij1" : [
+                    {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                    {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                    {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                ],
+                "multij2" : [
+                    {"a": 1, "b": 4},
+                    {"a": 2 },
+                    {"a": 3, "b": 120.9}
+                ]
+            }"""))
 
     return file_path
 
@@ -62,13 +65,14 @@ def valid_json_multi_file_2_1():
     file_path = "multijson_2_1.json"
 
     with open(file_path, "w") as f:
-        f.write("""{
-            "multij2" : [
-                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-            ]
-        }""")
+        f.write(dedent("""\
+            {
+                "multij2" : [
+                    {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                    {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                    {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                ]
+            }"""))
 
     return file_path
 
@@ -77,13 +81,14 @@ def valid_json_multi_file_2_2():
     file_path = "multijson_2_2.json"
 
     with open(file_path, "w") as f:
-        f.write("""{
-            "multij2" : [
-                {"attr_b": 4, "attr_c": "a", "attr_a": 1},
-                {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
-                {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
-            ]
-        }""")
+        f.write(dedent("""\
+            {
+                "multij2" : [
+                    {"attr_b": 4, "attr_c": "a", "attr_a": 1},
+                    {"attr_b": 2.1, "attr_c": "bb", "attr_a": 2},
+                    {"attr_b": 120.9, "attr_c": "ccc", "attr_a": 3}
+                ]
+            }"""))
 
     return file_path
 
@@ -92,13 +97,14 @@ def valid_json_multi_file_2_3():
     file_path = "multijson_2_3.json"
 
     with open(file_path, "w") as f:
-        f.write("""{
-            "multij2" : [
-                {"attr_b": "a", "attr_c": 4, "attr_a": "abc"},
-                {"attr_b": "bb", "attr_c": 2.1, "attr_a": "abc"},
-                {"attr_b": "ccc", "attr_c": 120.9, "attr_a": "abc"}
-            ]
-        }""")
+        f.write(dedent("""\
+            {
+                "multij2" : [
+                    {"attr_b": "a", "attr_c": 4, "attr_a": "abc"},
+                    {"attr_b": "bb", "attr_c": 2.1, "attr_a": "abc"},
+                    {"attr_b": "ccc", "attr_c": 120.9, "attr_a": "abc"}
+                ]
+            }"""))
 
     return file_path
 

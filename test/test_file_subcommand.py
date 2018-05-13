@@ -7,6 +7,8 @@
 from __future__ import print_function
 
 import os
+from textwrap import dedent
+
 import path
 import pytest
 import simplesqlite
@@ -286,19 +288,21 @@ class Test_sqlitebiter_file(object):
     @pytest.mark.parametrize(["file_creator", "index_list", "expected"], [
         [
             valid_csv_file_3_1, "aa,ac",
-            """.. table:: valid_csv_3_1 (3 records)
+            dedent("""\
+                .. table:: valid_csv_3_1 (3 records)
 
-    +--------------+---------+-----------+--------+------+-----+
-    |Attribute name|Data type|Primary key|Not NULL|Unique|Index|
-    +==============+=========+===========+========+======+=====+
-    |aa            |REAL     |           |        |      |X    |
-    +--------------+---------+-----------+--------+------+-----+
-    |ab            |INTEGER  |           |        |      |     |
-    +--------------+---------+-----------+--------+------+-----+
-    |ac            |TEXT     |           |        |      |X    |
-    +--------------+---------+-----------+--------+------+-----+
+                    +--------------+---------+-----------+--------+------+-----+
+                    |Attribute name|Data type|Primary key|Not NULL|Unique|Index|
+                    +==============+=========+===========+========+======+=====+
+                    |aa            |REAL     |           |        |      |X    |
+                    +--------------+---------+-----------+--------+------+-----+
+                    |ab            |INTEGER  |           |        |      |     |
+                    +--------------+---------+-----------+--------+------+-----+
+                    |ac            |TEXT     |           |        |      |X    |
+                    +--------------+---------+-----------+--------+------+-----+
 
-"""],
+                """)
+        ],
     ])
     def test_normal_index(self, file_creator, index_list, expected):
         db_path = "test_index.sqlite"
