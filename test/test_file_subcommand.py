@@ -18,7 +18,7 @@ from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqliteschema import SqliteSchemaExtractor
 
-from .common import print_traceback
+from .common import print_test_result, print_traceback
 from .dataset import (
     invalid_csv_file, invalid_excel_file_1, invalid_excel_file_2, invalid_html_file,
     valid_json_kv_file, invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file,
@@ -225,8 +225,7 @@ class Test_sqlitebiter_file(object):
             ]
             actual_table_list = con.get_table_name_list()
 
-            print("[expected]\n{}\n".format(expected_table_list))
-            print("[actual]\n{}\n".format(actual_table_list))
+            print_test_result(expected=expected_table_list, actual=actual_table_list)
 
             assert set(actual_table_list) == set(expected_table_list)
 
@@ -264,8 +263,7 @@ class Test_sqlitebiter_file(object):
                     table, expected_data, actual_data)
 
                 print("--- table: {} ---".format(table))
-                print("[expected]\n{}\n".format(expected_data))
-                print("[actual]\n{}\n".format(actual_data))
+                print_test_result(expected=expected_data, actual=actual_data)
 
                 assert expected_data == actual_data, message
 
@@ -301,8 +299,7 @@ class Test_sqlitebiter_file(object):
 
             extractor = SqliteSchemaExtractor(db_path)
 
-            print("[expected]\n{}\n".format(expected))
-            print("[actual]\n{}\n".format(extractor.dumps()))
+            print_test_result(expected=expected, actual=extractor.dumps())
 
             assert extractor.dumps() == expected
 
@@ -325,8 +322,9 @@ class Test_sqlitebiter_file(object):
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
             actual_table_list = con.get_table_name_list()
-            print("[expected]\n{}\n".format(expected_table_list))
-            print("[actual]\n{}\n".format(actual_table_list))
+
+            print_test_result(expected=expected_table_list, actual=actual_table_list)
+
             assert set(actual_table_list) == set(expected_table_list)
 
             actual_data = con.select("*", table_name=table_name).fetchall()
@@ -336,8 +334,7 @@ class Test_sqlitebiter_file(object):
                 (3, 120.9, 'ccc'),
             ]
 
-            print("[expected]\n{}\n".format(expected_data))
-            print("[actual]\n{}\n".format(actual_data))
+            print_test_result(expected=expected_data, actual=actual_data)
 
             assert expected_data == actual_data
 
@@ -351,8 +348,7 @@ class Test_sqlitebiter_file(object):
 
             actual_table_list = con.get_table_name_list()
 
-            print("[expected]\n{}\n".format(expected_table_list))
-            print("[actual]\n{}\n".format(actual_table_list))
+            print_test_result(expected=expected_table_list, actual=actual_table_list)
 
             assert set(actual_table_list) == set(expected_table_list)
 
@@ -366,8 +362,8 @@ class Test_sqlitebiter_file(object):
                 (3, 120.9, 'ccc'),
             ]
 
-            print("[expected]\n{}\n".format(expected_data))
-            print("[actual]\n{}\n".format(actual_data))
+            print_test_result(expected=expected_data, actual=actual_data)
+
             assert expected_data == actual_data
 
             # third execution without --append option (overwrite) ---
@@ -378,8 +374,9 @@ class Test_sqlitebiter_file(object):
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
             actual_table_list = con.get_table_name_list()
-            print("[expected]\n{}\n".format(expected_table_list))
-            print("[actual]\n{}\n".format(actual_table_list))
+
+            print_test_result(expected=expected_table_list, actual=actual_table_list)
+
             assert set(actual_table_list) == set(expected_table_list)
 
             actual_data = con.select("*", table_name=table_name).fetchall()
@@ -389,8 +386,8 @@ class Test_sqlitebiter_file(object):
                 (3, 120.9, 'ccc'),
             ]
 
-            print("[expected]\n{}\n".format(expected_data))
-            print("[actual]\n{}\n".format(actual_data))
+            print_test_result(expected=expected_data, actual=actual_data)
+
             assert expected_data == actual_data
 
     def test_normal_multi_file_same_table_same_structure(self):
@@ -411,8 +408,7 @@ class Test_sqlitebiter_file(object):
             expected_table_list = ['multij2']
             actual_table_list = con.get_table_name_list()
 
-            print("[expected]\n{}\n".format(expected_table_list))
-            print("[actual]\n{}\n".format(actual_table_list))
+            print_test_result(expected=expected_table_list, actual=actual_table_list)
 
             assert set(actual_table_list) == set(expected_table_list)
 
@@ -435,8 +431,7 @@ class Test_sqlitebiter_file(object):
                     table, expected_data, actual_data)
 
                 print("--- table: {} ---".format(table))
-                print("[expected]\n{}\n".format(expected_data))
-                print("[actual]\n{}\n".format(actual_data))
+                print_test_result(expected=expected_data, actual=actual_data)
 
                 assert expected_data == actual_data, message
 
@@ -458,8 +453,7 @@ class Test_sqlitebiter_file(object):
             expected_table_list = ['multij2', 'multij2_1']
             actual_table_list = con.get_table_name_list()
 
-            print("[expected]\n{}\n".format(expected_table_list))
-            print("[actual]\n{}\n".format(actual_table_list))
+            print_test_result(expected=expected_table_list, actual=actual_table_list)
 
             assert set(actual_table_list) == set(expected_table_list)
 
@@ -484,7 +478,6 @@ class Test_sqlitebiter_file(object):
                     table, expected_data, actual_data)
 
                 print("--- table: {} ---".format(table))
-                print("[expected]\n{}\n".format(expected_data))
-                print("[actual]\n{}\n".format(actual_data))
+                print_test_result(expected=expected_data, actual=actual_data)
 
                 assert expected_data == actual_data, message
