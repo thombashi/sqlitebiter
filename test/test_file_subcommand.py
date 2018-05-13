@@ -21,12 +21,12 @@ from sqliteschema import SqliteSchemaExtractor
 from .common import print_test_result, print_traceback
 from .dataset import (
     invalid_csv_file, invalid_excel_file_1, invalid_excel_file_2, invalid_html_file,
-    valid_json_kv_file, invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file,
-    not_supported_format_file, valid_csv_file_1_1, valid_csv_file_1_2, valid_csv_file_2_1,
-    valid_csv_file_3_1, valid_excel_file, valid_excel_file_1, valid_html_file,
+    invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file, not_supported_format_file,
+    valid_csv_file_1_1, valid_csv_file_1_2, valid_csv_file_2_1, valid_csv_file_3_1,
+    valid_excel_file, valid_excel_file_1, valid_html_file, valid_json_kv_file,
     valid_json_multi_file_1, valid_json_multi_file_2_1, valid_json_multi_file_2_2,
     valid_json_multi_file_2_3, valid_json_single_file, valid_ltsv_file, valid_markdown_file,
-    valid_tsv_file, valid_utf8_csv_file, valid_utf16_csv_file)
+    valid_ssv_file, valid_tsv_file, valid_utf8_csv_file, valid_utf16_csv_file)
 
 
 class Test_sqlitebiter_file(object):
@@ -266,6 +266,27 @@ class Test_sqlitebiter_file(object):
                 print_test_result(expected=expected_data, actual=actual_data)
 
                 assert expected_data == actual_data, message
+
+    def test_normal_format_ssv(self):
+        db_path = "test_ssv.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = valid_ssv_file()
+            result = runner.invoke(cmd, ["file", file_path, "-o", db_path, "--format", "ssv"])
+            print_traceback(result)
+
+            assert result.exit_code == ExitCode.SUCCESS
+
+            extractor = SqliteSchemaExtractor(db_path)
+            con = simplesqlite.SimpleSQLite(db_path, "r")
+            data = con.select_as_tabledata(table_name="ssv")
+            expected = (
+                "table_name=ssv, "
+                "header_list=[USER, PID, CPU, MEM, VSZ, RSS, TTY, STAT, START, TIME, COMMAND], "
+                "rows=5")
+
+            assert str(data) == expected
 
     @pytest.mark.parametrize(["file_creator", "index_list", "expected"], [
         [

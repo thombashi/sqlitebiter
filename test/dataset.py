@@ -216,6 +216,21 @@ def invalid_tsv_file():
     return file_path
 
 
+def valid_ssv_file():
+    file_path = "ssv.txt"
+    with open(file_path, "w") as f:
+        f.write(dedent("""\
+            USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+            root         1  0.0  0.4  77664  8784 ?        Ss   May11   0:02 /sbin/init
+            root         2  0.0  0.0      0     0 ?        S    May11   0:00 [kthreadd]
+            root         4  0.0  0.0      0     0 ?        I<   May11   0:00 [kworker/0:0H]
+            root         6  0.0  0.0      0     0 ?        I<   May11   0:00 [mm_percpu_wq]
+            root         7  0.0  0.0      0     0 ?        S    May11   0:01 [ksoftirqd/0]
+        """))
+
+    return file_path
+
+
 def valid_excel_file():
     file_path = "valid.xlsx"
     workbook = xlsxwriter.Workbook(str(file_path))
