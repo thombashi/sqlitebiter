@@ -168,7 +168,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
 @click.pass_context
 def file(ctx, files, format_name, output_path, encoding):
     """
-    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV
+    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
     file(s) to a SQLite database file.
     """
 
