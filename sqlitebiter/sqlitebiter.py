@@ -8,6 +8,7 @@
 from __future__ import absolute_import
 
 import errno
+import re
 import sys
 
 import click
@@ -129,6 +130,73 @@ def _get_format_type_from_path(file_path):
     return file_path.ext.lstrip(".")
 
 
+class DictConverter(object):
+
+    def __init__(
+            self, logger, table_creator, result_counter, schema_extractor, verbosity_level,
+            source, index_list):
+        self.__logger = logger
+        self.__table_creator = table_creator
+        self.__result_counter = result_counter
+        self.__index_list = index_list
+        self.__verbosity_level = verbosity_level
+        self.__source = source
+        self.__schema_extractor = schema_extractor
+
+    def to_sqlite_table(self, data, key_list):
+        if not data:
+            return
+
+        root_maps = {}
+
+        for key, v in data.items():
+            if isinstance(v, (six.text_type, int, float)) or v is None:
+                root_maps[key] = v
+                continue
+
+            loader = ptr.JsonTableDictLoader(v)
+
+            try:
+                for table_data in loader.load():
+                    if re.search("json[0-9]+", table_data.table_name):
+                        table_data.table_name = self.__make_table_name(key_list + [key])
+                    else:
+                        table_data.table_name = self.__make_table_name(
+                            key_list + [key, table_data.table_name])
+
+                    self.__write(table_data)
+            except ptr.InvalidDataError:
+                self.to_sqlite_table(v, key_list + [key])
+            except ptr.ValidationError as e:
+                self.__logger.debug(msgfy.to_debug_message(e))
+
+        if not root_maps:
+            return
+
+        loader = ptr.JsonTableDictLoader(root_maps)
+        for table_data in loader.load():
+            if key_list:
+                table_data.table_name = self.__make_table_name(key_list)
+            else:
+                table_data.table_name = "root"
+
+            self.__write(table_data)
+
+    def __make_table_name(self, key_list):
+        return "_".join(key_list)
+
+    def __write(self, table_data):
+        self.__logger.debug(u"loaded tabledata: {}".format(six.text_type(table_data)))
+
+        sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
+        self.__table_creator.create(sqlite_tabledata, self.__index_list)
+        self.__result_counter.inc_success()
+
+        self.__logger.info(get_success_message(
+            self.__verbosity_level, self.__source,
+            self.__schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__)
 @click.option(
@@ -231,6 +299,18 @@ def file(ctx, files, format_name, output_path, encoding):
                 e.__class__.__name__, file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
+            if loader.format_name == "json":
+                dict_converter = DictConverter(
+                    logger, table_creator, result_counter, schema_extractor, verbosity_level,
+                    source=file_path, index_list=ctx.obj.get(Context.INDEX_LIST))
+
+                try:
+                    dict_converter.to_sqlite_table(loader.loader.load_dict(), [])
+                except AttributeError:
+                    pass
+                else:
+                    continue
+
             logger.error(u"{:s}: invalid {} data format: path={}, message={}".format(
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
@@ -320,6 +400,23 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
             logger.info(get_success_message(
                 verbosity_level, url,
                 schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
+    except ptr.ValidationError as e:
+        is_fail = True
+        if loader.format_name == "json":
+            dict_converter = DictConverter(
+                logger, table_creator, result_counter, schema_extractor, verbosity_level,
+                source=url, index_list=ctx.obj.get(Context.INDEX_LIST))
+
+            try:
+                dict_converter.to_sqlite_table(loader.loader.load_dict(), [])
+            except AttributeError:
+                pass
+            else:
+                is_fail = False
+
+        if is_fail:
+            logger.error(u"{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
+            result_counter.inc_fail()
     except ptr.InvalidDataError as e:
         logger.error(u"{:s}: invalid data: url={}, message={}".format(
             e.__class__.__name__, url, str(e)))
