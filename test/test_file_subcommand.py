@@ -129,8 +129,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(
-                cmd, [verbosity_option, "file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, [verbosity_option, "file", file_path, "-o", db_path])
 
             assert result.exit_code == expected, file_path
 
@@ -138,12 +137,10 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            result = runner.invoke(
-                cmd, ["file"])
+            result = runner.invoke(cmd, ["file"])
 
             assert result.exit_code == ExitCode.NO_INPUT
-            assert not path.Path(
-                "out.sqlite").exists(), "output file must not exist"
+            assert not path.Path("out.sqlite").exists(), "output file must not exist"
 
     def test_abnormal_smoke(self):
         db_path = "test.sqlite"
@@ -162,11 +159,9 @@ class Test_sqlitebiter_file(object):
             ]
 
             for file_path in file_list:
-                result = runner.invoke(
-                    cmd, ["file", file_path, "-o", db_path])
+                result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
 
-                assert result.exit_code in (
-                    ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
+                assert result.exit_code in (ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
 
     @pytest.mark.parametrize(["file_creator", "expected"], [
         [valid_excel_file_1, ExitCode.SUCCESS],
@@ -177,8 +172,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(
-                cmd, ["file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
 
             assert result.exit_code == expected, file_path
 
@@ -237,12 +231,9 @@ class Test_sqlitebiter_file(object):
             assert set(actual_table_list) == set(expected_table_list)
 
             expected_data_table = {
-                "singlejson":
-                    [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "multij1":
-                    [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
-                "multij2":
-                    [(1, 4.0), (2, None), (3, 120.9)],
+                "singlejson": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
+                "multij1": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
+                "multij2": [(1, 4.0), (2, None), (3, 120.9)],
                 "valid_kv": [('json_b', 'hoge'), ('json_c', 'bar')],
                 "csv_a": [(1, 4.0, 'a'), (2, 2.1, 'bb'), (3, 120.9, 'ccc')],
                 "rename_insert": [
@@ -250,26 +241,19 @@ class Test_sqlitebiter_file(object):
                     (2, 36, 'J Ifdgg', 30, 'Raven'),
                     (3, 91, 'K Wedfb', 28, 'Raven'),
                 ],
-                "excel_sheet_a":
-                    [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
-                "excel_sheet_c":
-                    [(1, 1.1, 'a'), (2, '', 'bb'), (3, 3.3, '')],
-                "excel_sheet_d":
-                    [(1, 1.1, 'a'), (2, '', 'bb'), (3, 3.3, '')],
-                "testtitle_tablename":
-                    [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
+                "excel_sheet_a": [(1.0, 1.1, 'a'), (2.0, 2.2, 'bb'), (3.0, 3.3, 'cc')],
+                "excel_sheet_c": [(1, 1.1, 'a'), (2, '', 'bb'), (3, 3.3, '')],
+                "excel_sheet_d": [(1, 1.1, 'a'), (2, '', 'bb'), (3, 3.3, '')],
+                "testtitle_tablename": [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
 
                 "valid_ltsv_a": [
                     (1, 123.1, u'"ltsv0"', 1.0, u'"1"'),
                     (2, 2.2, u'"ltsv1"', 2.2, u'"2.2"'),
                     (3, 3.3, u'"ltsv2"', 3.0, u'"cccc"'),
                 ],
-                "testtitle_html2":
-                    [(1, 123.1), (2, 2.2), (3, 3.3)],
-                "tsv_a":
-                    [(1, 4.0, 'tsv0'), (2, 2.1, 'tsv1'), (3, 120.9, 'tsv2')],
-                "valid_mdtable_markdown1":
-                    [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
+                "testtitle_html2": [(1, 123.1), (2, 2.2), (3, 3.3)],
+                "tsv_a": [(1, 4.0, 'tsv0'), (2, 2.1, 'tsv1'), (3, 120.9, 'tsv2')],
+                "valid_mdtable_markdown1": [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
             }
             for table in con.get_table_name_list():
                 result = con.select("*", table_name=table)
@@ -310,9 +294,9 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(
-                cmd, ["--index", index_list, "file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["--index", index_list, "file", file_path, "-o", db_path])
             print_traceback(result)
+
             assert result.exit_code == ExitCode.SUCCESS
 
             extractor = SqliteSchemaExtractor(db_path)

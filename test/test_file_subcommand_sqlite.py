@@ -70,11 +70,7 @@ class Test_sqlitebiter_file_sqlite_merge(object):
 
         with runner.isolated_filesystem():
             result = runner.invoke(
-                cmd,
-                [
-                    "file", con_a0.database_path, con_a1.database_path,
-                    "-o", out_db_path,
-                ])
+                cmd, ["file", con_a0.database_path, con_a1.database_path, "-o", out_db_path,])
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -96,11 +92,7 @@ class Test_sqlitebiter_file_sqlite_merge(object):
 
         with runner.isolated_filesystem():
             result = runner.invoke(
-                cmd,
-                [
-                    "file", con_a0.database_path, con_b0.database_path,
-                    "-o", out_db_path,
-                ])
+                cmd, ["file", con_a0.database_path, con_b0.database_path, "-o", out_db_path])
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
