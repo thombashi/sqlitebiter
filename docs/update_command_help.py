@@ -8,9 +8,9 @@
 from __future__ import print_function, unicode_literals
 
 import os
+from textwrap import dedent, indent
 
 from subprocrunner import SubprocessRunner
-from textwrap import dedent, indent
 
 
 for subcommand in ["file", "gs", "url"]:

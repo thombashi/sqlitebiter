@@ -8,8 +8,8 @@ from __future__ import print_function
 
 import path
 import pytest
-import simplesqlite
 import responses
+import simplesqlite
 from click.testing import CliRunner
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd

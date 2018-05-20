@@ -22,8 +22,8 @@ import typepy
 from sqliteschema import SqliteSchemaExtractor
 
 from .__version__ import __version__
-from ._config import ConfigKey, app_config_manager
 from ._common import get_success_message
+from ._config import ConfigKey, app_config_manager
 from ._const import PROGRAM_NAME
 from ._counter import ResultCounter
 from ._enum import Context, ExitCode
