@@ -23,6 +23,7 @@ from sqliteschema import SqliteSchemaExtractor
 
 from .__version__ import __version__
 from ._config import ConfigKey, app_config_manager
+from ._common import get_success_message
 from ._const import PROGRAM_NAME
 from ._counter import ResultCounter
 from ._enum import Context, ExitCode
@@ -64,12 +65,6 @@ def get_schema_extractor(source, verbosity_level):
         return SqliteSchemaExtractor(source, verbosity_level=0, output_format="text")
 
     raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
-
-
-def get_success_message(verbosity_level, source, to_table_name):
-    message_template = u"convert '{:s}' to '{:s}' table"
-
-    return message_template.format(source, to_table_name.strip())
 
 
 def create_database(ctx, database_path):
