@@ -37,8 +37,7 @@ class TableCreator(object):
             simplesqlite.append_table(
                 src_con=con_mem, dst_con=self.__dst_con, table_name=dst_table_name)
 
-        self.__dst_con.create_index_list(dst_table_name, [
-            simplesqlite.sqlquery.SqlQuery.sanitize_attr(index) for index in index_list])
+        self.__dst_con.create_index_list(dst_table_name, index_list)
 
     def __require_rename_table(self, src_con, src_table_name):
         if not self.__dst_con.has_table(src_table_name):
