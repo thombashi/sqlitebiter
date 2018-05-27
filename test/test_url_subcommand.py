@@ -36,7 +36,6 @@ class Test_TableUrlLoader(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            extractor = SqliteSchemaExtractor(db_path)
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected = set([
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
