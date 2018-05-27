@@ -278,7 +278,6 @@ class Test_sqlitebiter_file(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            extractor = SqliteSchemaExtractor(db_path)
             con = simplesqlite.SimpleSQLite(db_path, "r")
             data = con.select_as_tabledata(table_name="ssv")
             expected = (
@@ -514,7 +513,6 @@ class Test_sqlitebiter_file(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            extractor = SqliteSchemaExtractor(db_path)
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected = set([
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
