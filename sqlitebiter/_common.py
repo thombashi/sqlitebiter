@@ -7,7 +7,7 @@
 from __future__ import absolute_import
 
 
-def get_success_message(verbosity_level, source, to_table_name):
+def get_success_message(verbosity_level, source, dst_table_name):
     message_template = u"convert '{:s}' to '{:s}' table"
 
-    return message_template.format(source, to_table_name.strip())
+    return message_template.format(source, dst_table_name.strip())
