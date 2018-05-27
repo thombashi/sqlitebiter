@@ -19,14 +19,7 @@ from sqlitebiter.sqlitebiter import cmd
 from sqliteschema import SqliteSchemaExtractor
 
 from .common import print_test_result, print_traceback
-from .dataset import (
-    invalid_csv_file, invalid_excel_file_1, invalid_excel_file_2, invalid_html_file,
-    invalid_json_single_file, invalid_ltsv_file, invalid_tsv_file, not_supported_format_file,
-    valid_complex_json_file, valid_csv_file_1_1, valid_csv_file_1_2, valid_csv_file_2_1,
-    valid_csv_file_3_1, valid_excel_file, valid_excel_file_1, valid_html_file, valid_json_kv_file,
-    valid_json_multi_file_1, valid_json_multi_file_2_1, valid_json_multi_file_2_2,
-    valid_json_multi_file_2_3, valid_json_single_file, valid_ltsv_file, valid_markdown_file,
-    valid_ssv_file, valid_tsv_file, valid_utf8_csv_file, valid_utf16_csv_file)
+from .dataset import *
 
 
 class Test_sqlitebiter_file(object):
