@@ -275,7 +275,7 @@ class Test_sqlitebiter_file(object):
             data = con.select_as_tabledata(table_name="ssv")
             expected = (
                 "table_name=ssv, "
-                "header_list=[USER, PID, CPU, MEM, VSZ, RSS, TTY, STAT, START, TIME, COMMAND], "
+                "header_list=[USER, PID, %CPU, %MEM, VSZ, RSS, TTY, STAT, START, TIME, COMMAND], "
                 "rows=5")
 
             assert str(data) == expected
