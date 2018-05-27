@@ -19,6 +19,7 @@ import simplesqlite
 import six
 import typepy
 from sqliteschema import SqliteSchemaExtractor
+from tabledata import SQLiteTableDataSanitizer
 
 from .__version__ import __version__
 from ._common import get_success_message
@@ -209,7 +210,7 @@ def file(ctx, files, format_name, output_path, encoding):
             for table_data in loader.load():
                 logger.debug(u"loaded tabledata: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
+                sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
 
                 try:
                     table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
@@ -311,7 +312,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         for table_data in loader.load():
             logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
+            sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
 
             try:
                 table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
@@ -393,7 +394,7 @@ def gs(ctx, credentials, title, output_path):
         for table_data in loader.load():
             logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-            sqlite_tabledata = ptr.SQLiteTableDataSanitizer(table_data).sanitize()
+            sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
 
             try:
                 table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))

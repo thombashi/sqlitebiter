@@ -8,10 +8,11 @@ from __future__ import print_function
 
 import pytest
 from click.testing import CliRunner
-from pytablereader import SqliteFileLoader, TableData
+from pytablereader import SqliteFileLoader
 from simplesqlite import SimpleSQLite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
+from tabledata import TableData
 
 from .common import print_traceback
 
