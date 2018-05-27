@@ -72,8 +72,11 @@ Python 2.7+ or 3.4+
 
 Python package dependencies are as follows.
 
-Mandatory Python package dependencies
+Python package dependencies
 ------------------------------------------------------------
+
+Mandatory dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following mandatory Python packages are automatically installed during
 ``sqlitebiter`` installation process:
 
@@ -87,7 +90,7 @@ Following mandatory Python packages are automatically installed during
 - `typepy <https://github.com/thombashi/typepy>`__
 
 Google Sheets dependencies (Optional)
-------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following Python packages are required to 
 `manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ 
 when you use Google Sheets feature:
@@ -96,14 +99,28 @@ when you use Google Sheets feature:
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
 
+The above packages can be installed with the following pip command;
+
+.. code:: console
+
+    $ pip install sqlitebiter[gs]
+
 Test dependencies
-------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <http://pytest.org/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
-Misc
+Misc dependencies (Optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- `lxml <http://lxml.de/installation.html>`__
+- `pypandoc <https://github.com/bebraw/pypandoc>`__
+    - required when converting MediaWiki files
+
+
+Dependencies other than Python packages (Optional)
 ------------------------------------------------------------
-- `lxml <http://lxml.de/installation.html>`__ (Faster HTML convert if installed)
+- ``libxml2`` (faster HTML/Markdown conversion)
+- `pandoc <http://pandoc.org/>`__ (required when converting MediaWiki files)
