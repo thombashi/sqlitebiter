@@ -16,7 +16,7 @@ from .common import print_traceback
 from .dataset import complex_json
 
 
-class Test_TableUrlLoader(object):
+class Test_url_subcommand(object):
 
     @responses.activate
     def test_normal(self):
