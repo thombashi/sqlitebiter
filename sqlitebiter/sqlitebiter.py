@@ -126,7 +126,6 @@ def _get_format_type_from_path(file_path):
     return file_path.ext.lstrip(".")
 
 
-
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__)
 @click.option(
