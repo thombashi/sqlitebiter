@@ -49,6 +49,7 @@ class Test_sqlitebiter_file(object):
         [valid_ltsv_file, ExitCode.SUCCESS],
         [valid_markdown_file, ExitCode.SUCCESS],
         [valid_utf8_csv_file, ExitCode.SUCCESS],
+        [valid_json_symbols, ExitCode.SUCCESS],
 
         [invalid_csv_file, ExitCode.FAILED_CONVERT],
         [invalid_json_single_file, ExitCode.FAILED_CONVERT],
@@ -66,6 +67,7 @@ class Test_sqlitebiter_file(object):
         with runner.isolated_filesystem():
             file_path = file_creator()
             result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+            print_traceback(result)
 
             assert result.exit_code == expected, file_path
 

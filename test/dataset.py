@@ -109,6 +109,27 @@ def valid_json_multi_file_2_3():
     return file_path
 
 
+def valid_json_symbols():
+    file_path = "symbols.json"
+
+    with open(file_path, "w") as f:
+        f.write(dedent("""\
+            {
+                "comp" : [
+                    {"ABCD>8.5": "aaa", "ABCD<8.5": 0},
+                    {"ABCD>8.5": "bbb", "ABCD<8.5": 9}
+                ],
+                "symbols": [
+                    {
+                        "a!bc#d$e%f&gh(i)j": "aaa",
+                        "k@l[m]n{o}p;q:r,s.t/u": 1
+                    }
+                ]
+            }"""))
+
+    return file_path
+
+
 def valid_json_kv_file():
     file_path = "valid_kv.json"
 
