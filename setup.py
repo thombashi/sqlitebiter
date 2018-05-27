@@ -85,6 +85,7 @@ setuptools.setup(
     extras_require={
         "build": build_requires,
         "docs": docs_requires,
+        "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "release": "releasecmd>=0.0.10",
         "test": tests_requires,
     },
