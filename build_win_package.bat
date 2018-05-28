@@ -2,6 +2,9 @@
 
 set BIN_NAME=sqlitebiter
 
+pip install --upgrade pip
+pip install --upgrade .[build]
+
 echo "----- start build -----"
 pyinstaller cli.py --onefile --name %BIN_NAME% --clean --noconfirm --specpath build
 echo "----- complete build -----"
