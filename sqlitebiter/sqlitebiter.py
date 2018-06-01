@@ -52,7 +52,7 @@ class Default(object):
 def get_schema_extractor(source, verbosity_level):
     found_ptw = True
     try:
-        import pytablewriter
+        import pytablewriter  # noqa: W0611
     except ImportError:
         found_ptw = False
 
