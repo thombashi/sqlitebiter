@@ -44,3 +44,21 @@ class Test_url_subcommand(object):
                 'screenshots_2', 'tags', 'versions', 'root'])
 
             assert set(con.get_table_name_list()) == expected
+
+    @pytest.mark.parametrize(["url", "expected"], [
+        [
+            "https://en.wikipedia.org/wiki/Comparison_of_firewalls",
+            ExitCode.SUCCESS,
+        ], [
+            "https://en.wikipedia.org/wiki/Comparison_of_firewalls#Firewall_software",
+            ExitCode.SUCCESS,
+        ],
+    ])
+    def test_normal_html(self, url, expected):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(cmd, ["url", url, "-o", self.db_path])
+            print_traceback(result)
+
+            assert result.exit_code == expected
