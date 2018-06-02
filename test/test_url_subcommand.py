@@ -6,6 +6,7 @@
 
 from __future__ import print_function
 
+import pytest
 import responses
 import simplesqlite
 from click.testing import CliRunner
@@ -18,9 +19,11 @@ from .dataset import complex_json
 
 class Test_url_subcommand(object):
 
+    db_path = "test.sqlite"
+
     @responses.activate
-    def test_normal(self):
-        url = "https://example.com/complex_jeson.json"
+    def test_normal_json(self):
+        url = "https://example.com/complex_json.json"
         responses.add(
             responses.GET,
             url,
@@ -28,15 +31,14 @@ class Test_url_subcommand(object):
             content_type='text/plain; charset=utf-8',
             status=200)
         runner = CliRunner()
-        db_path = "test_complex_json.sqlite"
 
         with runner.isolated_filesystem():
-            result = runner.invoke(cmd, ["url", url, "-o", db_path])
+            result = runner.invoke(cmd, ["url", url, "-o", self.db_path])
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = simplesqlite.SimpleSQLite(self.db_path, "r")
             expected = set([
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
                 'screenshots_2', 'tags', 'versions', 'root'])
