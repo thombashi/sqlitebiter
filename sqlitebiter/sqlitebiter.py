@@ -340,6 +340,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
             result_counter.inc_success()
         if result_counter.total_count == 0:
             table_not_found_msg_format.format(url)
+        else:
+            write_completion_message(logger, output_path, result_counter)
 
         sys.exit(result_counter.get_return_code())
 
