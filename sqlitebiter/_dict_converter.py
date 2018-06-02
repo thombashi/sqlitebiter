@@ -50,7 +50,7 @@ class DictConverter(object):
                             key_list + [key, table_data.table_name])
 
                     self.__write(table_data)
-            except ptr.InvalidDataError:
+            except ptr.DataError:
                 self.to_sqlite_table(v, key_list + [key])
             except ptr.ValidationError as e:
                 self.__logger.debug(msgfy.to_debug_message(e))

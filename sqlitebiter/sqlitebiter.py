@@ -243,7 +243,7 @@ def file(ctx, files, format_name, output_path, encoding):
             logger.error(u"{:s}: invalid {} data format: path={}, message={}".format(
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
-        except ptr.InvalidDataError as e:
+        except ptr.DataError as e:
             logger.error(u"{:s}: invalid {} data: path={}, message={}".format(
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
@@ -346,7 +346,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         if is_fail:
             logger.error(u"{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
             result_counter.inc_fail()
-    except ptr.InvalidDataError as e:
+    except ptr.DataError as e:
         logger.error(u"{:s}: invalid data: url={}, message={}".format(
             e.__class__.__name__, url, str(e)))
         result_counter.inc_fail()
@@ -397,7 +397,7 @@ def gs(ctx, credentials, title, output_path):
 
             try:
                 table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
-            except (ptr.ValidationError, ptr.InvalidDataError):
+            except (ptr.ValidationError, ptr.DataError):
                 result_counter.inc_fail()
 
             logger.info(get_success_message(
@@ -409,7 +409,7 @@ def gs(ctx, credentials, title, output_path):
     except AttributeError:
         logger.error(u"invalid credentials data: path={}".format(credentials))
         result_counter.inc_fail()
-    except (ptr.ValidationError, ptr.InvalidDataError) as e:
+    except (ptr.ValidationError, ptr.DataError) as e:
         logger.error(u"invalid credentials data: path={}, message={}".format(
             credentials, str(e)))
         result_counter.inc_fail()
