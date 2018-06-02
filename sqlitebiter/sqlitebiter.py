@@ -261,6 +261,14 @@ def file(ctx, files, format_name, output_path, encoding):
     sys.exit(result_counter.get_return_code())
 
 
+def get_logging_url_path(url):
+    from six.moves.urllib.parse import urlparse
+
+    result = urlparse(url)
+
+    return result.netloc + result.path
+
+
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
@@ -337,7 +345,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
                 continue
 
             logger.info(get_success_message(
-                verbosity_level, url,
+                verbosity_level, get_logging_url_path(url),
                 schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
     except ptr.ValidationError as e:
         is_fail = True
