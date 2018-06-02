@@ -71,7 +71,7 @@ class DictConverter(object):
         return "_".join(key_list)
 
     def __write(self, table_data):
-        from tabledata import SQLiteTableDataSanitizer
+        from simplesqlite import SQLiteTableDataSanitizer
 
         self.__logger.debug(u"loaded tabledata: {}".format(six.text_type(table_data)))
 

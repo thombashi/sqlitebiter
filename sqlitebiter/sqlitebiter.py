@@ -19,7 +19,7 @@ import simplesqlite
 import six
 import typepy
 from sqliteschema import SqliteSchemaExtractor
-from tabledata import SQLiteTableDataSanitizer
+from simplesqlite import SQLiteTableDataSanitizer
 
 from .__version__ import __version__
 from ._common import get_success_message
