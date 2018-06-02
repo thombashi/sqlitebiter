@@ -44,6 +44,9 @@ logbook.StderrHandler(
 ).push_application()
 
 
+table_not_found_msg_format = "table not found in {}"
+
+
 class Default(object):
     OUTPUT_FILE = "out.sqlite"
     ENCODING = "utf-8"
@@ -193,6 +196,8 @@ def file(ctx, files, format_name, output_path, encoding):
             continue
 
         logger.debug(u"converting '{}'".format(file_path))
+        convert_count = result_counter.total_count
+
 
         try:
             loader = ptr.TableFileLoader(file_path, format_name=format_name, encoding=encoding)
@@ -248,6 +253,9 @@ def file(ctx, files, format_name, output_path, encoding):
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
+        if result_counter.total_count == convert_count:
+            logger.warn(table_not_found_msg_format.format(file_path))
+
     write_completion_message(logger, output_path, result_counter)
 
     sys.exit(result_counter.get_return_code())
@@ -299,6 +307,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     try:
         loader = create_url_loader(logger, url, format_name, encoding, proxies)
     except ptr.LoaderNotFoundError as e:
+        logger.debug(e)
+
         try:
             loader = create_url_loader(logger, url, "html", encoding, proxies)
         except ptr.LoaderNotFoundError as e:
@@ -350,6 +360,9 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         logger.error(u"{:s}: invalid data: url={}, message={}".format(
             e.__class__.__name__, url, str(e)))
         result_counter.inc_fail()
+
+    if result_counter.total_count == 0:
+        logger.warn(table_not_found_msg_format.format(url))
 
     write_completion_message(logger, output_path, result_counter)
 
