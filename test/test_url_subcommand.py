@@ -62,3 +62,28 @@ class Test_url_subcommand(object):
             print_traceback(result)
 
             assert result.exit_code == expected
+
+    @pytest.mark.parametrize(["url", "expected"], [
+        [
+            "https://raw.githubusercontent.com/fastai/fastai/master/tutorials/meanshift.ipynb",
+            ExitCode.SUCCESS,
+        ], [
+            "https://raw.githubusercontent.com/fastai/fastai/master/tutorials/linalg_pytorch.ipynb",
+            ExitCode.SUCCESS,
+        ], [
+            "https://raw.githubusercontent.com/aymericdamien/TensorFlow-Examples/master/notebooks/1_Introduction/basic_eager_api.ipynb",
+            ExitCode.SUCCESS,
+        ], [
+            "https://raw.githubusercontent.com/aymericdamien/TensorFlow-Examples/master/notebooks/3_NeuralNetworks/recurrent_network.ipynb",
+            ExitCode.SUCCESS,
+        ],
+    ])
+    def test_smoke_url_ipynb(self, url, expected):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(cmd, ["url", url, "-o", self.db_path])
+            print_traceback(result)
+
+            assert result.exit_code == expected
+

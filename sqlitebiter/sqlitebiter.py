@@ -18,13 +18,13 @@ import pytablereader as ptr
 import simplesqlite
 import six
 import typepy
-from sqliteschema import SqliteSchemaExtractor
 from simplesqlite import SQLiteTableDataSanitizer
+from sqliteschema import SqliteSchemaExtractor
 
 from .__version__ import __version__
 from ._common import get_success_message
 from ._config import ConfigKey, app_config_manager
-from ._const import PROGRAM_NAME
+from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
 from ._counter import ResultCounter
 from ._dict_converter import DictConverter
 from ._enum import Context, ExitCode
@@ -156,7 +156,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
 @click.argument("files", type=str, nargs=-1)
 @click.option(
     "-f", "--format", "format_name",
-    type=click.Choice(ptr.TableFileLoader.get_format_name_list()),
+    type=click.Choice(ptr.TableFileLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
     help="Data format to loading (auto-detect from file extensions in default).")
 @click.option(
     "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
@@ -168,9 +168,12 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
 @click.pass_context
 def file(ctx, files, format_name, output_path, encoding):
     """
-    Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
+    Convert tabular data within
+    CSV/Excel/HTML/JSON/Jupyter Notebook/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
     file(s) to a SQLite database file.
     """
+
+    from ._ipynb_converter import is_ipynb_file_path, load_ipynb_file, convert_nb
 
     if typepy.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
@@ -198,6 +201,20 @@ def file(ctx, files, format_name, output_path, encoding):
         logger.debug(u"converting '{}'".format(file_path))
         convert_count = result_counter.total_count
 
+        if format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
+            convert_nb(
+                logger,
+                con,
+                result_counter,
+                nb=load_ipynb_file(file_path, encoding=encoding))
+            for table_name in con.get_table_name_list():
+                logger.info(get_success_message(
+                    verbosity_level, file_path,
+                    schema_extractor.get_table_schema_text(table_name)))
+                result_counter.inc_success()
+            if result_counter.total_count == convert_count:
+                table_not_found_msg_format.format(file_path)
+            continue
 
         try:
             loader = ptr.TableFileLoader(file_path, format_name=format_name, encoding=encoding)
@@ -273,7 +290,7 @@ def get_logging_url_path(url):
 @click.argument("url", type=str)
 @click.option(
     "-f", "--format", "format_name",
-    type=click.Choice(ptr.TableUrlLoader.get_format_name_list()),
+    type=click.Choice(ptr.TableUrlLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
     help="Data format to loading (defaults to html).")
 @click.option(
     "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
@@ -290,6 +307,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     """
     Scrape tabular data from a URL and convert data to a SQLite database file.
     """
+
+    from ._ipynb_converter import is_ipynb_url, load_ipynb_url, convert_nb
 
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
@@ -311,6 +330,18 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         "http": proxy,
         "https": proxy,
     }
+
+    if format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
+        convert_nb(logger, con, result_counter, nb=load_ipynb_url(url, proxies=proxies))
+        for table_name in con.get_table_name_list():
+            logger.info(get_success_message(
+                verbosity_level, get_logging_url_path(url),
+                schema_extractor.get_table_schema_text(table_name)))
+            result_counter.inc_success()
+        if result_counter.total_count == 0:
+            table_not_found_msg_format.format(url)
+
+        sys.exit(result_counter.get_return_code())
 
     try:
         loader = create_url_loader(logger, url, format_name, encoding, proxies)
