@@ -19,6 +19,10 @@ class ResultCounter(object):
     def fail_count(self):
         return self.__fail_count
 
+    @property
+    def total_count(self):
+        return self.success_count + self.fail_count
+
     def __init__(self):
         self.__success_count = 0
         self.__fail_count = 0
