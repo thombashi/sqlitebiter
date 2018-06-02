@@ -6,6 +6,7 @@ Features
         - Microsoft Excel :superscript:`TM`
         - HTML
         - JSON
+        - `Jupyter Notebook <http://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - Markdown
         - Mediawiki

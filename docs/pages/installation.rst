@@ -82,6 +82,7 @@ Following mandatory Python packages are automatically installed during
 
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
 - `click <http://click.pocoo.org/>`__
+- `nbformat <http://jupyter.org/>`__
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__

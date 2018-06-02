@@ -8,7 +8,7 @@
       Scrape tabular data from a URL and convert data to a SQLite database file.
 
     Options:
-      -f, --format [csv|excel|html|json|ltsv|markdown|mediawiki|sqlite|ssv|tsv]
+      -f, --format [csv|excel|html|json|ltsv|markdown|mediawiki|sqlite|ssv|tsv|ipynb]
                                       Data format to loading (defaults to html).
       -o, --output-path PATH          Output path of the SQLite database file.
                                       Defaults to 'out.sqlite'.
