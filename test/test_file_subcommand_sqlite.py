@@ -78,7 +78,7 @@ class Test_sqlitebiter_file_sqlite_merge(object):
             expected = TableData(
                 table_name=TEST_TABLE_NAME_A,
                 header_list=["attr_a", "attr_b"],
-                record_list=[
+                row_list=[
                     [1, 2],
                     [3, 4],
                     [11, 12],
@@ -101,14 +101,14 @@ class Test_sqlitebiter_file_sqlite_merge(object):
                 TableData(
                     table_name=TEST_TABLE_NAME_A,
                     header_list=["attr_a", "attr_b"],
-                    record_list=[
+                    row_list=[
                         [1, 2],
                         [3, 4],
                     ]),
                 TableData(
                     table_name=TEST_TABLE_NAME_B,
                     header_list=["ba", "bb"],
-                    record_list=[
+                    row_list=[
                         [101, 102],
                         [103, 104],
                     ]),

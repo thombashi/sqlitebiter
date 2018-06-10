@@ -231,7 +231,7 @@ def file(ctx, files, format_name, output_path, encoding):
             for table_data in loader.load():
                 logger.debug(u"loaded tabledata: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
+                sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
 
                 try:
                     table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
@@ -362,7 +362,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
         for table_data in loader.load():
             logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-            sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
+            sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
 
             try:
                 table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
@@ -447,7 +447,7 @@ def gs(ctx, credentials, title, output_path):
         for table_data in loader.load():
             logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-            sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
+            sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
 
             try:
                 table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
@@ -456,7 +456,7 @@ def gs(ctx, credentials, title, output_path):
 
             logger.info(get_success_message(
                 verbosity_level, "google sheets",
-                schema_extractor.get_table_schema_text(table_data.table_name)))
+                schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
     except ptr.OpenError as e:
         logger.error(msgfy.to_error_message(e))
         result_counter.inc_fail()

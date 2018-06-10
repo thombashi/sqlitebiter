@@ -75,7 +75,7 @@ class DictConverter(object):
 
         self.__logger.debug(u"loaded tabledata: {}".format(six.text_type(table_data)))
 
-        sqlite_tabledata = SQLiteTableDataSanitizer(table_data).sanitize()
+        sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
         self.__table_creator.create(sqlite_tabledata, self.__index_list)
         self.__result_counter.inc_success()
 
