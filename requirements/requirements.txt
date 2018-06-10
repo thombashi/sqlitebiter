@@ -4,7 +4,7 @@ logbook
 msgfy>=0.0.2
 nbformat>=4.4.0
 path.py
-pytablereader>=0.19.2
-SimpleSQLite>=0.21.2
+pytablereader>=0.19.3
+SimpleSQLite>=0.22.0
 sqliteschema>=0.9.7
 typepy>=0.1.0
