@@ -5,7 +5,7 @@
 
 Summary
 =========
-A CLI tool to convert CSV / Excel / HTML / JSON / Jupyter Notebook / LTSV / Markdown / SQLite / SSV / TSV / Google-Sheets to a SQLite database file.
+A CLI tool to convert CSV / Excel / HTML / JSON / Jupyter Notebook / LDJSON / LTSV / Markdown / SQLite / SSV / TSV / Google-Sheets to a SQLite database file.
 
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux
    :target: https://travis-ci.org/thombashi/sqlitebiter
