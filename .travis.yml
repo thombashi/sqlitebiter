@@ -52,7 +52,7 @@ deploy:
   api_key:
     secure: KMCOwxbBbEdh8vQl6sikAK+11xN3Zh5mHUyIbcD/nQK9rJlMXXBQ5vrhbr/Ybe8/JAUI1IX33PzUM4dK0oycdnvuKD10i2knV7pJHUEf+ykoijNE7RV/6hh068Cda4l86z74H3r8DfvxbgcpwtwwyHbWQa/j0s5jKg/sPcWv39m8F8t77pEJOvvjhCmoPTdtKUZg/HcXJmYLPXsvZjfNh6SncN2CtJ8o1CmUCh+BMpMBCdt8N3YOzdQEsDTQEk+CnrAuizSn33g3RBt8VrlN+HSOoK7sqba8nnLDhz5AO0qi2HeZOMr71JXInEEFOnjpdkhQaT+oRlPtIEVg8EU7m9FBuNAzkcDJF/1rFKWmczaGD1B+BEqBgnLl+0pN2EApD0QodIXOWg81+qgVOh8besdCwJ+d2NOpBKqR94jrr8SY18JCei49iqsJuaRWrWcrnl1MaGqfj1BFVLqAmTxB4ajizFEfAap/T3Nxs+AvPpP0r9vGx24W5MpsPrdmU8zZlgIlnl35pMhN/PP6OBjoS0yFWZSjASTuCANE9pxIeXlhciVaWUJ1Urmi5/q+tWNUJnXN9hoOz8ZJihgvf91vrTq63VA8NCYVxcABbY94aZY78p4CeiP9oCGQWBhzXszQzOBme8eC5nNna8NuCASvUp8RByc6pprcpZWMx7aMDKc=
   file_glob: true
-  file: 'dist/sqlitebiter_*.deb'
+  file: $DEPLOY_FILE
   on:
     tags: true
     branch: master
