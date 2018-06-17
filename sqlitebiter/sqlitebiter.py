@@ -451,6 +451,7 @@ def gs(ctx, credentials, title, output_path):
 
             try:
                 table_creator.create(sqlite_tabledata, ctx.obj.get(Context.INDEX_LIST))
+                result_counter.inc_success()
             except (ptr.ValidationError, ptr.DataError):
                 result_counter.inc_fail()
 
