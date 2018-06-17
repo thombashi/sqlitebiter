@@ -2,21 +2,39 @@ language: python
 
 matrix:
   include:
-    - python: 2.7
-      env: TOXENV=python2.7
-    - python: 3.4
-      env: TOXENV=python3.4
-    - python: 3.5
-      env: TOXENV=python3.5
-    - python: 3.6
-      env: TOXENV=python3.6
+    - os: linux
+      python: 2.7
+      sudo: required
+      env:
+        - TOXENV=python2.7
 
-os:
-  - linux
+    - os: linux
+      python: 3.4
+      sudo: required
+      env:
+        - TOXENV=python3.4
+
+    - os: linux
+      python: 3.5
+      sudo: required
+      env:
+        - TOXENV=python3.5
+
+    - os: linux
+      python: 3.6
+      sudo: required
+      env:
+        - TOXENV=python3.6
+        - DEPLOY_FILE='dist/sqlitebiter_*.deb'
+
+    - os: osx
+      language: generic
+      env:
+        - TOXENV=python3.6
+        - DEPLOY_FILE='dist/sqlitebiter_macos_*'
 
 install:
-  - pip install setuptools --upgrade
-  - pip install tox
+  - bash .travis/install.sh
 
 script: 
   - tox
@@ -26,9 +44,7 @@ notifications:
     secure: EHpNEhPxWbvByJouszVg5JIU9BBURFQnHlMEJDudWnK8i0hF37OYKkC8oSbvi2Hz+/bCW4eFStwuTu17RA9diUI6F4ZQ+H0OygI5NqlGSlty0sQpfpxOTSVlqGupKJtZRG5yeqzCVEdXYLZOQH8q54yUADxpjaPkdvCoOrcPB/xBe8vxpUc4uPtYQVeCJCOij0y+3nEwOOu/A8JBk0Uhx9690qKHzYwv3V93M4OjYeWntEcmcbJaLj+BCVV+DT3rPoUeweoZHwd/0euyKR/NmjR/y0uIsIkcjKpwDACaPIzzoQUD7VMf+91yebqI42t5ukg4fDArGE8jkQrRPsTKBdBP7n32n8PShWVypXR/CN/qYZvWwoVkuyYp2KudJIXm9SzWuW0sYjL4BaI9/sQs8iZfXOW2UJfErwNn5gybkxc/59hgtR955ceYWjKSm++KzG9AYb3c7MqY2HHWGdGxNHD6dv2tnTQJ1FUNC5wuOwmOsg0EjHD+o67zYuvOOsjA2EfgjFVqsWLBy7Uh9fQVBOUpb3NCFA0ZDK02xaBtuZSzhT2vCviUkRsvgIy51yzPt6ldeadKtogCUKrQU3U9M0R3ZkoJSZaN74ZHA33IFtCKfnIkZaoJ1w+DRGPLw8D31CI/dxIoeVUjsCYhDuPLxcF/L1x5GS/8tJHXcZEGK/c=
 
 before_deploy:
-  - sudo apt -qq update
-  - sudo apt install -y fakeroot
-  - bash build_deb_package.sh
+  - bash -x build_package.sh
 
 deploy:
   provider: releases
@@ -40,4 +56,4 @@ deploy:
   on:
     tags: true
     branch: master
-    python: 3.6
+    condition: "$TOXENV = python3.6"
