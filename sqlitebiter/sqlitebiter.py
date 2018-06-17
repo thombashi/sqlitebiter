@@ -460,9 +460,6 @@ def gs(ctx, credentials, title, output_path):
     except ptr.OpenError as e:
         logger.error(msgfy.to_error_message(e))
         result_counter.inc_fail()
-    except AttributeError:
-        logger.error(u"invalid credentials data: path={}".format(credentials))
-        result_counter.inc_fail()
     except (ptr.ValidationError, ptr.DataError) as e:
         logger.error(u"invalid credentials data: path={}, message={}".format(
             credentials, str(e)))
