@@ -8,6 +8,7 @@ Features
         - JSON
         - `Jupyter Notebook <http://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
+        - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__/NDJSON/JSON Lines
         - Markdown
         - Mediawiki
         - Space separated values (SSV)

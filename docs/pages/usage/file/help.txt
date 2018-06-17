@@ -6,11 +6,11 @@
     Usage: sqlitebiter file [OPTIONS] [FILES]...
 
       Convert tabular data within CSV/Excel/HTML/JSON/Jupyter
-      Notebook/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV file(s) to a SQLite
+      Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV file(s) to a SQLite
       database file.
 
     Options:
-      -f, --format [csv|excel|html|json|ltsv|markdown|mediawiki|sqlite|ssv|tsv|ipynb]
+      -f, --format [csv|excel|html|json|json_lines|jsonl|ldjson|ltsv|markdown|mediawiki|ndjson|sqlite|ssv|tsv|ipynb]
                                       Data format to loading (auto-detect from
                                       file extensions in default).
       -o, --output-path PATH          Output path of the SQLite database file.

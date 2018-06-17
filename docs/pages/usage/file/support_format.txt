@@ -4,18 +4,19 @@ Following table shows that the supported data formats:
 
 .. table:: Available data formats
 
-    ================  ========================  =================================================================
-     Format             File Extension                       Remarks                         
-    ================  ========================  =================================================================
-    CSV               ``.csv``                                                               
-    Excel             ``.xlsx``/``.xls``        Create table for each sheet in the Excel workbook.
-    HTML              ``.html``/``.htm``        | Scrape tabular data from ``<table>`` tags in the HTML file.
-                                                | And create table for each ``<table>`` tag data.
-    JSON              ``.json``                                                                  
-    Jupyter Notebook  ``.ipynb``
-    LTSV              ``.ltsv``                                                              
-    Markdown          ``.md``                   | Extract tabular data in the Markdown file.
-                                                | And create a table for each ``<table>`` tabular data.
-    SQLite            ``.sqlite``/``.sqlite3``  
-    TSV               ``.tsv``                                                               
-    ================  ========================  =================================================================
+    ===================  ===================================  =================================================================
+     Format               File Extension                       Remarks                         
+    ===================  ===================================  =================================================================
+    CSV                  ``.csv``                                                               
+    Excel                ``.xlsx``/``.xls``                   Create table for each sheet in the Excel workbook.
+    HTML                 ``.html``/``.htm``                   | Scrape tabular data from ``<table>`` tags in the HTML file.
+                                                              | And create table for each ``<table>`` tag data.
+    JSON                 ``.json``                                                                  
+    Jupyter Notebook     ``.ipynb``
+    Line-delimited JSON  ``.jsonl``/``.ldjson``/``.ndjson``
+    LTSV                 ``.ltsv``                                                              
+    Markdown             ``.md``                              | Extract tabular data in the Markdown file.
+                                                              | And create a table for each ``<table>`` tabular data.
+    SQLite               ``.sqlite``/``.sqlite3``  
+    TSV                  ``.tsv``                                                               
+    ===================  ===================================  =================================================================
