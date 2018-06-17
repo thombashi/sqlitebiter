@@ -169,7 +169,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
 def file(ctx, files, format_name, output_path, encoding):
     """
     Convert tabular data within
-    CSV/Excel/HTML/JSON/Jupyter Notebook/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
+    CSV/Excel/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
     file(s) to a SQLite database file.
     """
 
@@ -464,6 +464,9 @@ def gs(ctx, credentials, title, output_path):
     except (ptr.ValidationError, ptr.DataError) as e:
         logger.error(u"invalid credentials data: path={}, message={}".format(
             credentials, str(e)))
+        result_counter.inc_fail()
+    except ptr.APIError as e:
+        logger.error(msgfy.to_error_message(e))
         result_counter.inc_fail()
 
     write_completion_message(logger, output_path, result_counter)

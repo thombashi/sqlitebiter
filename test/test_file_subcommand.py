@@ -41,6 +41,7 @@ class Test_sqlitebiter_file(object):
         [valid_json_single_file, ExitCode.SUCCESS],
         [valid_json_multi_file_1, ExitCode.SUCCESS],
         [valid_json_kv_file, ExitCode.SUCCESS],
+        [valid_jsonlines_file, ExitCode.SUCCESS],
         [valid_csv_file_1_1, ExitCode.SUCCESS],
         [valid_csv_file_2_1, ExitCode.SUCCESS],
         [valid_tsv_file, ExitCode.SUCCESS],
@@ -96,6 +97,7 @@ class Test_sqlitebiter_file(object):
             file_list = [
                 valid_json_single_file(),
                 valid_json_multi_file_1(),
+                valid_jsonlines_file(),
                 valid_csv_file_1_1(),
                 valid_csv_file_2_1(),
                 valid_tsv_file(),
