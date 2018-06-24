@@ -220,7 +220,7 @@ class Test_sqlitebiter_file(object):
                 'tsv_a',
                 'valid_mdtable_markdown1',
             ]
-            actual_table_list = con.get_table_name_list()
+            actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -251,7 +251,7 @@ class Test_sqlitebiter_file(object):
                 "tsv_a": [(1, 4.0, 'tsv0'), (2, 2.1, 'tsv1'), (3, 120.9, 'tsv2')],
                 "valid_mdtable_markdown1": [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
             }
-            for table in con.get_table_name_list():
+            for table in con.fetch_table_name_list():
                 result = con.select("*", table_name=table)
                 expected_data = expected_data_table.get(table)
                 actual_data = result.fetchall()
@@ -338,7 +338,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.get_table_name_list()
+            actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -363,7 +363,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.get_table_name_list()
+            actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -390,7 +390,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.get_table_name_list()
+            actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -423,7 +423,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_table_list = ['multij2']
-            actual_table_list = con.get_table_name_list()
+            actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -440,7 +440,7 @@ class Test_sqlitebiter_file(object):
                 ],
             }
 
-            for table in con.get_table_name_list():
+            for table in con.fetch_table_name_list():
                 expected_data = expected_data_table.get(table)
                 actual_data = con.select("*", table_name=table).fetchall()
 
@@ -468,7 +468,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_table_list = ['multij2', 'multij2_1']
-            actual_table_list = con.get_table_name_list()
+            actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -487,7 +487,7 @@ class Test_sqlitebiter_file(object):
                 ],
             }
 
-            for table in con.get_table_name_list():
+            for table in con.fetch_table_name_list():
                 expected_data = expected_data_table.get(table)
                 actual_data = con.select("*", table_name=table).fetchall()
 
@@ -515,4 +515,4 @@ class Test_sqlitebiter_file(object):
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
                 'screenshots_2', 'tags', 'versions', 'root'])
 
-            assert set(con.get_table_name_list()) == expected
+            assert set(con.fetch_table_name_list()) == expected

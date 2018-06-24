@@ -43,7 +43,7 @@ class Test_url_subcommand(object):
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
                 'screenshots_2', 'tags', 'versions', 'root'])
 
-            assert set(con.get_table_name_list()) == expected
+            assert set(con.fetch_table_name_list()) == expected
 
     @pytest.mark.parametrize(["url", "expected"], [
         [
@@ -86,4 +86,3 @@ class Test_url_subcommand(object):
             print_traceback(result)
 
             assert result.exit_code == expected
-
