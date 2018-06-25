@@ -6,8 +6,6 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from textwrap import indent
-
 from sqliteschema import SQLiteSchemaExtractor
 
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME
@@ -45,6 +43,14 @@ class TableConverter(object):
         if self._result_counter.success_count > 0:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
+
+            try:
+                from textwrap import indent
+            except ImportError:
+                # for Python 2 compatibility
+                def indent(value, _):
+                    return value
+
             logger.debug("----- database schema -----\n{}".format(
                 indent(self._schema_extractor.dumps(
                     output_format=output_format, verbosity_level=verbosity_level), "    ")))
