@@ -64,8 +64,8 @@ class UrlConverter(TableConverter):
             convert_nb(logger, con, result_counter, nb=load_ipynb_url(url, proxies=proxies))
             for table_name in con.fetch_table_name_list():
                 logger.info(get_success_message(
-                    verbosity_level, get_logging_url_path(url),
-                    self._schema_extractor.get_table_schema_text(table_name)))
+                    get_logging_url_path(url), self._schema_extractor, table_name,
+                    verbosity_level))
                 result_counter.inc_success()
             if result_counter.total_count == 0:
                 TABLE_NOT_FOUND_MSG_FORMAT.format(url)
@@ -106,8 +106,8 @@ class UrlConverter(TableConverter):
                     continue
 
                 logger.info(get_success_message(
-                    verbosity_level, get_logging_url_path(url),
-                    self._schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
+                    get_logging_url_path(url), self._schema_extractor, sqlite_tabledata.table_name,
+                    verbosity_level))
         except ptr.ValidationError as e:
             is_fail = True
             if loader.format_name == "json":

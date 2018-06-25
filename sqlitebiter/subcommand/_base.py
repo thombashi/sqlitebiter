@@ -6,7 +6,10 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from .._common import get_schema_extractor
+from textwrap import indent
+
+from sqliteschema import SQLiteSchemaExtractor
+
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME
 from .._counter import ResultCounter
 from .._table_creator import TableCreator
@@ -26,7 +29,7 @@ class TableConverter(object):
         self._format_name = format_name
         self._encoding = encoding
 
-        self._schema_extractor = get_schema_extractor(con, verbosity_level)
+        self._schema_extractor = SQLiteSchemaExtractor(con)
         self._result_counter = ResultCounter()
         self._table_creator = TableCreator(logger=self._logger, dst_con=con)
 
@@ -40,9 +43,28 @@ class TableConverter(object):
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
         logger.info("number of created tables: {:d}".format(self._result_counter.success_count))
         if self._result_counter.success_count > 0:
+            output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
-            logger.debug("----- database schema -----")
-            logger.debug(get_schema_extractor(
-                self._con.database_path, MAX_VERBOSITY_LEVEL).dumps())
+            logger.debug("----- database schema -----\n{}".format(
+                indent(self._schema_extractor.dumps(
+                    output_format=output_format, verbosity_level=verbosity_level), "    ")))
         else:
             logger.debug(database_path_msg)
+
+    def __get_dump_param(self):
+        found_ptw = True
+        try:
+            import pytablewriter  # noqa: W0611
+        except ImportError:
+            found_ptw = False
+
+        if found_ptw:
+            return ("rst_simple_table", self._verbosity_level)
+
+        if self._verbosity_level >= 1:
+            return ("text", MAX_VERBOSITY_LEVEL)
+
+        if self._verbosity_level == 0:
+            return ("text", 1)
+
+        raise ValueError("invalid verbosity_level: {}".format(self._verbosity_level))

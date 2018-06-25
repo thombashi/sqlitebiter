@@ -80,5 +80,5 @@ class DictConverter(object):
         self.__result_counter.inc_success()
 
         self.__logger.info(get_success_message(
-            self.__verbosity_level, self.__source,
-            self.__schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
+            self.__source, self.__schema_extractor, sqlite_tabledata.table_name,
+            self.__verbosity_level))

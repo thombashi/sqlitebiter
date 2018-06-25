@@ -8,7 +8,7 @@
 from __future__ import absolute_import
 
 import simplesqlite
-from sqliteschema import SqliteSchemaExtractor
+from sqliteschema import SQLiteSchemaExtractor
 
 
 class TableCreator(object):
@@ -43,18 +43,10 @@ class TableCreator(object):
         if not self.__dst_con.has_table(src_table_name):
             return False
 
-        if (self.__dst_con.fetch_attr_name_list(src_table_name) !=
-                src_con.fetch_attr_name_list(src_table_name)):
-            return True
+        lhs = SQLiteSchemaExtractor(self.__dst_con).fetch_table_schema(src_table_name).as_dict()
+        rhs = SQLiteSchemaExtractor(src_con).fetch_table_schema(src_table_name).as_dict()
 
-        con_schema_extractor = SqliteSchemaExtractor(self.__dst_con, verbosity_level=1)
-        con_mem_schema_extractor = SqliteSchemaExtractor(src_con, verbosity_level=1)
-
-        if (con_schema_extractor.get_database_schema() ==
-                con_mem_schema_extractor.get_database_schema()):
-            return False
-
-        return True
+        return lhs != rhs
 
     def __make_unique_table_name(self, table_name_base):
         exist_table_name_list = self.__dst_con.fetch_table_name_list()

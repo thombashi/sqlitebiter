@@ -16,7 +16,7 @@ from click.testing import CliRunner
 from pytablereader.interface import TableLoader
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
-from sqliteschema import SqliteSchemaExtractor
+from sqliteschema import SQLiteSchemaExtractor
 
 from .common import print_test_result, print_traceback
 from .dataset import *
@@ -288,10 +288,10 @@ class Test_sqlitebiter_file(object):
         [
             valid_csv_file_3_1, "aa,ac",
             dedent("""\
-                .. table:: valid_csv_3_1 (3 records)
+                .. table:: valid_csv_3_1
 
                     +--------------+---------+-----------+--------+------+-----+
-                    |Attribute name|Data type|Primary key|Not NULL|Unique|Index|
+                    |Attribute name|Data type|PRIMARY KEY|NOT NULL|UNIQUE|Index|
                     +==============+=========+===========+========+======+=====+
                     |aa            |REAL     |           |        |      |X    |
                     +--------------+---------+-----------+--------+------+-----+
@@ -314,7 +314,7 @@ class Test_sqlitebiter_file(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            extractor = SqliteSchemaExtractor(db_path)
+            extractor = SQLiteSchemaExtractor(db_path)
 
             print_test_result(expected=expected, actual=extractor.dumps())
 

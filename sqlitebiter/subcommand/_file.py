@@ -53,8 +53,7 @@ class FileConverter(TableConverter):
                 nb=load_ipynb_file(file_path, encoding=self._encoding))
             for table_name in con.fetch_table_name_list():
                 logger.info(get_success_message(
-                    verbosity_level, file_path,
-                    self._schema_extractor.get_table_schema_text(table_name)))
+                    file_path, self._schema_extractor, table_name, verbosity_level))
                 result_counter.inc_success()
             if result_counter.total_count == convert_count:
                 TABLE_NOT_FOUND_MSG_FORMAT.format(file_path)
@@ -88,8 +87,8 @@ class FileConverter(TableConverter):
                     return
 
                 logger.info(get_success_message(
-                    verbosity_level, file_path,
-                    self._schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
+                    file_path, self._schema_extractor, sqlite_tabledata.table_name,
+                    verbosity_level))
         except ptr.OpenError as e:
             logger.error("{:s}: open error: file={}, message='{}'".format(
                 e.__class__.__name__, file_path, str(e)))

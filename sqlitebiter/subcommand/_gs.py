@@ -43,8 +43,8 @@ class GoogleSheetsConverter(TableConverter):
                     result_counter.inc_fail()
 
                 logger.info(get_success_message(
-                    verbosity_level, "google sheets",
-                    self._schema_extractor.get_table_schema_text(sqlite_tabledata.table_name)))
+                    "google sheets", self._schema_extractor, sqlite_tabledata.table_name,
+                    verbosity_level))
         except ptr.OpenError as e:
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()

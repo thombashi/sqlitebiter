@@ -4,33 +4,12 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 '''
 
-from __future__ import absolute_import
-
-from sqliteschema import SqliteSchemaExtractor
-
-from ._const import MAX_VERBOSITY_LEVEL
+from __future__ import absolute_import, unicode_literals
 
 
-def get_success_message(verbosity_level, source, dst_table_name):
-    message_template = u"convert '{:s}' to '{:s}' table"
+def get_success_message(source, schema_extractor, table_name, verbosity_level):
+    table_schema = schema_extractor.fetch_table_schema(table_name.strip())
 
-    return message_template.format(source, dst_table_name.strip())
-
-
-def get_schema_extractor(source, verbosity_level):
-    found_ptw = True
-    try:
-        import pytablewriter  # noqa: W0611
-    except ImportError:
-        found_ptw = False
-
-    if verbosity_level >= MAX_VERBOSITY_LEVEL and found_ptw:
-        return SqliteSchemaExtractor(source, verbosity_level=0, output_format="table")
-
-    if verbosity_level >= 1:
-        return SqliteSchemaExtractor(source, verbosity_level=3, output_format="text")
-
-    if verbosity_level == 0:
-        return SqliteSchemaExtractor(source, verbosity_level=0, output_format="text")
-
-    raise ValueError("invalid verbosity_level: {}".format(verbosity_level))
+    return "convert '{source:s}' to '{table_info:s}' table".format(
+        source=source,
+        table_info=table_schema.dumps(output_format="text", verbosity_level=verbosity_level))

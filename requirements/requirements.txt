@@ -6,5 +6,5 @@ nbformat>=4.4.0
 path.py
 pytablereader>=0.20.0
 SimpleSQLite>=0.23.0
-sqliteschema>=0.9.7
+sqliteschema>=0.10.1
 typepy>=0.1.0
