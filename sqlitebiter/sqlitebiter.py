@@ -14,7 +14,7 @@ import click
 import logbook
 import path
 import pytablereader as ptr
-import simplesqlite
+import simplesqlite as sqlite
 import typepy
 
 from .__version__ import __version__
@@ -50,9 +50,9 @@ def create_database(ctx, database_path):
         dir_path.makedirs_p()
 
     if is_append_table:
-        return simplesqlite.SimpleSQLite(db_path, "a")
+        return sqlite.SimpleSQLite(db_path, "a")
 
-    return simplesqlite.SimpleSQLite(db_path, "w")
+    return sqlite.SimpleSQLite(db_path, "w")
 
 
 def make_logger(channel_name, log_level):
@@ -65,7 +65,7 @@ def make_logger(channel_name, log_level):
 
     logger.level = log_level
     ptr.set_log_level(log_level)
-    simplesqlite.set_log_level(log_level)
+    sqlite.set_log_level(log_level)
     appconfigpy.set_log_level(log_level)
 
     return logger

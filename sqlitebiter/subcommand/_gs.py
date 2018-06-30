@@ -8,7 +8,7 @@ from __future__ import absolute_import, unicode_literals
 
 import msgfy
 import pytablereader as ptr
-import simplesqlite as sql
+import simplesqlite as sqlite
 import six
 
 from .._common import get_success_message
@@ -34,7 +34,7 @@ class GoogleSheetsConverter(TableConverter):
             for table_data in loader.load():
                 logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = sql.SQLiteTableDataSanitizer(table_data).normalize()
+                sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(table_data).normalize()
 
                 try:
                     self._table_creator.create(sqlite_tabledata, self._index_list)

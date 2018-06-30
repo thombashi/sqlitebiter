@@ -11,7 +11,7 @@ import sys
 
 import msgfy
 import pytablereader as ptr
-import simplesqlite as sql
+import simplesqlite as sqlite
 import six
 
 from .._common import get_success_message
@@ -89,12 +89,12 @@ class UrlConverter(TableConverter):
             for table_data in loader.load():
                 logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = sql.SQLiteTableDataSanitizer(table_data).normalize()
+                sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(table_data).normalize()
 
                 try:
                     self._table_creator.create(sqlite_tabledata, self._index_list)
                     result_counter.inc_success()
-                except sql.OperationalError as e:
+                except sqlite.OperationalError as e:
                     logger.error("{:s}: failed to convert: url={}, message={}".format(
                         e.__class__.__name__, url, e.message))
                     result_counter.inc_fail()
