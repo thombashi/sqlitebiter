@@ -91,7 +91,7 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
-    ctx.obj[Context.LOG_LEVEL] = (logbook.INFO if log_level is None else log_level)
+    ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
 
 
 @cmd.command()
