@@ -92,6 +92,7 @@ setuptools.setup(
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
+        "Framework :: Jupyter",
         "Intended Audience :: Information Technology",
         "License :: OSI Approved :: MIT License",
         "Operating System :: MacOS",
