@@ -27,6 +27,11 @@ matrix:
         - TOXENV=python3.6
         - DEPLOY_FILE='dist/sqlitebiter_*.deb'
 
+    - os: linux
+      python: 3.7-dev
+      sudo: required
+      env: TOXENV=python3.7
+
     - os: osx
       language: generic
       env:
