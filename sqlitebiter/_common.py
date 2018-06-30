@@ -7,6 +7,9 @@
 from __future__ import absolute_import, unicode_literals
 
 
+dup_col_handler = "rename"
+
+
 def get_success_message(source, schema_extractor, table_name, verbosity_level):
     table_schema = schema_extractor.fetch_table_schema(table_name.strip())
 

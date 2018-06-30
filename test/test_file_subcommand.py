@@ -320,6 +320,21 @@ class Test_sqlitebiter_file(object):
 
             assert extractor.dumps() == expected
 
+    def test_normal_dup_col_csv_file(self):
+        db_path = "test_dup_col.sqlite"
+        runner = CliRunner()
+        expected = "dup_col (A, A_2, A_1)"
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(cmd, ["file", dup_col_csv_file(), "-o", db_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            extractor = SQLiteSchemaExtractor(db_path)
+            options = {"output_format": "text", "verbosity_level": 1}
+            print_test_result(expected=expected, actual=extractor.dumps(**options))
+            assert extractor.dumps(**options) == expected
+
     def test_normal_append(self):
         db_path = "test.sqlite"
         runner = CliRunner()

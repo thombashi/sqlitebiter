@@ -14,7 +14,7 @@ import pytablereader as ptr
 import simplesqlite as sqlite
 import six
 
-from .._common import get_success_message
+from .._common import dup_col_handler, get_success_message
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._dict_converter import DictConverter
 from .._enum import ExitCode
@@ -89,7 +89,8 @@ class UrlConverter(TableConverter):
             for table_data in loader.load():
                 logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(table_data).normalize()
+                sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(
+                    table_data, dup_col_handler=dup_col_handler).normalize()
 
                 try:
                     self._table_creator.create(sqlite_tabledata, self._index_list)

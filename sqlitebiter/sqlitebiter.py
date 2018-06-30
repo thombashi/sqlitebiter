@@ -22,6 +22,7 @@ from ._config import ConfigKey, app_config_manager
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
 from ._enum import Context, ExitCode
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
+from ._common import dup_col_handler
 
 
 CONTEXT_SETTINGS = dict(
@@ -92,6 +93,8 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
+
+    sqlite.SimpleSQLite.dup_col_handler = dup_col_handler
 
 
 @cmd.command()

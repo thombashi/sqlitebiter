@@ -209,6 +209,19 @@ def valid_csv_file_3_1():
     return file_path
 
 
+def dup_col_csv_file():
+    file_path = "dup_col.csv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"A","A","A_1"',
+            '4,1,"a"',
+            '2.1,2,"bb"',
+            '120.9,3,"ccc"',
+        ]))
+
+    return file_path
+
+
 def invalid_csv_file():
     file_path = "invalid_csv.csv"
 
