@@ -56,6 +56,23 @@ class TableConverter(object):
         else:
             logger.debug(database_path_msg)
 
+    def _convert_complex_json(self, json_loader):
+        from .._dict_converter import DictConverter
+
+        dict_converter = DictConverter(
+            self._logger, self._table_creator, self._result_counter, self._schema_extractor,
+            self._verbosity_level, source=json_loader.source, index_list=self._index_list)
+        is_success = False
+
+        try:
+            dict_converter.to_sqlite_table(json_loader.load_dict(), [])
+        except AttributeError:
+            pass
+        else:
+            is_success = True
+
+        return is_success
+
     def __get_dump_param(self):
         found_ptw = True
         try:

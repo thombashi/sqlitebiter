@@ -14,7 +14,6 @@ from simplesqlite import SQLiteTableDataSanitizer
 
 from .._common import dup_col_handler, get_success_message
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
-from .._dict_converter import DictConverter
 from .._ipynb_converter import convert_nb, is_ipynb_file_path, load_ipynb_file
 from ._base import TableConverter
 
@@ -95,17 +94,8 @@ class FileConverter(TableConverter):
                 e.__class__.__name__, file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
-            if loader.format_name == "json":
-                dict_converter = DictConverter(
-                    logger, self._table_creator, result_counter, self._schema_extractor,
-                    verbosity_level, source=file_path, index_list=self._index_list)
-
-                try:
-                    dict_converter.to_sqlite_table(loader.loader.load_dict(), [])
-                except AttributeError:
-                    pass
-                else:
-                    return
+            if loader.format_name == "json" and self._convert_complex_json(loader.loader):
+                return
 
             logger.error("{:s}: invalid {} data format: path={}, message={}".format(
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))

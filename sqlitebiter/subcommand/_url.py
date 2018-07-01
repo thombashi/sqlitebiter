@@ -16,7 +16,6 @@ import six
 
 from .._common import dup_col_handler, get_success_message
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
-from .._dict_converter import DictConverter
 from .._enum import ExitCode
 from .._ipynb_converter import convert_nb, is_ipynb_url, load_ipynb_url
 from ._base import TableConverter
@@ -97,20 +96,11 @@ class UrlConverter(TableConverter):
                     get_logging_url_path(url), self._schema_extractor, sqlite_tabledata.table_name,
                     verbosity_level))
         except ptr.ValidationError as e:
-            is_fail = True
+            is_success = False
             if loader.format_name == "json":
-                dict_converter = DictConverter(
-                    logger, self._table_creator, result_counter, self._schema_extractor,
-                    verbosity_level, source=url, index_list=self._index_list)
+                is_success = self._convert_complex_json(loader.loader)
 
-                try:
-                    dict_converter.to_sqlite_table(loader.loader.load_dict(), [])
-                except AttributeError:
-                    pass
-                else:
-                    is_fail = False
-
-            if is_fail:
+            if not is_success:
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()
         except ptr.DataError as e:
