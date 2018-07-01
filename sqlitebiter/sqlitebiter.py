@@ -42,9 +42,7 @@ class Default(object):
     ENCODING = "utf-8"
 
 
-def create_database(ctx, database_path):
-    is_append_table = ctx.obj.get(Context.IS_APPEND_TABLE)
-
+def create_database(database_path, is_append_table):
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
     if typepy.is_not_null_string(dir_path):
@@ -93,11 +91,10 @@ def make_logger(channel_name, log_level):
     help="suppress execution log messages.")
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
-    ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
+    ctx.obj[Context.CONNECTION] = create_database(output_path, is_append_table)
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
-    ctx.obj[Context.CONNECTION] = create_database(ctx, output_path)
 
     sqlite.SimpleSQLite.dup_col_handler = dup_col_handler
 
