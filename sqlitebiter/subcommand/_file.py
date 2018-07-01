@@ -42,7 +42,7 @@ class FileConverter(TableConverter):
             return
 
         logger.debug("converting '{}'".format(file_path))
-        convert_count = result_counter.total_count
+        existing_table_count = result_counter.total_count
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
             convert_nb(
@@ -54,7 +54,7 @@ class FileConverter(TableConverter):
                 logger.info(get_success_message(
                     file_path, self._schema_extractor, table_name, verbosity_level))
                 result_counter.inc_success()
-            if result_counter.total_count == convert_count:
+            if result_counter.total_count == existing_table_count:
                 TABLE_NOT_FOUND_MSG_FORMAT.format(file_path)
             return
 
@@ -105,5 +105,5 @@ class FileConverter(TableConverter):
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
             result_counter.inc_fail()
 
-        if result_counter.total_count == convert_count:
+        if result_counter.total_count == existing_table_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
