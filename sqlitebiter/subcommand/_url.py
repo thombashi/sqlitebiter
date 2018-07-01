@@ -63,7 +63,7 @@ class UrlConverter(TableConverter):
                     verbosity_level))
                 result_counter.inc_success()
             if result_counter.total_count == 0:
-                TABLE_NOT_FOUND_MSG_FORMAT.format(url)
+                logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
             else:
                 self.write_completion_message()
 

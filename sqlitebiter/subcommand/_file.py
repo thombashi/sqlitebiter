@@ -55,7 +55,7 @@ class FileConverter(TableConverter):
                     file_path, self._schema_extractor, table_name, verbosity_level))
                 result_counter.inc_success()
             if result_counter.total_count == existing_table_count:
-                TABLE_NOT_FOUND_MSG_FORMAT.format(file_path)
+                logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
             return
 
         try:
