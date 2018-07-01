@@ -33,7 +33,7 @@ class Test_url_subcommand(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            result = runner.invoke(cmd, ["url", url, "-o", self.db_path])
+            result = runner.invoke(cmd, ["-o", self.db_path, "url", url])
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS
@@ -58,7 +58,7 @@ class Test_url_subcommand(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            result = runner.invoke(cmd, ["url", url, "-o", self.db_path])
+            result = runner.invoke(cmd, ["-o", self.db_path, "url", url])
             print_traceback(result)
 
             assert result.exit_code == expected
@@ -82,7 +82,7 @@ class Test_url_subcommand(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            result = runner.invoke(cmd, ["url", url, "-o", self.db_path])
+            result = runner.invoke(cmd, ["-o", self.db_path, "url", url])
             print_traceback(result)
 
             assert result.exit_code == expected

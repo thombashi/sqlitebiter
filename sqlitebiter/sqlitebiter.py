@@ -75,6 +75,10 @@ def make_logger(channel_name, log_level):
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__)
 @click.option(
+    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
+        Default.OUTPUT_FILE))
+@click.option(
     "-a", "--append", "is_append_table", is_flag=True,
     help="append table(s) to existing database.")
 @click.option(
@@ -88,11 +92,12 @@ def make_logger(channel_name, log_level):
     "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL,
     help="suppress execution log messages.")
 @click.pass_context
-def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
+def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.IS_APPEND_TABLE] = is_append_table
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
+    ctx.obj[Context.CONNECTION] = create_database(ctx, output_path)
 
     sqlite.SimpleSQLite.dup_col_handler = dup_col_handler
 
@@ -104,14 +109,10 @@ def cmd(ctx, is_append_table, index_list, verbosity_level, log_level):
     type=click.Choice(ptr.TableFileLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
     help="Data format to loading (auto-detect from file extensions in default).")
 @click.option(
-    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
-    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
-        Default.OUTPUT_FILE))
-@click.option(
     "--encoding", metavar="ENCODING",
     help="Encoding to load files. Auto-detection from files in default.")
 @click.pass_context
-def file(ctx, files, format_name, output_path, encoding):
+def file(ctx, files, format_name, encoding):
     """
     Convert tabular data within
     CSV/Excel/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
@@ -121,7 +122,7 @@ def file(ctx, files, format_name, output_path, encoding):
     if typepy.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = create_database(ctx, output_path)
+    con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     file_converter = FileConverter(
@@ -155,17 +156,13 @@ def get_logging_url_path(url):
     type=click.Choice(ptr.TableUrlLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
     help="Data format to loading (defaults to html).")
 @click.option(
-    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
-    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
-        Default.OUTPUT_FILE))
-@click.option(
     "-e", "--encoding", type=str, metavar="ENCODING",
     help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
 @click.option(
     "-p", "--proxy", type=str, metavar="PROXY",
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
 @click.pass_context
-def url(ctx, url, format_name, output_path, encoding, proxy):
+def url(ctx, url, format_name, encoding, proxy):
     """
     Scrape tabular data from a URL and convert data to a SQLite database file.
     """
@@ -173,7 +170,7 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = create_database(ctx, output_path)
+    con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(encoding):
@@ -204,12 +201,8 @@ def url(ctx, url, format_name, output_path, encoding, proxy):
     "credentials", type=click.Path(exists=True))
 @click.argument(
     "title", type=str)
-@click.option(
-    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
-    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
-        Default.OUTPUT_FILE))
 @click.pass_context
-def gs(ctx, credentials, title, output_path):
+def gs(ctx, credentials, title):
     """
     Convert a spreadsheet in Google Sheets to a SQLite database file.
 
@@ -217,7 +210,7 @@ def gs(ctx, credentials, title, output_path):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    con = create_database(ctx, output_path)
+    con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     converter = GoogleSheetsConverter(

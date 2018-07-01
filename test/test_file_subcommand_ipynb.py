@@ -36,7 +36,7 @@ class Test_file_subcommand_ipynb(object):
         runner = CliRunner()
 
         try:
-            result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
             print_traceback(result)
 
             assert result.exit_code == expected, file_path
@@ -47,7 +47,7 @@ class Test_file_subcommand_ipynb(object):
         runner = CliRunner()
 
         try:
-            result = runner.invoke(cmd, ["file"] + self.IPYNB_FILE_LIST + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + self.IPYNB_FILE_LIST)
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS

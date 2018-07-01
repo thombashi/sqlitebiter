@@ -67,7 +67,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
             print_traceback(result)
 
             assert result.exit_code == expected, file_path
@@ -85,7 +85,7 @@ class Test_sqlitebiter_file(object):
             file_path = file_creator()
             os.rename(file_path, test_path)
             result = runner.invoke(
-                cmd, ["file", test_path, "--format", file_format, "-o", db_path])
+                cmd, ["-o", db_path, "file", test_path, "--format", file_format])
 
             assert result.exit_code == expected, file_path
 
@@ -109,7 +109,7 @@ class Test_sqlitebiter_file(object):
                 valid_utf16_csv_file(),
             ]
 
-            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
 
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -126,7 +126,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(cmd, [verbosity_option, "file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, [verbosity_option, "-o", db_path, "file", file_path])
 
             assert result.exit_code == expected, file_path
 
@@ -156,7 +156,7 @@ class Test_sqlitebiter_file(object):
             ]
 
             for file_path in file_list:
-                result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+                result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
 
                 assert result.exit_code in (ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
 
@@ -169,7 +169,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
 
             assert result.exit_code == expected, file_path
 
@@ -207,7 +207,7 @@ class Test_sqlitebiter_file(object):
                 not_supported_format_file(),
             ]
 
-            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
@@ -270,7 +270,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = valid_ssv_file()
-            result = runner.invoke(cmd, ["file", file_path, "-o", db_path, "--format", "ssv"])
+            result = runner.invoke(cmd, ["-o", db_path, "file", file_path, "--format", "ssv"])
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS
@@ -309,7 +309,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = file_creator()
-            result = runner.invoke(cmd, ["--index", index_list, "file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "--index", index_list, "file", file_path])
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS
@@ -326,7 +326,7 @@ class Test_sqlitebiter_file(object):
         expected = "dup_col (A, A_2, A_1)"
 
         with runner.isolated_filesystem():
-            result = runner.invoke(cmd, ["file", dup_col_csv_file(), "-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file", dup_col_csv_file()])
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -347,7 +347,7 @@ class Test_sqlitebiter_file(object):
             expected_table_list = [table_name]
 
             # first execution without --append option (new) ---
-            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -372,7 +372,7 @@ class Test_sqlitebiter_file(object):
 
             # second execution with --append option ---
             result = runner.invoke(
-                cmd, ["--append", "file"] + file_list + ["-o", db_path])
+                cmd, ["-o", db_path, "--append", "file"] + file_list)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -399,7 +399,7 @@ class Test_sqlitebiter_file(object):
             assert expected_data == actual_data
 
             # third execution without --append option (overwrite) ---
-            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -432,7 +432,7 @@ class Test_sqlitebiter_file(object):
                 valid_json_multi_file_2_2(),
             ]
 
-            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -477,7 +477,7 @@ class Test_sqlitebiter_file(object):
                 valid_json_multi_file_2_3(),
             ]
 
-            result = runner.invoke(cmd, ["file"] + file_list + ["-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -520,7 +520,7 @@ class Test_sqlitebiter_file(object):
 
         with runner.isolated_filesystem():
             file_path = valid_complex_json_file()
-            result = runner.invoke(cmd, ["file", file_path, "-o", db_path])
+            result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS
