@@ -55,10 +55,7 @@ class UrlConverter(TableConverter):
         verbosity_level = self._verbosity_level
         result_counter = self._result_counter
 
-        proxies = {
-            "http": self.__proxy,
-            "https": self.__proxy,
-        }
+        proxies = self.__get_proxies()
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             convert_nb(logger, con, result_counter, nb=load_ipynb_url(url, proxies=proxies))
@@ -133,3 +130,9 @@ class UrlConverter(TableConverter):
 
         if result_counter.total_count == 0:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
+
+    def __get_proxies(self):
+        return {
+            "http": self.__proxy,
+            "https": self.__proxy,
+        }
