@@ -66,6 +66,14 @@ Installation for macOS via Homebrew
 - `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
+Bash Auto Completion
+----------------------------------------------------------
+.. code:: console
+
+    $ wget https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/sqlitebiter-complete.sh -O - >> ~/.bash_profile
+    $ source ~/.bash_profile
+
+
 Dependencies
 ============
 Python 2.7+ or 3.4+
