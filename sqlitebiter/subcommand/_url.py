@@ -96,11 +96,9 @@ class UrlConverter(TableConverter):
                     get_logging_url_path(url), self._schema_extractor, sqlite_tabledata.table_name,
                     verbosity_level))
         except ptr.ValidationError as e:
-            is_success = False
-            if loader.format_name == "json":
-                is_success = self._convert_complex_json(loader.loader)
-
-            if not is_success:
+            if loader.format_name == "json" and self._convert_complex_json(loader.loader):
+                result_counter.inc_success()
+            else:
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()
         except ptr.DataError as e:
