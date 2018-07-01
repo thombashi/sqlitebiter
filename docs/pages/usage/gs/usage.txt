@@ -3,7 +3,7 @@ Example
 
 .. code-block:: console
 
-    $ sqlitebiter gs credentials-xxxxxxxxxxxx.json samplebook -o sample.sqlite
+    $ sqlitebiter -o sample.sqlite gs credentials-xxxxxxxxxxxx.json samplebook
     [INFO] sqlitebiter gs: convert 'google sheets' to 'sheet3' table
     [INFO] sqlitebiter gs: convert 'google sheets' to 'sheet1' table
     $ sqlite3 sample.sqlite

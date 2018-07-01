@@ -2,19 +2,19 @@ Table naming convention
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Table name automatically decided as follows for each format:
 
-    ========  =============================================================================
+    ========  ================================================================================
      Format       Table Name
-    ========  =============================================================================
+    ========  ================================================================================
     CSV       ``<filename>``
     Excel     ``<Sheet name>``
-    HTML      | ``<title>_<key>``. ``<title>`` replaced with a title tag.
+    HTML      | ``<title>_<key>``. ``<title>`` replaced with the ``title`` tag of the page.
               | ``<key>`` replaced with: **(1)** ``id`` attribute of the table tag. 
               | **(2)** unique string if ``id`` attribute not present in the table tag.
     JSON                                                                                   
     LTSV      ``<filename>``
     Markdown  ``<filename>``
     TSV       ``<filename>``
-    ========  =============================================================================
+    ========  ================================================================================
 
 - Common behavior
     - ``<filename>`` replaced with filename of converting file (without extensions)

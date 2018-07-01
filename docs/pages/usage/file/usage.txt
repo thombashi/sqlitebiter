@@ -8,7 +8,7 @@ File formats are automatically detected from the extensions.
 
         $ ls
         sample_data.csv  sample_data.xlsx  sample_data_multi.json  sample_data_single.json
-        $ sqlitebiter file * -o sample.sqlite
+        $ sqlitebiter -o sample.sqlite file *
         [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table

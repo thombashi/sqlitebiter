@@ -15,13 +15,15 @@
     Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --version         Show the version and exit.
-      -a, --append      append table(s) to existing database.
-      -i, --index TEXT  comma separated attribute names to create indices.
+      --version               Show the version and exit.
+      -o, --output-path PATH  Output path of the SQLite database file. Defaults to
+                              'out.sqlite'.
+      -a, --append            append table(s) to existing database.
+      -i, --index TEXT        comma separated attribute names to create indices.
       -v, --verbose
-      --debug           for debug print.
-      --quiet           suppress execution log messages.
-      -h, --help        Show this message and exit.
+      --debug                 for debug print.
+      --quiet                 suppress execution log messages.
+      -h, --help              Show this message and exit.
 
     Commands:
       configure  Configure the following application settings:...

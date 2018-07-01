@@ -10,8 +10,6 @@
     Options:
       -f, --format [csv|excel|html|json|json_lines|jsonl|ldjson|ltsv|markdown|mediawiki|ndjson|sqlite|ssv|tsv|ipynb]
                                       Data format to loading (defaults to html).
-      -o, --output-path PATH          Output path of the SQLite database file.
-                                      Defaults to 'out.sqlite'.
       -e, --encoding ENCODING         HTML page read encoding. Defaults to utf-8.
       -p, --proxy PROXY               Specify a proxy in the form
                                       [user:passwd@]proxy.server:port.

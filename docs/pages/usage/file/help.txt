@@ -13,8 +13,6 @@
       -f, --format [csv|excel|html|json|json_lines|jsonl|ldjson|ltsv|markdown|mediawiki|ndjson|sqlite|ssv|tsv|ipynb]
                                       Data format to loading (auto-detect from
                                       file extensions in default).
-      -o, --output-path PATH          Output path of the SQLite database file.
-                                      Defaults to 'out.sqlite'.
       --encoding ENCODING             Encoding to load files. Auto-detection from
                                       files in default.
       -h, --help                      Show this message and exit.
