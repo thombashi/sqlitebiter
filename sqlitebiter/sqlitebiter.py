@@ -147,14 +147,6 @@ def file(ctx, files, format_name, encoding):
     sys.exit(finalize(ctx, converter))
 
 
-def get_logging_url_path(url):
-    from six.moves.urllib.parse import urlparse
-
-    result = urlparse(url)
-
-    return result.netloc + result.path
-
-
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
