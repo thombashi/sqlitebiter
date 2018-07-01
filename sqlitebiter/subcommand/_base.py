@@ -15,10 +15,6 @@ from .._table_creator import TableCreator
 
 class TableConverter(object):
 
-    @property
-    def result_counter(self):
-        return self._result_counter
-
     def __init__(self, logger, con, index_list, verbosity_level, format_name=None, encoding=None):
         self._logger = logger
         self._con = con
