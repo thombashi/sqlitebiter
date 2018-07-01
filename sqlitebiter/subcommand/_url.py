@@ -55,8 +55,8 @@ class UrlConverter(TableConverter):
         result_counter = self._result_counter
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
-            convert_nb(
-                logger, con, result_counter, nb=load_ipynb_url(url, proxies=self.__get_proxies()))
+            nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
+            convert_nb(logger, con, result_counter, nb=nb)
             for table_name in con.fetch_table_name_list():
                 logger.info(get_success_message(
                     get_logging_url_path(url), self._schema_extractor, table_name,

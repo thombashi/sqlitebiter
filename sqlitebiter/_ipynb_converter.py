@@ -40,7 +40,7 @@ def load_ipynb_url(url, proxies):
     response = requests.get(url, proxies=proxies)
     response.raise_for_status()
 
-    return nbformat.reads(response.text, as_version=4)
+    return (nbformat.reads(response.text, as_version=4), len(response.content))
 
 
 @six.add_metaclass(abc.ABCMeta)
