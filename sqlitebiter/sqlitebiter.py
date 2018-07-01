@@ -122,7 +122,7 @@ def file(ctx, files, format_name, encoding):
     con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
-    file_converter = FileConverter(
+    converter = FileConverter(
         logger=logger,
         con=con,
         index_list=ctx.obj.get(Context.INDEX_LIST),
@@ -131,11 +131,11 @@ def file(ctx, files, format_name, encoding):
         encoding=encoding)
 
     for file_path in files:
-        file_converter.convert(file_path)
+        converter.convert(file_path)
 
-    file_converter.write_completion_message()
+    converter.write_completion_message()
 
-    sys.exit(file_converter.get_return_code())
+    sys.exit(converter.get_return_code())
 
 
 def get_logging_url_path(url):
