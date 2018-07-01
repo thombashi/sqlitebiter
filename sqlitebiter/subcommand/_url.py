@@ -55,10 +55,9 @@ class UrlConverter(TableConverter):
         verbosity_level = self._verbosity_level
         result_counter = self._result_counter
 
-        proxies = self.__get_proxies()
-
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
-            convert_nb(logger, con, result_counter, nb=load_ipynb_url(url, proxies=proxies))
+            convert_nb(
+                logger, con, result_counter, nb=load_ipynb_url(url, proxies=self.__get_proxies()))
             for table_name in con.fetch_table_name_list():
                 logger.info(get_success_message(
                     get_logging_url_path(url), self._schema_extractor, table_name,
@@ -71,16 +70,7 @@ class UrlConverter(TableConverter):
 
             sys.exit(self.get_return_code())
 
-        try:
-            loader = create_url_loader(logger, url, self._format_name, self._encoding, proxies)
-        except ptr.LoaderNotFoundError as e:
-            logger.debug(e)
-
-            try:
-                loader = create_url_loader(logger, url, "html", self._encoding, proxies)
-            except ptr.LoaderNotFoundError as e:
-                logger.error(msgfy.to_error_message(e))
-                sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
+        loader = self.__create_loader(url)
 
         try:
             for table_data in loader.load():
@@ -136,3 +126,18 @@ class UrlConverter(TableConverter):
             "http": self.__proxy,
             "https": self.__proxy,
         }
+
+    def __create_loader(self, url):
+        logger = self._logger
+        proxies = self.__get_proxies()
+
+        try:
+            return create_url_loader(logger, url, self._format_name, self._encoding, proxies)
+        except ptr.LoaderNotFoundError as e:
+            logger.debug(e)
+
+        try:
+            return create_url_loader(logger, url, "html", self._encoding, proxies)
+        except ptr.LoaderNotFoundError as e:
+            logger.error(msgfy.to_error_message(e))
+            sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
