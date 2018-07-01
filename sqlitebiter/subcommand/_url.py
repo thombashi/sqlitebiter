@@ -7,12 +7,14 @@
 from __future__ import absolute_import, unicode_literals
 
 import errno
+import os
 import sys
 
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
 import six
+from six.moves.urllib.parse import urlparse
 
 from .._common import dup_col_handler, get_success_message
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
@@ -22,11 +24,15 @@ from ._base import TableConverter
 
 
 def get_logging_url_path(url):
-    from six.moves.urllib.parse import urlparse
-
     result = urlparse(url)
 
     return result.netloc + result.path
+
+
+def parse_source_info_url(url):
+    result = urlparse(url)
+
+    return (result.netloc + os.path.dirname(result.path), os.path.basename(result.path))
 
 
 def create_url_loader(logger, source_url, format_name, encoding, proxies):
@@ -53,10 +59,11 @@ class UrlConverter(TableConverter):
         con = self._con
         verbosity_level = self._verbosity_level
         result_counter = self._result_counter
+        url_dir_name, url_base_name = parse_source_info_url(url)
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
-            convert_nb(logger, con, result_counter, nb=nb)
+            convert_nb(logger, con, result_counter, nb=nb, source_id=self._fetch_next_source_id())
             for table_name in con.fetch_table_name_list():
                 logger.info(get_success_message(
                     get_logging_url_path(url), self._schema_extractor, table_name,
@@ -65,6 +72,8 @@ class UrlConverter(TableConverter):
             if result_counter.total_count == 0:
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
             else:
+                self._add_source_info(
+                    url_dir_name, url_base_name, format_name="ipynb", size=nb_size)
                 self.write_completion_message()
 
             sys.exit(self.get_return_code())
@@ -95,9 +104,12 @@ class UrlConverter(TableConverter):
                 logger.info(get_success_message(
                     get_logging_url_path(url), self._schema_extractor, sqlite_tabledata.table_name,
                     verbosity_level))
+
+            self._add_source_info(url_dir_name, url_base_name, loader.format_name)
         except ptr.ValidationError as e:
             if loader.format_name == "json" and self._convert_complex_json(loader.loader):
                 result_counter.inc_success()
+                self._add_source_info(url_dir_name, url_base_name, loader.format_name)
             else:
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()

@@ -299,7 +299,8 @@ class CellConverter(JupyterNotebookConverterBase):
         del output_data[output_key]
 
 
-def convert_nb(logger, con, result_counter, nb):
+def convert_nb(logger, con, result_counter, nb, source_id):
+    # TODO: source_id
     CellConverter(logger, con, nb.cells).convert()
     MetaDataConverter(logger, con, nb.metadata).convert()
 

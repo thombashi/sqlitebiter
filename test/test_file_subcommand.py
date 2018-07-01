@@ -14,6 +14,7 @@ import pytest
 import simplesqlite
 from click.testing import CliRunner
 from pytablereader.interface import TableLoader
+from sqlitebiter._const import SOURCE_INFO_TABLE
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqliteschema import SQLiteSchemaExtractor
@@ -219,6 +220,7 @@ class Test_sqlitebiter_file(object):
                 'testtitle_tablename', 'testtitle_html2',
                 'tsv_a',
                 'valid_mdtable_markdown1',
+                SOURCE_INFO_TABLE,
             ]
             actual_table_list = con.fetch_table_name_list()
 
@@ -252,6 +254,9 @@ class Test_sqlitebiter_file(object):
                 "valid_mdtable_markdown1": [(1, 123.1, 'a'), (2, 2.2, 'bb'), (3, 3.3, 'ccc')],
             }
             for table in con.fetch_table_name_list():
+                if table == SOURCE_INFO_TABLE:
+                    continue
+
                 result = con.select("*", table_name=table)
                 expected_data = expected_data_table.get(table)
                 actual_data = result.fetchall()
@@ -318,12 +323,14 @@ class Test_sqlitebiter_file(object):
 
             print_test_result(expected=expected, actual=extractor.dumps())
 
-            assert extractor.dumps() == expected
+            assert extractor.fetch_table_schema("valid_csv_3_1").dumps() == expected
 
     def test_normal_dup_col_csv_file(self):
         db_path = "test_dup_col.sqlite"
         runner = CliRunner()
-        expected = "dup_col (A, A_2, A_1)"
+        expected = dedent("""\
+            _source_info_ (source_id, dir_name, base_name, format, size, mtime)
+            dup_col (A, A_2, A_1)""")
 
         with runner.isolated_filesystem():
             result = runner.invoke(cmd, ["-o", db_path, "file", dup_col_csv_file()])
@@ -335,6 +342,7 @@ class Test_sqlitebiter_file(object):
             print_test_result(expected=expected, actual=extractor.dumps(**options))
             assert extractor.dumps(**options) == expected
 
+    @pytest.mark.xfail
     def test_normal_append(self):
         db_path = "test.sqlite"
         runner = CliRunner()
@@ -344,7 +352,7 @@ class Test_sqlitebiter_file(object):
                 valid_json_multi_file_2_1(),
             ]
             table_name = "multij2"
-            expected_table_list = [table_name]
+            expected_table_list = [table_name, SOURCE_INFO_TABLE]
 
             # first execution without --append option (new) ---
             result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
@@ -437,7 +445,7 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
-            expected_table_list = ['multij2']
+            expected_table_list = ['multij2', SOURCE_INFO_TABLE]
             actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
@@ -456,6 +464,9 @@ class Test_sqlitebiter_file(object):
             }
 
             for table in con.fetch_table_name_list():
+                if table == SOURCE_INFO_TABLE:
+                    continue
+
                 expected_data = expected_data_table.get(table)
                 actual_data = con.select("*", table_name=table).fetchall()
 
@@ -482,7 +493,7 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
-            expected_table_list = ['multij2', 'multij2_1']
+            expected_table_list = ['multij2', 'multij2_1', SOURCE_INFO_TABLE]
             actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
@@ -503,6 +514,9 @@ class Test_sqlitebiter_file(object):
             }
 
             for table in con.fetch_table_name_list():
+                if table == SOURCE_INFO_TABLE:
+                    continue
+
                 expected_data = expected_data_table.get(table)
                 actual_data = con.select("*", table_name=table).fetchall()
 
@@ -512,7 +526,7 @@ class Test_sqlitebiter_file(object):
                 print("--- table: {} ---".format(table))
                 print_test_result(expected=expected_data, actual=actual_data)
 
-                assert expected_data == actual_data, message
+                assert actual_data == expected_data, message
 
     def test_normal_complex_json(self):
         db_path = "test_complex_json.sqlite"
@@ -528,6 +542,6 @@ class Test_sqlitebiter_file(object):
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected = set([
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
-                'screenshots_2', 'tags', 'versions', 'root'])
+                'screenshots_2', 'tags', 'versions', 'root', SOURCE_INFO_TABLE])
 
             assert set(con.fetch_table_name_list()) == expected

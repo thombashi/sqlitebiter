@@ -26,6 +26,7 @@ class FileConverter(TableConverter):
 
     def convert(self, file_path):
         file_path = path.Path(file_path)
+        file_real_path = file_path.realpath()
         logger = self._logger
         con = self._con
         verbosity_level = self._verbosity_level
@@ -36,7 +37,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
 
-        if file_path.realpath() == con.database_path:
+        if file_real_path == con.database_path:
             logger.warn(
                 "skip a file which has the same path as the output file ({})".format(file_path))
             return
@@ -49,13 +50,18 @@ class FileConverter(TableConverter):
                 logger,
                 con,
                 result_counter,
-                nb=load_ipynb_file(file_path, encoding=self._encoding))
+                nb=load_ipynb_file(file_path, encoding=self._encoding),
+                source_id=self._fetch_next_source_id())
             for table_name in con.fetch_table_name_list():
                 logger.info(get_success_message(
                     file_path, self._schema_extractor, table_name, verbosity_level))
                 result_counter.inc_success()
             if result_counter.total_count == existing_table_count:
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+
+            self._add_source_info(
+                file_real_path.dirname(), file_real_path.basename(), format_name="ipynb",
+                size=file_path.getsize(), mtime=file_path.getmtime())
             return
 
         try:
@@ -69,6 +75,10 @@ class FileConverter(TableConverter):
             logger.debug("loader not found that coincide with '{}'".format(file_path))
             result_counter.inc_fail()
             return
+
+        source_info_record = (
+            file_real_path.dirname(), file_real_path.basename(), loader.format_name,
+            file_path.getsize(), file_path.getmtime())
 
         try:
             for table_data in loader.load():
@@ -89,17 +99,20 @@ class FileConverter(TableConverter):
                 logger.info(get_success_message(
                     file_path, self._schema_extractor, sqlite_tabledata.table_name,
                     verbosity_level))
+
+            self._add_source_info(*source_info_record)
         except ptr.OpenError as e:
             logger.error("{:s}: open error: file={}, message='{}'".format(
                 e.__class__.__name__, file_path, str(e)))
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             if loader.format_name == "json" and self._convert_complex_json(loader.loader):
-                return
-
-            logger.error("{:s}: invalid {} data format: path={}, message={}".format(
-                e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
-            result_counter.inc_fail()
+                result_counter.inc_success()
+                self._add_source_info(*source_info_record)
+            else:
+                logger.error("{:s}: invalid {} data format: path={}, message={}".format(
+                    e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))
+                result_counter.inc_fail()
         except ptr.DataError as e:
             logger.error("{:s}: invalid {} data: path={}, message={}".format(
                 e.__class__.__name__, _get_format_type_from_path(file_path), file_path, str(e)))

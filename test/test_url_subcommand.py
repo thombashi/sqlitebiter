@@ -10,6 +10,7 @@ import pytest
 import responses
 import simplesqlite
 from click.testing import CliRunner
+from sqlitebiter._const import SOURCE_INFO_TABLE
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 
@@ -41,7 +42,7 @@ class Test_url_subcommand(object):
             con = simplesqlite.SimpleSQLite(self.db_path, "r")
             expected = set([
                 'ratings', 'screenshots_4', 'screenshots_3', 'screenshots_5', 'screenshots_1',
-                'screenshots_2', 'tags', 'versions', 'root'])
+                'screenshots_2', 'tags', 'versions', 'root', SOURCE_INFO_TABLE])
 
             assert set(con.fetch_table_name_list()) == expected
 
