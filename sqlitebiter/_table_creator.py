@@ -5,7 +5,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import simplesqlite
 from sqliteschema import SQLiteSchemaExtractor
@@ -27,7 +27,7 @@ class TableCreator(object):
         if need_rename:
             dst_table_name = self.__make_unique_table_name(src_table_name)
 
-            self.__logger.debug(u"rename table from '{}' to '{}'".format(
+            self.__logger.debug("rename table from '{}' to '{}'".format(
                 src_table_name, dst_table_name))
 
             simplesqlite.copy_table(
@@ -56,7 +56,7 @@ class TableCreator(object):
 
         suffix_id = 1
         while True:
-            table_name_candidate = u"{:s}_{:d}".format(table_name_base, suffix_id)
+            table_name_candidate = "{:s}_{:d}".format(table_name_base, suffix_id)
 
             if table_name_candidate not in exist_table_name_list:
                 return table_name_candidate

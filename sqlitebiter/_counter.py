@@ -4,7 +4,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 from ._enum import ExitCode
 
@@ -28,7 +28,7 @@ class ResultCounter(object):
         self.__fail_count = 0
 
     def __repr__(self):
-        return u"results: success={:d}, failed={:d}, return_code={:d}".format(
+        return "results: success={:d}, failed={:d}, return_code={:d}".format(
             self.__success_count, self.__fail_count, self.get_return_code())
 
     def inc_success(self):

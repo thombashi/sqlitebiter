@@ -32,7 +32,7 @@ class GoogleSheetsConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug(u"loaded table_data: {}".format(six.text_type(table_data)))
+                logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
                 sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(
                     table_data, dup_col_handler=dup_col_handler).normalize()
@@ -50,7 +50,7 @@ class GoogleSheetsConverter(TableConverter):
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()
         except (ptr.ValidationError, ptr.DataError) as e:
-            logger.error(u"invalid credentials data: path={}, message={}".format(
+            logger.error("invalid credentials data: path={}, message={}".format(
                 credentials, str(e)))
             result_counter.inc_fail()
         except ptr.APIError as e:
