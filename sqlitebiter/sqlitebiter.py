@@ -8,6 +8,7 @@
 from __future__ import absolute_import
 
 import errno
+import os
 import sys
 
 import click
@@ -18,11 +19,11 @@ import simplesqlite as sqlite
 import typepy
 
 from .__version__ import __version__
+from ._common import dup_col_handler
 from ._config import ConfigKey, app_config_manager
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
 from ._enum import Context, ExitCode
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
-from ._common import dup_col_handler
 
 
 CONTEXT_SETTINGS = dict(
@@ -70,6 +71,15 @@ def make_logger(channel_name, log_level):
     return logger
 
 
+def finalize(ctx, converter):
+    converter.write_completion_message()
+
+    if converter.get_success_count() == 0 and ctx.obj[Context.CREATE_DATABASE]:
+        os.remove(ctx.obj[Context.CONNECTION].database_path)
+
+    return converter.get_return_code()
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__)
 @click.option(
@@ -91,6 +101,7 @@ def make_logger(channel_name, log_level):
     help="suppress execution log messages.")
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
+    ctx.obj[Context.CREATE_DATABASE] = not os.path.isfile(output_path)
     ctx.obj[Context.CONNECTION] = create_database(output_path, is_append_table)
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
@@ -133,9 +144,7 @@ def file(ctx, files, format_name, encoding):
     for file_path in files:
         converter.convert(file_path)
 
-    converter.write_completion_message()
-
-    sys.exit(converter.get_return_code())
+    sys.exit(finalize(ctx, converter))
 
 
 def get_logging_url_path(url):
@@ -188,9 +197,7 @@ def url(ctx, url, format_name, encoding, proxy):
 
     converter.convert(url)
 
-    converter.write_completion_message()
-
-    sys.exit(converter.get_return_code())
+    sys.exit(finalize(ctx, converter))
 
 
 @cmd.command()
@@ -218,9 +225,7 @@ def gs(ctx, credentials, title):
 
     converter.convert(credentials, title)
 
-    converter.write_completion_message()
-
-    sys.exit(converter.get_return_code())
+    sys.exit(finalize(ctx, converter))
 
 
 @cmd.command()

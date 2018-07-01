@@ -30,13 +30,16 @@ class TableConverter(object):
     def get_return_code(self):
         return self._result_counter.get_return_code()
 
+    def get_success_count(self):
+        return self._result_counter.success_count
+
     def write_completion_message(self):
         logger = self._logger
         database_path_msg = "database path: {:s}".format(self._con.database_path)
 
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
-        logger.info("number of created tables: {:d}".format(self._result_counter.success_count))
-        if self._result_counter.success_count > 0:
+        logger.info("number of created tables: {:d}".format(self.get_success_count()))
+        if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
 
