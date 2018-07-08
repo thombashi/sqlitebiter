@@ -10,10 +10,10 @@ from enum import Enum, auto
 
 
 class Context(Enum):
-    CREATE_DATABASE = auto()
-    CONNECTION = auto()
+    DUP_TABLE = auto()
     INDEX_LIST = auto()
     LOG_LEVEL = auto()
+    OUTPUT_PATH = auto()
     VERBOSITY_LEVEL = auto()
 
 
@@ -23,3 +23,9 @@ class ExitCode(object):
     FAILED_CONVERT = 2
     FAILED_HTTP = 3
     NO_INPUT = 10
+
+
+class DupTable(Enum):
+    OVERWRITE = auto()
+    APPEND = auto()
+    SKIP = auto()  # TODO

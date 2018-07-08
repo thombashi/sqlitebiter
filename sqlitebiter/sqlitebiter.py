@@ -22,7 +22,7 @@ from .__version__ import __version__
 from ._common import dup_col_handler
 from ._config import ConfigKey, app_config_manager
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
-from ._enum import Context, ExitCode
+from ._enum import Context, DupTable, ExitCode
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
 
 
@@ -43,16 +43,19 @@ class Default(object):
     ENCODING = "utf-8"
 
 
-def create_database(database_path, is_append_table):
+def create_database(database_path, dup_table):
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
+
     if typepy.is_not_null_string(dir_path):
         dir_path.makedirs_p()
 
-    if is_append_table:
-        return sqlite.SimpleSQLite(db_path, "a")
+    is_create_db = not db_path.isfile()
 
-    return sqlite.SimpleSQLite(db_path, "w")
+    if dup_table == DupTable.APPEND:
+        return (sqlite.SimpleSQLite(db_path, "a"), is_create_db)
+
+    return (sqlite.SimpleSQLite(db_path, "w"), is_create_db)
 
 
 def make_logger(channel_name, log_level):
@@ -71,11 +74,17 @@ def make_logger(channel_name, log_level):
     return logger
 
 
-def finalize(ctx, converter):
+def finalize(con, converter, is_create_db):
     converter.write_completion_message()
+    database_path = con.database_path
+    con.close()
 
-    if converter.get_success_count() == 0 and ctx.obj[Context.CREATE_DATABASE]:
-        os.remove(ctx.obj[Context.CONNECTION].database_path)
+    if all([
+        os.path.isfile(database_path),
+        converter.get_success_count() == 0,
+        is_create_db,
+    ]):
+        os.remove(database_path)
 
     return converter.get_return_code()
 
@@ -101,8 +110,8 @@ def finalize(ctx, converter):
     help="suppress execution log messages.")
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
-    ctx.obj[Context.CREATE_DATABASE] = not os.path.isfile(output_path)
-    ctx.obj[Context.CONNECTION] = create_database(output_path, is_append_table)
+    ctx.obj[Context.OUTPUT_PATH] = output_path
+    ctx.obj[Context.DUP_TABLE] = DupTable.APPEND if is_append_table else DupTable.OVERWRITE
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
@@ -130,9 +139,8 @@ def file(ctx, files, format_name, encoding):
     if typepy.is_empty_sequence(files):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_TABLE])
     converter = FileConverter(
         logger=logger,
         con=con,
@@ -144,7 +152,7 @@ def file(ctx, files, format_name, encoding):
     for file_path in files:
         converter.convert(file_path)
 
-    sys.exit(finalize(ctx, converter))
+    sys.exit(finalize(con, converter, is_create_db))
 
 
 @cmd.command()
@@ -168,7 +176,6 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(encoding):
@@ -178,6 +185,7 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_null_string(proxy):
         proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
 
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_TABLE])
     converter = UrlConverter(
         logger=logger,
         con=con,
@@ -189,7 +197,7 @@ def url(ctx, url, format_name, encoding, proxy):
 
     converter.convert(url)
 
-    sys.exit(finalize(ctx, converter))
+    sys.exit(finalize(con, converter, is_create_db))
 
 
 @cmd.command()
@@ -206,9 +214,8 @@ def gs(ctx, credentials, title):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    con = ctx.obj.get(Context.CONNECTION)
     logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_TABLE])
     converter = GoogleSheetsConverter(
         logger=logger,
         con=con,
@@ -217,7 +224,7 @@ def gs(ctx, credentials, title):
 
     converter.convert(credentials, title)
 
-    sys.exit(finalize(ctx, converter))
+    sys.exit(finalize(con, converter, is_create_db))
 
 
 @cmd.command()
