@@ -267,7 +267,7 @@ class Test_sqlitebiter_file(object):
                 print("--- table: {} ---".format(table))
                 print_test_result(expected=expected_data, actual=actual_data)
 
-                assert expected_data == actual_data, message
+                assert sorted(expected_data) == sorted(actual_data), message
 
     def test_normal_format_ssv(self):
         db_path = "test_ssv.sqlite"
