@@ -19,7 +19,7 @@ from .common import print_traceback
 db_path = "test.sqlite"
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(run=False)
 class Test_file_subcommand_ipynb(object):
     IPYNB_FILE_LIST = [
         "test/data/pytablewriter_examples.ipynb",
