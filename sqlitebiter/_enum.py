@@ -6,13 +6,15 @@
 
 from __future__ import absolute_import
 
+from enum import Enum, auto
 
-class Context(object):
-    CREATE_DATABASE = "create_database"
-    CONNECTION = "connection"
-    INDEX_LIST = "INDEX_LIST"
-    LOG_LEVEL = "LOG_LEVEL"
-    VERBOSITY_LEVEL = "VERBOSITY_LEVEL"
+
+class Context(Enum):
+    CREATE_DATABASE = auto()
+    CONNECTION = auto()
+    INDEX_LIST = auto()
+    LOG_LEVEL = auto()
+    VERBOSITY_LEVEL = auto()
 
 
 class ExitCode(object):
