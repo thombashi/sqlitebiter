@@ -11,10 +11,9 @@ echo "----- complete build -----"
 
 echo "----- start compress -----"
 set DIST_DIR_NAME=dist
-set BIN_PATH=%DIST_DIR_NAME%/%BIN_NAME%
-set ARCHIVE_PATH=%DIST_DIR_NAME%/%BIN_NAME%_win_x64
+set BIN_PATH=%DIST_DIR_NAME%/%BIN_NAME%.exe
+set ARCHIVE_PATH=%DIST_DIR_NAME%/%BIN_NAME%_win_x64.zip
 
-powershell compress-archive -Force %BIN_PATH%.exe %ARCHIVE_PATH%.zip
+echo %ARCHIVE_PATH%
+powershell compress-archive -Force %BIN_PATH% %ARCHIVE_PATH%
 echo "----- complete compress -----"
-
-pause
