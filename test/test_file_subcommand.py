@@ -296,7 +296,7 @@ class Test_sqlitebiter_file(object):
                 .. table:: valid_csv_3_1
 
                     +--------------+---------+-----------+--------+------+-----+
-                    |Attribute name|Data type|PRIMARY KEY|NOT NULL|UNIQUE|Index|
+                    |Attribute Name|Data Type|PRIMARY KEY|NOT NULL|UNIQUE|Index|
                     +==============+=========+===========+========+======+=====+
                     |aa            |REAL     |           |        |      |X    |
                     +--------------+---------+-----------+--------+------+-----+
@@ -342,7 +342,6 @@ class Test_sqlitebiter_file(object):
             print_test_result(expected=expected, actual=extractor.dumps(**options))
             assert extractor.dumps(**options) == expected
 
-    @pytest.mark.xfail
     def test_normal_append(self):
         db_path = "test.sqlite"
         runner = CliRunner()
