@@ -6,15 +6,15 @@
 
 from __future__ import absolute_import
 
-from enum import Enum, auto
+from enum import Enum
 
 
 class Context(Enum):
-    DUP_TABLE = auto()
-    INDEX_LIST = auto()
-    LOG_LEVEL = auto()
-    OUTPUT_PATH = auto()
-    VERBOSITY_LEVEL = auto()
+    DUP_TABLE = 1
+    INDEX_LIST = 2
+    LOG_LEVEL = 3
+    OUTPUT_PATH = 4
+    VERBOSITY_LEVEL = 5
 
 
 class ExitCode(object):
@@ -26,6 +26,6 @@ class ExitCode(object):
 
 
 class DupTable(Enum):
-    OVERWRITE = auto()
-    APPEND = auto()
-    SKIP = auto()  # TODO
+    OVERWRITE = 1
+    APPEND = 2
+    SKIP = 3  # TODO
