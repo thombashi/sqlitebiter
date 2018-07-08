@@ -51,15 +51,15 @@ class TableConverter(object):
     def _fetch_source_id(self, dir_name, base_name, format_name, size=None, mtime=None):
         where_list = []
         if dir_name:
-            where_list.append(Where(SourceInfo.DIR_NAME, dir_name))        
+            where_list.append(Where(SourceInfo.DIR_NAME, dir_name))
         where_list.extend([
             Where(SourceInfo.BASE_NAME, base_name),
             Where(SourceInfo.FORMAT_NAME, format_name),
         ])
         if size:
-            where_list.append(Where(SourceInfo.SIZE, size))        
+            where_list.append(Where(SourceInfo.SIZE, size))
         if mtime:
-            where_list.append(Where(SourceInfo.MTIME, mtime))        
+            where_list.append(Where(SourceInfo.MTIME, mtime))
 
         return self._con.fetch_value(
             select=Attr(SourceInfo.SOURCE_ID),
@@ -70,10 +70,10 @@ class TableConverter(object):
         source_id = self._con.fetch_value(
             select="MAX({})".format(Attr(SourceInfo.SOURCE_ID)),
             table_name=SOURCE_INFO_TABLE)
-        
+
         if source_id is None:
             return 1
-        
+
         return source_id + 1
 
     def _add_source_info(self, dir_name, base_name, format_name, size=None, mtime=None):
