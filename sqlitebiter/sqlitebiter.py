@@ -13,6 +13,7 @@ import sys
 
 import click
 import logbook
+import logbook.more
 import path
 import pytablereader as ptr
 import simplesqlite as sqlite
@@ -32,7 +33,7 @@ CONTEXT_SETTINGS = dict(
 )
 QUIET_LOG_LEVEL = logbook.NOTSET
 
-logbook.StderrHandler(
+logbook.more.ColorizedStderrHandler(
     level=logbook.DEBUG,
     format_string="[{record.level_name}] {record.channel}: {record.message}"
 ).push_application()
