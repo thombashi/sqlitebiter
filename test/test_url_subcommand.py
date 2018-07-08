@@ -46,6 +46,7 @@ class Test_url_subcommand(object):
 
             assert set(con.fetch_table_name_list()) == expected
 
+    @pytest.mark.xfail(run=False)
     @pytest.mark.parametrize(["url", "expected"], [
         [
             "https://en.wikipedia.org/wiki/Comparison_of_firewalls",
@@ -64,6 +65,7 @@ class Test_url_subcommand(object):
 
             assert result.exit_code == expected
 
+    @pytest.mark.xfail(run=False)
     @pytest.mark.parametrize(["url", "expected"], [
         [
             "https://raw.githubusercontent.com/fastai/fastai/master/tutorials/meanshift.ipynb",
