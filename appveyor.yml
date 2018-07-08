@@ -5,6 +5,9 @@ environment:
     - PYTHON: "C:/Python35-x64"
     - PYTHON: "C:/Python36-x64"
 
+configuration:
+  - Release
+
 init:
   - "ECHO %PYTHON%"
   - ps: "ls C:/Python*"
@@ -15,6 +18,7 @@ install:
   - "%PYTHON%/Scripts/pip.exe --version"
   - "%PYTHON%/Scripts/pip.exe install -r requirements/requirements.txt"
   - "%PYTHON%/Scripts/pip.exe install -r requirements/test_requirements.txt"
+  - "%PYTHON%/Scripts/pip.exe install -r requirements/build_requirements.txt"
 
 test_script:
   - "%PYTHON%/python.exe invoke_pytest.py"
@@ -24,3 +28,18 @@ notifications:
     auth_token:
       secure: JyTQAtBzpPYiWK3eRTz/U+rvmAKopqIWE19ti4vSL/IRygV3jUVUkwET1VyTlrqOeYfNx3Kfcp7eUmHCHxFCgw==
     channel: notifications
+
+before_deploy:
+  - "build_win_package.bat"
+  - ps: appveyor PushArtifact dist/sqlitebiter_win_x64.zip
+
+deploy:
+- provider: GitHub
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  description: 'Release description'
+  auth_token:
+    secure: yCkrIbtWpwkayosMqpLMv0ew4Le1PY0kYBMNlOIbD6jwSRnc5dRhV6n9DAGMqQ0f
+  draft: false
+  prerelease: true
+  on:
+    appveyor_repo_tag: true        # deploy on tag push only
