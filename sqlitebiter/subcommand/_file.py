@@ -26,7 +26,6 @@ class FileConverter(TableConverter):
 
     def convert(self, file_path):
         file_path = path.Path(file_path)
-        file_real_path = file_path.realpath()
         logger = self._logger
         con = self._con
         verbosity_level = self._verbosity_level
@@ -37,13 +36,14 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
 
-        if file_real_path == con.database_path:
+        if file_path.realpath() == con.database_path:
             logger.warn(
                 "skip a file which has the same path as the output file ({})".format(file_path))
             return
 
         logger.debug("converting '{}'".format(file_path))
         existing_table_count = result_counter.total_count
+        dirname, basename, filesize, mtime = self.__get_source_info_base(file_path.realpath())
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
             convert_nb(
@@ -60,8 +60,7 @@ class FileConverter(TableConverter):
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
             self._add_source_info(
-                file_real_path.dirname(), file_real_path.basename(), format_name="ipynb",
-                size=file_path.getsize(), mtime=file_path.getmtime())
+                dirname, basename, format_name="ipynb", size=filesize, mtime=mtime)
             return
 
         try:
@@ -76,9 +75,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
 
-        source_info_record = (
-            file_real_path.dirname(), file_real_path.basename(), loader.format_name,
-            file_path.getsize(), file_path.getmtime())
+        source_info_record = (dirname, basename, loader.format_name, filesize, mtime)
 
         try:
             for table_data in loader.load():
@@ -120,3 +117,7 @@ class FileConverter(TableConverter):
 
         if result_counter.total_count == existing_table_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+
+    @staticmethod
+    def __get_source_info_base(source):
+        return (source.dirname(), source.basename(), source.getsize(), source.getmtime())
