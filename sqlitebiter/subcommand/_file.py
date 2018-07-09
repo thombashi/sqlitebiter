@@ -46,16 +46,7 @@ class FileConverter(TableConverter):
         dirname, basename, filesize, mtime = self.__get_source_info_base(file_path.realpath())
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
-            convert_nb(
-                logger,
-                con,
-                result_counter,
-                nb=load_ipynb_file(file_path, encoding=self._encoding),
-                source_id=self._fetch_next_source_id())
-            for table_name in con.fetch_table_name_list():
-                logger.info(get_success_message(
-                    file_path, self._schema_extractor, table_name, verbosity_level))
-                result_counter.inc_success()
+            self.__convert_nb(file_path)
             if result_counter.total_count == existing_table_count:
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
@@ -117,6 +108,19 @@ class FileConverter(TableConverter):
 
         if result_counter.total_count == existing_table_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+
+    def __convert_nb(self, file_path):
+        convert_nb(
+            self._logger,
+            self._con,
+            self._result_counter,
+            nb=load_ipynb_file(file_path, encoding=self._encoding),
+            source_id=self._fetch_next_source_id())
+
+        for table_name in self._con.fetch_table_name_list():
+            self._logger.info(get_success_message(
+                file_path, self._schema_extractor, table_name, self._verbosity_level))
+            self._result_counter.inc_success()
 
     @staticmethod
     def __get_source_info_base(source):
