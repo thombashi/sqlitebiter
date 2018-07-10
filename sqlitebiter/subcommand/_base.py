@@ -35,7 +35,7 @@ class TableConverter(object):
 
         self._schema_extractor = SQLiteSchemaExtractor(con)
         self._result_counter = ResultCounter()
-        self._table_creator = TableCreator(logger=self._logger, dst_con=con)
+        self._table_creator = TableCreator(logger=self._logger, dst_con=con, verbosity_level=verbosity_level)
 
         self._con.create_table(
             SOURCE_INFO_TABLE,
@@ -112,8 +112,8 @@ class TableConverter(object):
         from .._dict_converter import DictConverter
 
         dict_converter = DictConverter(
-            self._logger, self._table_creator, self._result_counter, self._schema_extractor,
-            self._verbosity_level, source=json_loader.source, index_list=self._index_list)
+            self._logger, self._table_creator, self._result_counter,
+            source=json_loader.source, index_list=self._index_list)
         is_success = False
 
         try:

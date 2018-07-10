@@ -12,9 +12,12 @@ from sqliteschema import SQLiteSchemaExtractor
 
 class TableCreator(object):
 
-    def __init__(self, logger, dst_con):
+    def __init__(self, logger, dst_con, verbosity_level):
         self.__logger = logger
         self.__dst_con = dst_con
+        self.__verbosity_level = verbosity_level
+
+        self.__schema_extractor = SQLiteSchemaExtractor(dst_con)
 
     def create(self, table_data, index_list):
         con_mem = simplesqlite.connect_sqlite_memdb()
@@ -38,11 +41,19 @@ class TableCreator(object):
 
         self.__dst_con.create_index_list(dst_table_name, index_list)
 
+    def logging_success(self, source, table_name):
+        table_schema = self.__schema_extractor.fetch_table_schema(table_name.strip())
+
+        return self.__logger.info("convert '{source:s}' to '{table_info:s}' table".format(
+            source=source,
+            table_info=table_schema.dumps(
+                output_format="text", verbosity_level=self.__verbosity_level)))
+
     def __require_rename_table(self, src_con, src_table_name):
         if not self.__dst_con.has_table(src_table_name):
             return False
 
-        lhs = SQLiteSchemaExtractor(self.__dst_con).fetch_table_schema(src_table_name).as_dict()
+        lhs = self.__schema_extractor.fetch_table_schema(src_table_name).as_dict()
         rhs = SQLiteSchemaExtractor(src_con).fetch_table_schema(src_table_name).as_dict()
 
         return lhs != rhs

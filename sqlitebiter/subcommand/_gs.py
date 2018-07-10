@@ -11,7 +11,7 @@ import pytablereader as ptr
 import simplesqlite as sqlite
 import six
 
-from .._common import dup_col_handler, get_success_message
+from .._common import dup_col_handler
 from ._base import TableConverter
 
 
@@ -19,7 +19,6 @@ class GoogleSheetsConverter(TableConverter):
 
     def convert(self, credentials, title):
         logger = self._logger
-        verbosity_level = self._verbosity_level
         result_counter = self._result_counter
 
         loader = ptr.GoogleSheetsTableLoader()
@@ -43,9 +42,7 @@ class GoogleSheetsConverter(TableConverter):
                 except (ptr.ValidationError, ptr.DataError):
                     result_counter.inc_fail()
 
-                logger.info(get_success_message(
-                    "google sheets", self._schema_extractor, sqlite_tabledata.table_name,
-                    verbosity_level))
+                self._table_creator.logging_success("google sheets", sqlite_tabledata.table_name)
 
             self._add_source_info(None, title, format_name="google sheets")
         except ptr.OpenError as e:

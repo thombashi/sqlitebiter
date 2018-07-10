@@ -12,7 +12,7 @@ import pytablereader as ptr
 import six
 from simplesqlite import SQLiteTableDataSanitizer
 
-from .._common import dup_col_handler, get_success_message
+from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import convert_nb, is_ipynb_file_path, load_ipynb_file
 from ._base import TableConverter
@@ -28,7 +28,6 @@ class FileConverter(TableConverter):
         file_path = path.Path(file_path)
         logger = self._logger
         con = self._con
-        verbosity_level = self._verbosity_level
         result_counter = self._result_counter
 
         if not file_path.isfile():
@@ -84,9 +83,7 @@ class FileConverter(TableConverter):
                     result_counter.inc_fail()
                     return
 
-                logger.info(get_success_message(
-                    file_path, self._schema_extractor, sqlite_tabledata.table_name,
-                    verbosity_level))
+                self._table_creator.logging_success(file_path, sqlite_tabledata.table_name)
 
             self._add_source_info(*source_info_record)
         except ptr.OpenError as e:
@@ -118,8 +115,7 @@ class FileConverter(TableConverter):
             source_id=self._fetch_next_source_id())
 
         for table_name in self._con.fetch_table_name_list():
-            self._logger.info(get_success_message(
-                file_path, self._schema_extractor, table_name, self._verbosity_level))
+            self._table_creator.logging_success(file_path, table_name)
             self._result_counter.inc_success()
 
     @staticmethod

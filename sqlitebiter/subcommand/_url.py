@@ -16,7 +16,7 @@ import simplesqlite as sqlite
 import six
 from six.moves.urllib.parse import urlparse
 
-from .._common import dup_col_handler, get_success_message
+from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._enum import ExitCode
 from .._ipynb_converter import convert_nb, is_ipynb_url, load_ipynb_url
@@ -57,7 +57,6 @@ class UrlConverter(TableConverter):
     def convert(self, url):
         logger = self._logger
         con = self._con
-        verbosity_level = self._verbosity_level
         result_counter = self._result_counter
         url_dir_name, url_base_name = parse_source_info_url(url)
 
@@ -65,10 +64,9 @@ class UrlConverter(TableConverter):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
             convert_nb(logger, con, result_counter, nb=nb, source_id=self._fetch_next_source_id())
             for table_name in con.fetch_table_name_list():
-                logger.info(get_success_message(
-                    get_logging_url_path(url), self._schema_extractor, table_name,
-                    verbosity_level))
+                self._table_creator.logging_success(get_logging_url_path(url), table_name)
                 result_counter.inc_success()
+
             if result_counter.total_count == 0:
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
             else:
@@ -101,9 +99,8 @@ class UrlConverter(TableConverter):
                     result_counter.inc_fail()
                     continue
 
-                logger.info(get_success_message(
-                    get_logging_url_path(url), self._schema_extractor, sqlite_tabledata.table_name,
-                    verbosity_level))
+                self._table_creator.logging_success(
+                    get_logging_url_path(url), sqlite_tabledata.table_name)
 
             self._add_source_info(url_dir_name, url_base_name, loader.format_name)
         except ptr.ValidationError as e:

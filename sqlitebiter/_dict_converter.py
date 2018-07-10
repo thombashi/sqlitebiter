@@ -12,21 +12,15 @@ import msgfy
 import pytablereader as ptr
 import six
 
-from ._common import get_success_message
-
 
 class DictConverter(object):
 
-    def __init__(
-            self, logger, table_creator, result_counter, schema_extractor, verbosity_level,
-            source, index_list):
+    def __init__(self, logger, table_creator, result_counter, source, index_list):
         self.__logger = logger
         self.__table_creator = table_creator
         self.__result_counter = result_counter
         self.__index_list = index_list
-        self.__verbosity_level = verbosity_level
         self.__source = source
-        self.__schema_extractor = schema_extractor
 
     def to_sqlite_table(self, data, key_list):
         if not data:
@@ -79,6 +73,4 @@ class DictConverter(object):
         self.__table_creator.create(sqlite_tabledata, self.__index_list)
         self.__result_counter.inc_success()
 
-        self.__logger.info(get_success_message(
-            self.__source, self.__schema_extractor, sqlite_tabledata.table_name,
-            self.__verbosity_level))
+        self.__table_creator.logging_success(self.__source, sqlite_tabledata.table_name)
