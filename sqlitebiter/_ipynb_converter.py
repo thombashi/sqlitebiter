@@ -87,7 +87,6 @@ class MetaDataConverter(JupyterNotebookConverterBase):
             self._logger.debug("metadata not found")
             return
 
-        self.__create_tables()
         self.__convert_kernelspec()
         self.__convert_language_info()
         self.__convert_kv()
@@ -95,29 +94,16 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         if self.__metadata:
             self._logger.debug("cannot convert: {}".format(json.dumps(self.__metadata, indent=4)))
 
-    def __create_tables(self):
-        self._con.create_table(
-            self._make_table_name(["kernelspec"]),
-            [
-                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
-                "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
-            ])
-        self._con.create_table(
-            self._make_table_name(["language_info"]),
-            [
-                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
-                "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
-            ])
-        self._con.create_table(
-            self._make_table_name([KEY_VALUE_TABLE]),
-            [
-                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
-                "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
-            ])
-
     def __convert_kernelspec(self):
         target = "kernelspec"
         table_name = self._make_table_name([target])
+
+        self._con.create_table(
+            table_name,
+            [
+                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
+                "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
+            ])
         self._con.insert_many(
             table_name,
             [
@@ -140,14 +126,28 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         for key, value in language_info.items():
             record_list.append((key, value))
 
-        self._con.insert_many(self._make_table_name([target]), record_list)
+        table_name = self._make_table_name([target])
+        self._con.create_table(
+            table_name,
+            [
+                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
+                "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
+            ])
+        self._con.insert_many(table_name, record_list)
 
         del self.__metadata[target]
 
     def __convert_kv(self):
+        target = "anaconda-cloud"
         table_name = self._make_table_name([KEY_VALUE_TABLE])
 
-        target = "anaconda-cloud"
+        self._con.create_table(
+            table_name,
+            [
+                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
+                "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
+            ])
+
         if target in self.__metadata:
             self._con.insert_many(
                 table_name,
@@ -171,48 +171,23 @@ class CellConverter(JupyterNotebookConverterBase):
         self._cell_id = None
 
     def convert(self):
-        self.__create_tables()
-
         for cell_id, cell_data in enumerate(self.__cells):
             self._cell_id = cell_id
             self.__convert_cell(cell_data)
 
-    def __create_tables(self):
+    def __convert_source(self, cell_data):
+        target = "source"
+        table_name = self._make_table_name([target])
+
         self._con.create_table(
-            self._make_table_name(["source"]),
+            table_name,
             [
                 "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
                 "{:s} INTEGER NOT NULL".format(self.Attr.LINE_NUMBER),
                 "{:s} TEXT".format("text"),
             ])
-        self._con.create_table(
-            self._make_table_name(["outputs"]),
-            [
-                "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
-                "type TEXT NOT NULL",
-                "{:s} INTEGER".format(self.Attr.LINE_NUMBER),
-                "{:s} BLOB".format("data"),
-            ])
-        self._con.create_table(
-            self._make_table_name(["outputs", KEY_VALUE_TABLE]),
-            [
-                "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
-                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
-                "{:s} TEXT".format(self.Attr.VALUE),
-            ])
-        self._con.create_table(
-            self._make_table_name([KEY_VALUE_TABLE]),
-            [
-                "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
-                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
-                "{:s} TEXT".format(self.Attr.VALUE),
-            ])
-
-    def __convert_source(self, cell_data):
-        target = "source"
-
         self._con.insert_many(
-            self._make_table_name([target]),
+            table_name,
             [
                 [self._cell_id, line_no, source_line.rstrip()]
                 for line_no, source_line in enumerate(cell_data.get(target).splitlines())
@@ -243,6 +218,21 @@ class CellConverter(JupyterNotebookConverterBase):
 
         category = "outputs"
         if category in cell_data:
+            self._con.create_table(
+                self._make_table_name([category]),
+                [
+                    "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
+                    "type TEXT NOT NULL",
+                    "{:s} INTEGER".format(self.Attr.LINE_NUMBER),
+                    "{:s} BLOB".format("data"),
+                ])
+            self._con.create_table(
+                self._make_table_name([category, KEY_VALUE_TABLE]),
+                [
+                    "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
+                    "{:s} TEXT NOT NULL".format(self.Attr.KEY),
+                    "{:s} TEXT".format(self.Attr.VALUE),
+                ])
             for output_data in cell_data.outputs:
                 self.__convert_output_text(output_data)
                 self.__convert_output_data(output_data)
@@ -253,8 +243,15 @@ class CellConverter(JupyterNotebookConverterBase):
 
             del cell_data[category]
 
-        self._con.insert_many(
-            self._make_table_name([KEY_VALUE_TABLE]), self.__to_kv_record_list(cell_data))
+        table_name = self._make_table_name([KEY_VALUE_TABLE])
+        self._con.create_table(
+            table_name,
+            [
+                "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
+                "{:s} TEXT NOT NULL".format(self.Attr.KEY),
+                "{:s} TEXT".format(self.Attr.VALUE),
+            ])
+        self._con.insert_many(table_name, self.__to_kv_record_list(cell_data))
 
     def __convert_output_text(self, output_data):
         data_type = "text"
