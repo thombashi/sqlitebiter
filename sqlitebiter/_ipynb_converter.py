@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
+"""
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
-'''
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -45,14 +45,12 @@ def load_ipynb_url(url, proxies):
 
 @six.add_metaclass(abc.ABCMeta)
 class JupyterNotebookConverterInterface(object):
-
     @abc.abstractmethod
     def convert(self):  # pragma: no cover
         pass
 
 
 class JupyterNotebookConverterBase(object):
-
     class Attr(object):
         CELL_ID = "cell_id"
         KEY = "key"
@@ -82,7 +80,6 @@ class JupyterNotebookConverterBase(object):
 
 
 class MetaDataConverter(JupyterNotebookConverterBase):
-
     @property
     def _base_table_name(self):
         return "metadata"
@@ -107,9 +104,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
     def __convert_kernelspec(self):
         target = "kernelspec"
         table_name, need_create_table = self._make_table_name([target])
-        record_list = [
-            [key, value] for key, value in self.__metadata.get(target).items()
-        ]
+        record_list = [[key, value] for key, value in self.__metadata.get(target).items()]
 
         if len(record_list) > 0:
             self._con.create_table(
@@ -117,15 +112,15 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                 [
                     "{:s} TEXT NOT NULL".format(self.Attr.KEY),
                     "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
-                ])
+                ],
+            )
             self._con.insert_many(
-                table_name,
-                [
-                    [key, value] for key, value in self.__metadata.get(target).items()
-                ])
+                table_name, [[key, value] for key, value in self.__metadata.get(target).items()]
+            )
 
             self._result_logger.logging_success(
-                self._get_log_header(target), table_name, need_create_table)
+                self._get_log_header(target), table_name, need_create_table
+            )
 
         del self.__metadata[target]
 
@@ -150,11 +145,13 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                 [
                     "{:s} TEXT NOT NULL".format(self.Attr.KEY),
                     "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
-                ])
+                ],
+            )
             self._con.insert_many(table_name, record_list)
 
             self._result_logger.logging_success(
-                self._get_log_header(target), table_name, need_create_table)
+                self._get_log_header(target), table_name, need_create_table
+            )
 
         del self.__metadata[target]
 
@@ -163,9 +160,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
 
         if target in self.__metadata:
             table_name, need_create_table = self._make_table_name([KEY_VALUE_TABLE])
-            record_list = [
-                [key, value] for key, value in self.__metadata.get(target).items()
-            ]
+            record_list = [[key, value] for key, value in self.__metadata.get(target).items()]
 
             if len(record_list) > 0:
                 self._con.create_table(
@@ -173,17 +168,18 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                     [
                         "{:s} TEXT NOT NULL".format(self.Attr.KEY),
                         "{:s} TEXT NOT NULL".format(self.Attr.VALUE),
-                    ])
+                    ],
+                )
                 self._con.insert_many(table_name, record_list)
 
                 self._result_logger.logging_success(
-                    self._get_log_header(target), table_name, need_create_table)
+                    self._get_log_header(target), table_name, need_create_table
+                )
 
             del self.__metadata[target]
 
 
 class CellConverter(JupyterNotebookConverterBase):
-
     @property
     def _base_table_name(self):
         return "cells"
@@ -201,7 +197,8 @@ class CellConverter(JupyterNotebookConverterBase):
 
     def _get_log_header(self, info_name):
         return "{:s}: {:s}#{:d}({:s})".format(
-            self._source, self._base_table_name, self._cell_id, info_name)
+            self._source, self._base_table_name, self._cell_id, info_name
+        )
 
     def __convert_source(self, cell_data):
         target = "source"
@@ -220,11 +217,13 @@ class CellConverter(JupyterNotebookConverterBase):
                     "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
                     "{:s} INTEGER NOT NULL".format(self.Attr.LINE_NUMBER),
                     "{:s} TEXT".format("text"),
-                ])
+                ],
+            )
             self._con.insert_many(table_name, record_list)
 
             self._result_logger.logging_success(
-                self._get_log_header(target), table_name, need_create_table)
+                self._get_log_header(target), table_name, need_create_table
+            )
 
     def __to_kv_record_list(self, data_map):
         record_list = []
@@ -255,17 +254,20 @@ class CellConverter(JupyterNotebookConverterBase):
                     "type TEXT NOT NULL",
                     "{:s} INTEGER".format(self.Attr.LINE_NUMBER),
                     "{:s} BLOB".format("data"),
-                ])
+                ],
+            )
 
             outputs_kv_table_name, need_create_output_kv_table = self._make_table_name(
-                [category, KEY_VALUE_TABLE])
+                [category, KEY_VALUE_TABLE]
+            )
             self._con.create_table(
                 outputs_kv_table_name,
                 [
                     "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
                     "{:s} TEXT NOT NULL".format(self.Attr.KEY),
                     "{:s} TEXT".format(self.Attr.VALUE),
-                ])
+                ],
+            )
 
             for output_data in cell_data.outputs:
                 self.__convert_output_text(output_data, need_create_output_table)
@@ -275,7 +277,9 @@ class CellConverter(JupyterNotebookConverterBase):
                 self._con.insert_many(outputs_kv_table_name, self.__to_kv_record_list(output_data))
                 self._result_logger.logging_success(
                     self._get_log_header("{} {}".format(category, KEY_VALUE_TABLE)),
-                    outputs_kv_table_name, need_create_output_kv_table)
+                    outputs_kv_table_name,
+                    need_create_output_kv_table,
+                )
                 need_create_output_kv_table = False
 
             del cell_data[category]
@@ -294,12 +298,13 @@ class CellConverter(JupyterNotebookConverterBase):
                 "{:s} INTEGER NOT NULL".format(self.Attr.CELL_ID),
                 "{:s} TEXT NOT NULL".format(self.Attr.KEY),
                 "{:s} TEXT".format(self.Attr.VALUE),
-            ])
+            ],
+        )
         self._con.insert_many(kv_table_name, kv_record_list)
 
         self._result_logger.logging_success(
-            self._get_log_header(KEY_VALUE_TABLE), kv_table_name,
-            need_create_kv_table)
+            self._get_log_header(KEY_VALUE_TABLE), kv_table_name, need_create_kv_table
+        )
 
     def __convert_output_text(self, output_data, need_create_table):
         data_type = "text"
@@ -313,7 +318,8 @@ class CellConverter(JupyterNotebookConverterBase):
             [
                 [self._cell_id, data_type, line_no, line]
                 for line_no, line in enumerate(output_data.get(data_type).splitlines())
-            ])
+            ],
+        )
 
         del output_data[data_type]
 
@@ -321,7 +327,8 @@ class CellConverter(JupyterNotebookConverterBase):
             return
 
         self._result_logger.logging_success(
-            self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table)
+            self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
+        )
 
     def __convert_output_data(self, output_data, need_create_table):
         output_key = "data"
@@ -333,8 +340,11 @@ class CellConverter(JupyterNotebookConverterBase):
         num_record = 0
 
         for data_type, data in output_data.get(output_key).items():
-            self._logger.debug("table={} id={} data_type={} {}".format(
-                table_name, self._cell_id, data_type, type(data)))
+            self._logger.debug(
+                "table={} id={} data_type={} {}".format(
+                    table_name, self._cell_id, data_type, type(data)
+                )
+            )
 
             if image_regexp.search(data_type):
                 self._con.insert(table_name, [self._cell_id, data_type, 0, data])
@@ -349,7 +359,8 @@ class CellConverter(JupyterNotebookConverterBase):
                 [
                     [self._cell_id, data_type, data_no, line]
                     for data_no, line in enumerate(data.splitlines())
-                ])
+                ],
+            )
 
         del output_data[output_key]
 
@@ -357,7 +368,8 @@ class CellConverter(JupyterNotebookConverterBase):
             return
 
         self._result_logger.logging_success(
-            self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table)
+            self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
+        )
 
 
 def convert_nb(logger, source, con, result_logger, nb, source_id):
@@ -367,17 +379,13 @@ def convert_nb(logger, source, con, result_logger, nb, source_id):
 
     table_name = KEY_VALUE_TABLE
     need_create_table = not con.has_table(table_name)
-    kv_record_list = [
-        [key, nb.get(key)] for key in ("nbformat", "nbformat_minor")
-    ]
+    kv_record_list = [[key, nb.get(key)] for key in ("nbformat", "nbformat_minor")]
 
     if len(kv_record_list) > 0:
         con.create_table(
-            table_name,
-            [
-                "{:s} TEXT NOT NULL".format("key"),
-                "{:s} TEXT".format("value"),
-            ])
+            table_name, ["{:s} TEXT NOT NULL".format("key"), "{:s} TEXT".format("value")]
+        )
         con.insert_many(table_name, kv_record_list)
         result_logger.logging_success(
-            "{}: {}".format(source, table_name), table_name, need_create_table)
+            "{}: {}".format(source, table_name), table_name, need_create_table
+        )

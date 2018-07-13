@@ -28,10 +28,8 @@ def con_a0():
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME_A,
         attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [1, 2],
-            [3, 4],
-        ])
+        data_matrix=[[1, 2], [3, 4]],
+    )
 
     return con
 
@@ -42,10 +40,8 @@ def con_a1():
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME_A,
         attr_name_list=["attr_a", "attr_b"],
-        data_matrix=[
-            [11, 12],
-            [13, 14],
-        ])
+        data_matrix=[[11, 12], [13, 14]],
+    )
 
     return con
 
@@ -56,35 +52,29 @@ def con_b0():
     con.create_table_from_data_matrix(
         table_name=TEST_TABLE_NAME_B,
         attr_name_list=["ba", "bb"],
-        data_matrix=[
-            [101, 102],
-            [103, 104],
-        ])
+        data_matrix=[[101, 102], [103, 104]],
+    )
 
     return con
 
 
 class Test_sqlitebiter_file_sqlite_merge(object):
-
     def test_normal_same_table(self, con_a0, con_a1):
         out_db_path = "test.sqlite"
         runner = CliRunner()
 
         with runner.isolated_filesystem():
             result = runner.invoke(
-                cmd, ["-o", out_db_path, "file", con_a0.database_path, con_a1.database_path])
+                cmd, ["-o", out_db_path, "file", con_a0.database_path, con_a1.database_path]
+            )
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
             expected = TableData(
                 table_name=TEST_TABLE_NAME_A,
                 header_list=["attr_a", "attr_b"],
-                row_list=[
-                    [1, 2],
-                    [3, 4],
-                    [11, 12],
-                    [13, 14],
-                ])
+                row_list=[[1, 2], [3, 4], [11, 12], [13, 14]],
+            )
             for tabledata in SqliteFileLoader(out_db_path).load():
                 if tabledata.table_name == SOURCE_INFO_TABLE:
                     continue
@@ -97,7 +87,8 @@ class Test_sqlitebiter_file_sqlite_merge(object):
 
         with runner.isolated_filesystem():
             result = runner.invoke(
-                cmd, ["-o", out_db_path, "file", con_a0.database_path, con_b0.database_path])
+                cmd, ["-o", out_db_path, "file", con_a0.database_path, con_b0.database_path]
+            )
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -105,17 +96,13 @@ class Test_sqlitebiter_file_sqlite_merge(object):
                 TableData(
                     table_name=TEST_TABLE_NAME_A,
                     header_list=["attr_a", "attr_b"],
-                    row_list=[
-                        [1, 2],
-                        [3, 4],
-                    ]),
+                    row_list=[[1, 2], [3, 4]],
+                ),
                 TableData(
                     table_name=TEST_TABLE_NAME_B,
                     header_list=["ba", "bb"],
-                    row_list=[
-                        [101, 102],
-                        [103, 104],
-                    ]),
+                    row_list=[[101, 102], [103, 104]],
+                ),
             ]
             for tabledata in SqliteFileLoader(out_db_path).load():
                 if tabledata.table_name == SOURCE_INFO_TABLE:

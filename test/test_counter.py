@@ -10,13 +10,15 @@ from sqlitebiter._enum import ExitCode
 
 
 class Test_ResultCounter(object):
-
-    @pytest.mark.parametrize(["success", "fail", "expected"], [
-        [0, 0, ExitCode.NO_INPUT],
-        [1, 0, ExitCode.SUCCESS],
-        [1, 1, ExitCode.SUCCESS],
-        [0, 1, ExitCode.FAILED_CONVERT],
-    ])
+    @pytest.mark.parametrize(
+        ["success", "fail", "expected"],
+        [
+            [0, 0, ExitCode.NO_INPUT],
+            [1, 0, ExitCode.SUCCESS],
+            [1, 1, ExitCode.SUCCESS],
+            [0, 1, ExitCode.FAILED_CONVERT],
+        ],
+    )
     def test_normal(self, success, fail, expected):
         result_counter = ResultCounter()
 

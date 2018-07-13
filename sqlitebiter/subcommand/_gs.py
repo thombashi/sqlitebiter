@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
+"""
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
-'''
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -16,7 +16,6 @@ from ._base import TableConverter
 
 
 class GoogleSheetsConverter(TableConverter):
-
     def convert(self, credentials, title):
         logger = self._logger
         result_counter = self._result_counter
@@ -34,11 +33,13 @@ class GoogleSheetsConverter(TableConverter):
                 logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
                 sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(
-                    table_data, dup_col_handler=dup_col_handler).normalize()
+                    table_data, dup_col_handler=dup_col_handler
+                ).normalize()
 
                 try:
                     self._table_creator.create(
-                        sqlite_tabledata, self._index_list, source="google sheets")
+                        sqlite_tabledata, self._index_list, source="google sheets"
+                    )
                 except (ptr.ValidationError, ptr.DataError):
                     result_counter.inc_fail()
 
@@ -47,8 +48,9 @@ class GoogleSheetsConverter(TableConverter):
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()
         except (ptr.ValidationError, ptr.DataError) as e:
-            logger.error("invalid credentials data: path={}, message={}".format(
-                credentials, str(e)))
+            logger.error(
+                "invalid credentials data: path={}, message={}".format(credentials, str(e))
+            )
             result_counter.inc_fail()
         except ptr.APIError as e:
             logger.error(msgfy.to_error_message(e))

@@ -27,11 +27,14 @@ class Test_file_subcommand_ipynb(object):
         "test/data/DataProperty.ipynb",
     ]
 
-    @pytest.mark.parametrize(["file_path", "expected"], [
-        [IPYNB_FILE_LIST[0], ExitCode.SUCCESS],
-        [IPYNB_FILE_LIST[1], ExitCode.SUCCESS],
-        [IPYNB_FILE_LIST[2], ExitCode.SUCCESS],
-    ])
+    @pytest.mark.parametrize(
+        ["file_path", "expected"],
+        [
+            [IPYNB_FILE_LIST[0], ExitCode.SUCCESS],
+            [IPYNB_FILE_LIST[1], ExitCode.SUCCESS],
+            [IPYNB_FILE_LIST[2], ExitCode.SUCCESS],
+        ],
+    )
     def test_smoke_one_file(self, file_path, expected):
         runner = CliRunner()
 

@@ -10,7 +10,6 @@ from ._enum import ExitCode
 
 
 class ResultCounter(object):
-
     @property
     def success_count(self):
         return self.__success_count
@@ -34,7 +33,8 @@ class ResultCounter(object):
 
     def __repr__(self):
         return "results: success={:d}, failed={:d}, return_code={:d}".format(
-            self.__success_count, self.__fail_count, self.get_return_code())
+            self.__success_count, self.__fail_count, self.get_return_code()
+        )
 
     def inc_success(self, is_create_table):
         self.__success_count += 1

@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
+"""
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
-'''
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -14,7 +14,6 @@ import six
 
 
 class DictConverter(object):
-
     def __init__(self, logger, table_creator, source, index_list):
         self.__logger = logger
         self.__table_creator = table_creator
@@ -40,7 +39,8 @@ class DictConverter(object):
                         table_data.table_name = self.__make_table_name(key_list + [key])
                     else:
                         table_data.table_name = self.__make_table_name(
-                            key_list + [key, table_data.table_name])
+                            key_list + [key, table_data.table_name]
+                        )
 
                     self.__write(table_data)
             except ptr.DataError:

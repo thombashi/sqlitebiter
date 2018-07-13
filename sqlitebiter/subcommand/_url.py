@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
+"""
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
-'''
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -47,10 +47,10 @@ def create_url_loader(logger, source_url, format_name, encoding, proxies):
 
 
 class UrlConverter(TableConverter):
-
     def __init__(self, logger, con, index_list, verbosity_level, format_name, encoding, proxy):
         super(UrlConverter, self).__init__(
-            logger, con, index_list, verbosity_level, format_name, encoding)
+            logger, con, index_list, verbosity_level, format_name, encoding
+        )
 
         self.__proxy = proxy
 
@@ -63,14 +63,20 @@ class UrlConverter(TableConverter):
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
             convert_nb(
-                logger, get_logging_url_path(url), con, self._result_logger, nb=nb,
-                source_id=self._fetch_next_source_id())
+                logger,
+                get_logging_url_path(url),
+                con,
+                self._result_logger,
+                nb=nb,
+                source_id=self._fetch_next_source_id(),
+            )
 
             if result_counter.total_count == 0:
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
             else:
                 self._add_source_info(
-                    url_dir_name, url_base_name, format_name="ipynb", size=nb_size)
+                    url_dir_name, url_base_name, format_name="ipynb", size=nb_size
+                )
                 self.write_completion_message()
 
             sys.exit(self.get_return_code())
@@ -82,19 +88,25 @@ class UrlConverter(TableConverter):
                 logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
                 sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(
-                    table_data, dup_col_handler=dup_col_handler).normalize()
+                    table_data, dup_col_handler=dup_col_handler
+                ).normalize()
 
                 try:
                     self._table_creator.create(
-                        sqlite_tabledata, self._index_list, source=get_logging_url_path(url))
+                        sqlite_tabledata, self._index_list, source=get_logging_url_path(url)
+                    )
                 except sqlite.OperationalError as e:
-                    logger.error("{:s}: failed to convert: url={}, message={}".format(
-                        e.__class__.__name__, url, e.message))
+                    logger.error(
+                        "{:s}: failed to convert: url={}, message={}".format(
+                            e.__class__.__name__, url, e.message
+                        )
+                    )
                     result_counter.inc_fail()
                     continue
                 except ValueError as e:
-                    logger.debug("{:s}: url={}, message={}".format(
-                        e.__class__.__name__, url, str(e)))
+                    logger.debug(
+                        "{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e))
+                    )
                     result_counter.inc_fail()
                     continue
 
@@ -106,18 +118,16 @@ class UrlConverter(TableConverter):
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()
         except ptr.DataError as e:
-            logger.error("{:s}: invalid data: url={}, message={}".format(
-                e.__class__.__name__, url, str(e)))
+            logger.error(
+                "{:s}: invalid data: url={}, message={}".format(e.__class__.__name__, url, str(e))
+            )
             result_counter.inc_fail()
 
         if result_counter.total_count == 0:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
 
     def __get_proxies(self):
-        return {
-            "http": self.__proxy,
-            "https": self.__proxy,
-        }
+        return {"http": self.__proxy, "https": self.__proxy}
 
     def __create_loader(self, url):
         logger = self._logger

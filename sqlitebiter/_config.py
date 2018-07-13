@@ -23,14 +23,15 @@ app_config_manager = appconfigpy.ConfigManager(
         appconfigpy.ConfigItem(
             name=ConfigKey.DEFAULT_ENCODING,
             prompt_text="Default encoding to load files",
-            initial_value="utf-8"),
+            initial_value="utf-8",
+        ),
         appconfigpy.ConfigItem(
-            name=ConfigKey.PROXY_SERVER,
-            prompt_text="HTTP/HTTPS proxy server URI",
-            initial_value=""),
+            name=ConfigKey.PROXY_SERVER, prompt_text="HTTP/HTTPS proxy server URI", initial_value=""
+        ),
         # appconfigpy.ConfigItem(
         #    name="gs_credentials_file_path",
         #    prompt_text="Google Sheets credentials file path",
         #    initial_value="",
         # ),
-    ])
+    ],
+)

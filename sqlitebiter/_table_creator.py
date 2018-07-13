@@ -11,7 +11,6 @@ from sqliteschema import SQLiteSchemaExtractor
 
 
 class TableCreator(object):
-
     def __init__(self, logger, dst_con, result_logger, verbosity_level):
         self.__logger = logger
         self.__dst_con = dst_con
@@ -30,17 +29,22 @@ class TableCreator(object):
         if need_rename:
             dst_table_name = self.__make_unique_table_name(src_table_name)
 
-            self.__logger.debug("rename table from '{}' to '{}'".format(
-                src_table_name, dst_table_name))
+            self.__logger.debug(
+                "rename table from '{}' to '{}'".format(src_table_name, dst_table_name)
+            )
 
             is_create_table = True
             simplesqlite.copy_table(
-                src_con=con_mem, dst_con=self.__dst_con,
-                src_table_name=src_table_name, dst_table_name=dst_table_name)
+                src_con=con_mem,
+                dst_con=self.__dst_con,
+                src_table_name=src_table_name,
+                dst_table_name=dst_table_name,
+            )
         else:
             is_create_table = not self.__dst_con.has_table(dst_table_name)
             simplesqlite.append_table(
-                src_con=con_mem, dst_con=self.__dst_con, table_name=dst_table_name)
+                src_con=con_mem, dst_con=self.__dst_con, table_name=dst_table_name
+            )
 
         self.__dst_con.create_index_list(dst_table_name, index_list)
 

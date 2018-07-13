@@ -11,4 +11,5 @@ exclude = """
 | _sandbox/
 | docs/conf.py
 | setup.py
+| test/dataset.py
 """

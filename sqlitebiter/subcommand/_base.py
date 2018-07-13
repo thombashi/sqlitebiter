@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-'''
+"""
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
-'''
+"""
 
 from __future__ import absolute_import, unicode_literals
 
@@ -25,7 +25,6 @@ class SourceInfo(object):
 
 
 class TableConverter(object):
-
     def __init__(self, logger, con, index_list, verbosity_level, format_name=None, encoding=None):
         self._logger = logger
         self._con = con
@@ -37,10 +36,14 @@ class TableConverter(object):
         self._schema_extractor = SQLiteSchemaExtractor(con)
         self._result_counter = ResultCounter()
         self._result_logger = ResultLogger(
-            logger, self._schema_extractor, self._result_counter, self._verbosity_level)
+            logger, self._schema_extractor, self._result_counter, self._verbosity_level
+        )
         self._table_creator = TableCreator(
-            logger=self._logger, dst_con=con, result_logger=self._result_logger,
-            verbosity_level=verbosity_level)
+            logger=self._logger,
+            dst_con=con,
+            result_logger=self._result_logger,
+            verbosity_level=verbosity_level,
+        )
 
         self._con.create_table(
             SOURCE_INFO_TABLE,
@@ -51,30 +54,29 @@ class TableConverter(object):
                 "{:s} TEXT NOT NULL".format(SourceInfo.FORMAT_NAME),
                 "{:s} INTEGER".format(SourceInfo.SIZE),
                 "{:s} INTEGER".format(SourceInfo.MTIME),
-            ])
+            ],
+        )
 
     def _fetch_source_id(self, dir_name, base_name, format_name, size=None, mtime=None):
         where_list = []
         if dir_name:
             where_list.append(Where(SourceInfo.DIR_NAME, dir_name))
-        where_list.extend([
-            Where(SourceInfo.BASE_NAME, base_name),
-            Where(SourceInfo.FORMAT_NAME, format_name),
-        ])
+        where_list.extend(
+            [Where(SourceInfo.BASE_NAME, base_name), Where(SourceInfo.FORMAT_NAME, format_name)]
+        )
         if size:
             where_list.append(Where(SourceInfo.SIZE, size))
         if mtime:
             where_list.append(Where(SourceInfo.MTIME, mtime))
 
         return self._con.fetch_value(
-            select=Attr(SourceInfo.SOURCE_ID),
-            table_name=SOURCE_INFO_TABLE,
-            where=And(where_list))
+            select=Attr(SourceInfo.SOURCE_ID), table_name=SOURCE_INFO_TABLE, where=And(where_list)
+        )
 
     def _fetch_next_source_id(self):
         source_id = self._con.fetch_value(
-            select="MAX({})".format(Attr(SourceInfo.SOURCE_ID)),
-            table_name=SOURCE_INFO_TABLE)
+            select="MAX({})".format(Attr(SourceInfo.SOURCE_ID)), table_name=SOURCE_INFO_TABLE
+        )
 
         if source_id is None:
             return 1
@@ -95,10 +97,11 @@ class TableConverter(object):
         database_path_msg = "database path: {:s}".format(self._con.database_path)
 
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
-        logger.info("converted results: sources={}, success={} tables={}".format(
-            1,
-            self.get_success_count(),
-            self._result_counter.created_table_count))
+        logger.info(
+            "converted results: sources={}, success={} tables={}".format(
+                1, self.get_success_count(), self._result_counter.created_table_count
+            )
+        )
         if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
@@ -110,9 +113,16 @@ class TableConverter(object):
                 def indent(value, _):
                     return value
 
-            logger.debug("----- database schema -----\n{}".format(
-                indent(self._schema_extractor.dumps(
-                    output_format=output_format, verbosity_level=verbosity_level), "    ")))
+            logger.debug(
+                "----- database schema -----\n{}".format(
+                    indent(
+                        self._schema_extractor.dumps(
+                            output_format=output_format, verbosity_level=verbosity_level
+                        ),
+                        "    ",
+                    )
+                )
+            )
         else:
             logger.debug(database_path_msg)
 
@@ -120,8 +130,11 @@ class TableConverter(object):
         from .._dict_converter import DictConverter
 
         dict_converter = DictConverter(
-            self._logger, self._table_creator,
-            source=json_loader.source, index_list=self._index_list)
+            self._logger,
+            self._table_creator,
+            source=json_loader.source,
+            index_list=self._index_list,
+        )
         is_success = False
 
         try:

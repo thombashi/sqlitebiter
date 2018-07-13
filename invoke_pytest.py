@@ -11,5 +11,5 @@ import sys
 import py
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(py.test.cmdline.main())

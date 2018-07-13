@@ -27,15 +27,11 @@ from ._enum import Context, DupTable, ExitCode
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
 
 
-CONTEXT_SETTINGS = dict(
-    help_option_names=["-h", "--help"],
-    obj={},
-)
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})
 QUIET_LOG_LEVEL = logbook.NOTSET
 
 logbook.more.ColorizedStderrHandler(
-    level=logbook.DEBUG,
-    format_string="[{record.level_name}] {record.channel}: {record.message}"
+    level=logbook.DEBUG, format_string="[{record.level_name}] {record.channel}: {record.message}"
 ).push_application()
 
 
@@ -80,11 +76,7 @@ def finalize(con, converter, is_create_db):
     database_path = con.database_path
     con.close()
 
-    if all([
-        os.path.isfile(database_path),
-        converter.get_success_count() == 0,
-        is_create_db,
-    ]):
+    if all([os.path.isfile(database_path), converter.get_success_count() == 0, is_create_db]):
         os.remove(database_path)
 
     return converter.get_return_code()
@@ -93,22 +85,27 @@ def finalize(con, converter, is_create_db):
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__)
 @click.option(
-    "-o", "--output-path", metavar="PATH", default=Default.OUTPUT_FILE,
-    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(
-        Default.OUTPUT_FILE))
+    "-o",
+    "--output-path",
+    metavar="PATH",
+    default=Default.OUTPUT_FILE,
+    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(Default.OUTPUT_FILE),
+)
 @click.option(
-    "-a", "--append", "is_append_table", is_flag=True,
-    help="append table(s) to existing database.")
+    "-a", "--append", "is_append_table", is_flag=True, help="append table(s) to existing database."
+)
 @click.option(
-    "-i", "--index", "index_list", default="",
-    help="comma separated attribute names to create indices.")
+    "-i",
+    "--index",
+    "index_list",
+    default="",
+    help="comma separated attribute names to create indices.",
+)
 @click.option("-v", "--verbose", "verbosity_level", count=True)
+@click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="for debug print.")
 @click.option(
-    "--debug", "log_level", flag_value=logbook.DEBUG,
-    help="for debug print.")
-@click.option(
-    "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL,
-    help="suppress execution log messages.")
+    "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL, help="suppress execution log messages."
+)
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.OUTPUT_PATH] = output_path
@@ -123,12 +120,17 @@ def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_leve
 @cmd.command()
 @click.argument("files", type=str, nargs=-1)
 @click.option(
-    "-f", "--format", "format_name",
+    "-f",
+    "--format",
+    "format_name",
     type=click.Choice(ptr.TableFileLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
-    help="Data format to loading (auto-detect from file extensions in default).")
+    help="Data format to loading (auto-detect from file extensions in default).",
+)
 @click.option(
-    "--encoding", metavar="ENCODING",
-    help="Encoding to load files. Auto-detection from files in default.")
+    "--encoding",
+    metavar="ENCODING",
+    help="Encoding to load files. Auto-detection from files in default.",
+)
 @click.pass_context
 def file(ctx, files, format_name, encoding):
     """
@@ -148,7 +150,8 @@ def file(ctx, files, format_name, encoding):
         index_list=ctx.obj.get(Context.INDEX_LIST),
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
-        encoding=encoding)
+        encoding=encoding,
+    )
 
     for file_path in files:
         converter.convert(file_path)
@@ -159,15 +162,26 @@ def file(ctx, files, format_name, encoding):
 @cmd.command()
 @click.argument("url", type=str)
 @click.option(
-    "-f", "--format", "format_name",
+    "-f",
+    "--format",
+    "format_name",
     type=click.Choice(ptr.TableUrlLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
-    help="Data format to loading (defaults to html).")
+    help="Data format to loading (defaults to html).",
+)
 @click.option(
-    "-e", "--encoding", type=str, metavar="ENCODING",
-    help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING))
+    "-e",
+    "--encoding",
+    type=str,
+    metavar="ENCODING",
+    help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING),
+)
 @click.option(
-    "-p", "--proxy", type=str, metavar="PROXY",
-    help="Specify a proxy in the form [user:passwd@]proxy.server:port.")
+    "-p",
+    "--proxy",
+    type=str,
+    metavar="PROXY",
+    help="Specify a proxy in the form [user:passwd@]proxy.server:port.",
+)
 @click.pass_context
 def url(ctx, url, format_name, encoding, proxy):
     """
@@ -194,7 +208,8 @@ def url(ctx, url, format_name, encoding, proxy):
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
         encoding=encoding,
-        proxy=proxy)
+        proxy=proxy,
+    )
 
     converter.convert(url)
 
@@ -202,10 +217,8 @@ def url(ctx, url, format_name, encoding, proxy):
 
 
 @cmd.command()
-@click.argument(
-    "credentials", type=click.Path(exists=True))
-@click.argument(
-    "title", type=str)
+@click.argument("credentials", type=click.Path(exists=True))
+@click.argument("title", type=str)
 @click.pass_context
 def gs(ctx, credentials, title):
     """
@@ -221,7 +234,8 @@ def gs(ctx, credentials, title):
         logger=logger,
         con=con,
         index_list=ctx.obj.get(Context.INDEX_LIST),
-        verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL))
+        verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
+    )
 
     converter.convert(credentials, title)
 
@@ -243,8 +257,9 @@ def configure(ctx):
 
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
-    logger.debug("{} configuration file existence: {}".format(
-        PROGRAM_NAME, app_config_manager.exists))
+    logger.debug(
+        "{} configuration file existence: {}".format(PROGRAM_NAME, app_config_manager.exists)
+    )
 
     try:
         sys.exit(app_config_manager.configure())
@@ -253,5 +268,5 @@ def configure(ctx):
         sys.exit(errno.EINTR)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cmd()
