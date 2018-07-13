@@ -15,10 +15,9 @@ import six
 
 class DictConverter(object):
 
-    def __init__(self, logger, table_creator, result_counter, source, index_list):
+    def __init__(self, logger, table_creator, source, index_list):
         self.__logger = logger
         self.__table_creator = table_creator
-        self.__result_counter = result_counter
         self.__index_list = index_list
         self.__source = source
 
@@ -70,7 +69,4 @@ class DictConverter(object):
         self.__logger.debug("loaded tabledata: {}".format(six.text_type(table_data)))
 
         sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
-        self.__table_creator.create(sqlite_tabledata, self.__index_list)
-        self.__result_counter.inc_success()
-
-        self.__table_creator.logging_success(self.__source, sqlite_tabledata.table_name)
+        self.__table_creator.create(sqlite_tabledata, self.__index_list, source=self.__source)

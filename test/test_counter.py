@@ -21,7 +21,7 @@ class Test_ResultCounter(object):
         result_counter = ResultCounter()
 
         for _i in range(success):
-            result_counter.inc_success()
+            result_counter.inc_success(True)
 
         for _i in range(fail):
             result_counter.inc_fail()

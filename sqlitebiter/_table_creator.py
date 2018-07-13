@@ -12,14 +12,15 @@ from sqliteschema import SQLiteSchemaExtractor
 
 class TableCreator(object):
 
-    def __init__(self, logger, dst_con, verbosity_level):
+    def __init__(self, logger, dst_con, result_logger, verbosity_level):
         self.__logger = logger
         self.__dst_con = dst_con
+        self.__result_logger = result_logger
         self.__verbosity_level = verbosity_level
 
         self.__schema_extractor = SQLiteSchemaExtractor(dst_con)
 
-    def create(self, table_data, index_list):
+    def create(self, table_data, index_list, source):
         con_mem = simplesqlite.connect_sqlite_memdb()
         con_mem.create_table_from_tabledata(table_data)
         need_rename = self.__require_rename_table(con_mem, table_data.table_name)
@@ -32,22 +33,18 @@ class TableCreator(object):
             self.__logger.debug("rename table from '{}' to '{}'".format(
                 src_table_name, dst_table_name))
 
+            is_create_table = True
             simplesqlite.copy_table(
                 src_con=con_mem, dst_con=self.__dst_con,
                 src_table_name=src_table_name, dst_table_name=dst_table_name)
         else:
+            is_create_table = not self.__dst_con.has_table(dst_table_name)
             simplesqlite.append_table(
                 src_con=con_mem, dst_con=self.__dst_con, table_name=dst_table_name)
 
         self.__dst_con.create_index_list(dst_table_name, index_list)
 
-    def logging_success(self, source, table_name):
-        table_schema = self.__schema_extractor.fetch_table_schema(table_name.strip())
-
-        return self.__logger.info("convert '{source:s}' to '{table_info:s}' table".format(
-            source=source,
-            table_info=table_schema.dumps(
-                output_format="text", verbosity_level=self.__verbosity_level)))
+        self.__result_logger.logging_success(source, dst_table_name, is_create_table)
 
     def __require_rename_table(self, src_con, src_table_name):
         if not self.__dst_con.has_table(src_table_name):

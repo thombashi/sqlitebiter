@@ -23,7 +23,12 @@ class ResultCounter(object):
     def total_count(self):
         return self.success_count + self.fail_count
 
+    @property
+    def created_table_count(self):
+        return self.__create_table_count
+
     def __init__(self):
+        self.__create_table_count = 0
         self.__success_count = 0
         self.__fail_count = 0
 
@@ -31,8 +36,11 @@ class ResultCounter(object):
         return "results: success={:d}, failed={:d}, return_code={:d}".format(
             self.__success_count, self.__fail_count, self.get_return_code())
 
-    def inc_success(self):
+    def inc_success(self, is_create_table):
         self.__success_count += 1
+
+        if is_create_table:
+            self.__create_table_count += 1
 
     def inc_fail(self):
         self.__fail_count += 1

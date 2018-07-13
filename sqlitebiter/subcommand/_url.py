@@ -62,10 +62,9 @@ class UrlConverter(TableConverter):
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
-            convert_nb(logger, con, result_counter, nb=nb, source_id=self._fetch_next_source_id())
-            for table_name in con.fetch_table_name_list():
-                self._table_creator.logging_success(get_logging_url_path(url), table_name)
-                result_counter.inc_success()
+            convert_nb(
+                logger, get_logging_url_path(url), con, self._result_logger, nb=nb,
+                source_id=self._fetch_next_source_id())
 
             if result_counter.total_count == 0:
                 logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
@@ -86,8 +85,8 @@ class UrlConverter(TableConverter):
                     table_data, dup_col_handler=dup_col_handler).normalize()
 
                 try:
-                    self._table_creator.create(sqlite_tabledata, self._index_list)
-                    result_counter.inc_success()
+                    self._table_creator.create(
+                        sqlite_tabledata, self._index_list, source=get_logging_url_path(url))
                 except sqlite.OperationalError as e:
                     logger.error("{:s}: failed to convert: url={}, message={}".format(
                         e.__class__.__name__, url, e.message))
@@ -99,13 +98,9 @@ class UrlConverter(TableConverter):
                     result_counter.inc_fail()
                     continue
 
-                self._table_creator.logging_success(
-                    get_logging_url_path(url), sqlite_tabledata.table_name)
-
             self._add_source_info(url_dir_name, url_base_name, loader.format_name)
         except ptr.ValidationError as e:
             if loader.format_name == "json" and self._convert_complex_json(loader.loader):
-                result_counter.inc_success()
                 self._add_source_info(url_dir_name, url_base_name, loader.format_name)
             else:
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))

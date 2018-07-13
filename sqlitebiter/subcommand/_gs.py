@@ -37,12 +37,10 @@ class GoogleSheetsConverter(TableConverter):
                     table_data, dup_col_handler=dup_col_handler).normalize()
 
                 try:
-                    self._table_creator.create(sqlite_tabledata, self._index_list)
-                    result_counter.inc_success()
+                    self._table_creator.create(
+                        sqlite_tabledata, self._index_list, source="google sheets")
                 except (ptr.ValidationError, ptr.DataError):
                     result_counter.inc_fail()
-
-                self._table_creator.logging_success("google sheets", sqlite_tabledata.table_name)
 
             self._add_source_info(None, title, format_name="google sheets")
         except ptr.OpenError as e:

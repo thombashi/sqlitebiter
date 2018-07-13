@@ -9,6 +9,7 @@ from __future__ import absolute_import, unicode_literals
 from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
 
+from .._common import ResultLogger
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, SOURCE_INFO_TABLE
 from .._counter import ResultCounter
 from .._table_creator import TableCreator
@@ -35,8 +36,11 @@ class TableConverter(object):
 
         self._schema_extractor = SQLiteSchemaExtractor(con)
         self._result_counter = ResultCounter()
+        self._result_logger = ResultLogger(
+            logger, self._schema_extractor, self._result_counter, self._verbosity_level)
         self._table_creator = TableCreator(
-            logger=self._logger, dst_con=con, verbosity_level=verbosity_level)
+            logger=self._logger, dst_con=con, result_logger=self._result_logger,
+            verbosity_level=verbosity_level)
 
         self._con.create_table(
             SOURCE_INFO_TABLE,
@@ -91,7 +95,10 @@ class TableConverter(object):
         database_path_msg = "database path: {:s}".format(self._con.database_path)
 
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
-        logger.info("number of created tables: {:d}".format(self.get_success_count()))
+        logger.info("converted results: sources={}, success={} tables={}".format(
+            1,
+            self.get_success_count(),
+            self._result_counter.created_table_count))
         if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
@@ -113,7 +120,7 @@ class TableConverter(object):
         from .._dict_converter import DictConverter
 
         dict_converter = DictConverter(
-            self._logger, self._table_creator, self._result_counter,
+            self._logger, self._table_creator,
             source=json_loader.source, index_list=self._index_list)
         is_success = False
 

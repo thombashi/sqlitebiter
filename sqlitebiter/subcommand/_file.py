@@ -75,15 +75,13 @@ class FileConverter(TableConverter):
                     table_data, dup_col_handler=dup_col_handler).normalize()
 
                 try:
-                    self._table_creator.create(sqlite_tabledata, self._index_list)
-                    result_counter.inc_success()
+                    self._table_creator.create(
+                        sqlite_tabledata, self._index_list, source=file_path)
                 except (ValueError, IOError) as e:
                     logger.debug("exception={:s}, path={}, message={}".format(
                         type(e).__name__, file_path, e))
                     result_counter.inc_fail()
                     return
-
-                self._table_creator.logging_success(file_path, sqlite_tabledata.table_name)
 
             self._add_source_info(*source_info_record)
         except ptr.OpenError as e:
@@ -92,7 +90,6 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             if loader.format_name == "json" and self._convert_complex_json(loader.loader):
-                result_counter.inc_success()
                 self._add_source_info(*source_info_record)
             else:
                 logger.error("{:s}: invalid {} data format: path={}, message={}".format(
@@ -109,14 +106,11 @@ class FileConverter(TableConverter):
     def __convert_nb(self, file_path):
         convert_nb(
             self._logger,
+            file_path,
             self._con,
-            self._result_counter,
+            self._result_logger,
             nb=load_ipynb_file(file_path, encoding=self._encoding),
             source_id=self._fetch_next_source_id())
-
-        for table_name in self._con.fetch_table_name_list():
-            self._table_creator.logging_success(file_path, table_name)
-            self._result_counter.inc_success()
 
     @staticmethod
     def __get_source_info_base(source):
