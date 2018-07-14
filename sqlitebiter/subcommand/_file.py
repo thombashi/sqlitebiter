@@ -29,19 +29,7 @@ class FileConverter(TableConverter):
         con = self._con
         result_counter = self._result_counter
 
-        SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
-
-        if not file_path.isfile():
-            logger.warn(SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
-            result_counter.inc_skip()
-            return
-
-        if file_path.realpath() == con.database_path:
-            logger.warn(SKIP_MSG_FORMAT.format(
-                source=file_path,
-                message="same path as the output file"
-            ))
-            result_counter.inc_skip()
+        if not self.__is_file(file_path):
             return
 
         logger.debug("converting '{}'".format(file_path))
@@ -137,6 +125,24 @@ class FileConverter(TableConverter):
 
         if result_counter.total_count == existing_table_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+
+    def __is_file(self, file_path):
+        SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
+
+        if not file_path.isfile():
+            self._logger.warn(SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
+            self._result_counter.inc_skip()
+            return False
+
+        if file_path.realpath() == self._con.database_path:
+            self._logger.warn(SKIP_MSG_FORMAT.format(
+                source=file_path,
+                message="same path as the output file"
+            ))
+            self._result_counter.inc_skip()
+            return False
+
+        return True
 
     @staticmethod
     def __get_source_info_base(source):
