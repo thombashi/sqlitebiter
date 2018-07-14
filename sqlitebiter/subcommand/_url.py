@@ -19,7 +19,7 @@ from six.moves.urllib.parse import urlparse
 from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._enum import ExitCode
-from .._ipynb_converter import convert_nb, is_ipynb_url, load_ipynb_url
+from .._ipynb_converter import is_ipynb_url, load_ipynb_url
 from ._base import TableConverter
 
 
@@ -56,24 +56,14 @@ class UrlConverter(TableConverter):
 
     def convert(self, url):
         logger = self._logger
-        con = self._con
         result_counter = self._result_counter
         url_dir_name, url_base_name = parse_source_info_url(url)
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
-            convert_nb(
-                logger,
-                get_logging_url_path(url),
-                con,
-                self._result_logger,
-                nb=nb,
-                source_id=self._fetch_next_source_id(),
-            )
+            created_table_name_set = self._convert_nb(nb, source=get_logging_url_path(url))
 
-            if result_counter.total_count == 0:
-                logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
-            else:
+            if created_table_name_set:
                 self._add_source_info(
                     url_dir_name, url_base_name, format_name="ipynb", size=nb_size
                 )

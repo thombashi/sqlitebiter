@@ -10,8 +10,14 @@ from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
 
 from .._common import ResultLogger
-from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, SOURCE_INFO_TABLE
+from .._const import (
+    MAX_VERBOSITY_LEVEL,
+    PROGRAM_NAME,
+    SOURCE_INFO_TABLE,
+    TABLE_NOT_FOUND_MSG_FORMAT,
+)
 from .._counter import ResultCounter
+from .._ipynb_converter import convert_nb
 from .._table_creator import TableCreator
 
 
@@ -125,6 +131,25 @@ class TableConverter(object):
             )
         else:
             logger.debug(database_path_msg)
+
+    def _convert_nb(self, nb, source):
+        existing_table_name_set = set(self._con.fetch_table_name_list())
+
+        convert_nb(
+            self._logger,
+            source,
+            self._con,
+            self._result_logger,
+            nb=nb,
+            source_id=self._fetch_next_source_id(),
+        )
+
+        created_table_set = set(self._con.fetch_table_name_list()) - existing_table_name_set
+
+        if not created_table_set:
+            self._logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(source))
+
+        return created_table_set
 
     def _convert_complex_json(self, json_loader):
         from .._dict_converter import DictConverter

@@ -14,7 +14,7 @@ from simplesqlite import SQLiteTableDataSanitizer
 
 from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
-from .._ipynb_converter import convert_nb, is_ipynb_file_path, load_ipynb_file
+from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
 from ._base import TableConverter
 
 
@@ -45,13 +45,21 @@ class FileConverter(TableConverter):
         dirname, basename, filesize, mtime = self.__get_source_info_base(file_path.realpath())
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
-            self.__convert_nb(file_path)
-            if result_counter.total_count == existing_table_count:
-                logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+            import nbformat
 
-            self._add_source_info(
-                dirname, basename, format_name="ipynb", size=filesize, mtime=mtime
-            )
+            try:
+                created_table_name_set = self._convert_nb(
+                    nb=load_ipynb_file(file_path, encoding=self._encoding), source=file_path
+                )
+            except nbformat.reader.NotJSONError as e:
+                logger.error(e)
+                return
+
+            if created_table_name_set:
+                self._add_source_info(
+                    dirname, basename, format_name="ipynb", size=filesize, mtime=mtime
+                )
+
             return
 
         try:
@@ -117,16 +125,6 @@ class FileConverter(TableConverter):
 
         if result_counter.total_count == existing_table_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
-
-    def __convert_nb(self, file_path):
-        convert_nb(
-            self._logger,
-            file_path,
-            self._con,
-            self._result_logger,
-            nb=load_ipynb_file(file_path, encoding=self._encoding),
-            source_id=self._fetch_next_source_id(),
-        )
 
     @staticmethod
     def __get_source_info_base(source):
