@@ -15,7 +15,7 @@ from simplesqlite import SQLiteTableDataSanitizer
 from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
-from ._base import TableConverter
+from ._base import SourceInfo, TableConverter
 
 
 def _get_format_type_from_path(file_path):
@@ -58,8 +58,8 @@ class FileConverter(TableConverter):
             for table_name in created_table_name_set:
                 record = source_info_record_base.copy()
                 record.update({
-                    "format_name": "ipynb",
-                    "dst_table_name": table_name,
+                    SourceInfo.FORMAT_NAME: "ipynb",
+                    SourceInfo.DST_TABLE: table_name,
                 })
                 self._add_source_info(**record)
 
@@ -78,7 +78,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
 
-        source_info_record_base["format_name"] = loader.format_name
+        source_info_record_base[SourceInfo.FORMAT_NAME] = loader.format_name
 
         try:
             for table_data in loader.load():
@@ -98,7 +98,7 @@ class FileConverter(TableConverter):
                     return
 
                 record = source_info_record_base.copy()
-                record.update({"dst_table_name": sqlite_tabledata.table_name})
+                record.update({SourceInfo.DST_TABLE: sqlite_tabledata.table_name})
                 self._add_source_info(**record)
         except ptr.OpenError as e:
             logger.error(
@@ -111,7 +111,7 @@ class FileConverter(TableConverter):
             if loader.format_name == "json":
                 for table_name in self._convert_complex_json(loader.loader):
                     record = source_info_record_base.copy()
-                    record.update({"dst_table_name": table_name})
+                    record.update({SourceInfo.DST_TABLE: table_name})
                     self._add_source_info(**record)
             else:
                 logger.error(
@@ -137,8 +137,8 @@ class FileConverter(TableConverter):
     @staticmethod
     def __get_source_info_base(source):
         return {
-            "dir_name": source.dirname(),
-            "base_name": source.basename(),
-            "size": source.getsize(),
-            "mtime": source.getmtime(),
+            SourceInfo.DIR_NAME: source.dirname(),
+            SourceInfo.BASE_NAME: source.basename(),
+            SourceInfo.SIZE: source.getsize(),
+            SourceInfo.MTIME: source.getmtime(),
         }
