@@ -29,15 +29,18 @@ class FileConverter(TableConverter):
         con = self._con
         result_counter = self._result_counter
 
+        SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
+
         if not file_path.isfile():
-            logger.warn("skip '{}': not a file".format(file_path))
+            logger.warn(SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
             result_counter.inc_skip()
             return
 
         if file_path.realpath() == con.database_path:
-            logger.warn(
-                "skip a file which has the same path as the output file ({})".format(file_path)
-            )
+            logger.warn(SKIP_MSG_FORMAT.format(
+                source=file_path,
+                message="same path as the output file"
+            ))
             return
 
         logger.debug("converting '{}'".format(file_path))
