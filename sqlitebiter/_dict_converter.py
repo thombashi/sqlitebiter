@@ -15,11 +15,16 @@ from simplesqlite import SQLiteTableDataSanitizer
 
 
 class DictConverter(object):
+    @property
+    def converted_table_name_set(self):
+        return self.__converted_table_name_set
+
     def __init__(self, logger, table_creator, source, index_list):
         self.__logger = logger
         self.__table_creator = table_creator
         self.__index_list = index_list
         self.__source = source
+        self.__converted_table_name_set = set([])
 
     def to_sqlite_table(self, data, key_list):
         if not data:
@@ -69,3 +74,4 @@ class DictConverter(object):
 
         sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
         self.__table_creator.create(sqlite_tabledata, self.__index_list, source=self.__source)
+        self.__converted_table_name_set.add(sqlite_tabledata.table_name)
