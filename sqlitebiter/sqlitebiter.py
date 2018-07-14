@@ -23,7 +23,7 @@ from .__version__ import __version__
 from ._common import dup_col_handler
 from ._config import ConfigKey, app_config_manager
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
-from ._enum import Context, DupTable, ExitCode
+from ._enum import Context, DupDatabase, ExitCode
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
 
 
@@ -49,7 +49,7 @@ def create_database(database_path, dup_table):
 
     is_create_db = not db_path.isfile()
 
-    if dup_table == DupTable.APPEND:
+    if dup_table == DupDatabase.APPEND:
         return (sqlite.SimpleSQLite(db_path, "a"), is_create_db)
 
     return (sqlite.SimpleSQLite(db_path, "w"), is_create_db)
@@ -109,7 +109,7 @@ def finalize(con, converter, is_create_db):
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.OUTPUT_PATH] = output_path
-    ctx.obj[Context.DUP_TABLE] = DupTable.APPEND if is_append_table else DupTable.OVERWRITE
+    ctx.obj[Context.DUP_TABLE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level

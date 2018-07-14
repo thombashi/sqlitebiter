@@ -25,7 +25,7 @@ class ExitCode(object):
     NO_INPUT = 10
 
 
-class DupTable(Enum):
+class DupDatabase(Enum):
     OVERWRITE = 1
     APPEND = 2
     SKIP = 3  # TODO
