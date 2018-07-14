@@ -41,7 +41,7 @@ def parse_source_info_url(url):
 def create_url_loader(logger, source_url, format_name, encoding, proxies):
     try:
         return ptr.TableUrlLoader(source_url, format_name, encoding=encoding, proxies=proxies)
-    except ptr.HTTPError as e:
+    except (ptr.HTTPError, ptr.UrlError) as e:
         logger.error(msgfy.to_error_message(e))
         sys.exit(ExitCode.FAILED_HTTP)
     except ptr.ProxyError as e:
