@@ -58,19 +58,28 @@ class UrlConverter(TableConverter):
         logger = self._logger
         result_counter = self._result_counter
         url_dir_name, url_base_name = parse_source_info_url(url)
+        source_info_record_base = {
+            "dir_name": url_dir_name,
+            "base_name": url_base_name,
+        }
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
             created_table_name_set = self._convert_nb(nb, source=get_logging_url_path(url))
 
-            if created_table_name_set:
-                self._add_source_info(
-                    url_dir_name, url_base_name, format_name="ipynb", size=nb_size
-                )
+            for table_name in created_table_name_set:
+                record = source_info_record_base.copy()
+                record.update({
+                    "format_name": "ipynb",
+                    "dst_table_name": table_name,
+                    "size": nb_size
+                })
+                self._add_source_info(**record)
 
             return
 
         loader = self.__create_loader(url)
+        source_info_record_base["format_name"] = loader.format_name
 
         try:
             for table_data in loader.load():
@@ -99,10 +108,15 @@ class UrlConverter(TableConverter):
                     result_counter.inc_fail()
                     continue
 
-            self._add_source_info(url_dir_name, url_base_name, loader.format_name)
+                record = source_info_record_base.copy()
+                record.update({"dst_table_name": sqlite_tabledata.table_name})
+                self._add_source_info(**record)
         except ptr.ValidationError as e:
-            if loader.format_name == "json" and self._convert_complex_json(loader.loader):
-                self._add_source_info(url_dir_name, url_base_name, loader.format_name)
+            if loader.format_name == "json":
+                for table_name in self._convert_complex_json(loader.loader):
+                    record = source_info_record_base.copy()
+                    record.update({"dst_table_name": table_name})
+                    self._add_source_info(**record)
             else:
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()

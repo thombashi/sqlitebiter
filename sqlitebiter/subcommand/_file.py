@@ -43,6 +43,12 @@ class FileConverter(TableConverter):
         logger.debug("converting '{}'".format(file_path))
         existing_table_count = result_counter.total_count
         dirname, basename, filesize, mtime = self.__get_source_info_base(file_path.realpath())
+        source_info_record_base = {
+            "dir_name": dirname,
+            "base_name": basename,
+            "size": filesize,
+            "mtime": mtime,
+        }
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
             import nbformat
@@ -55,10 +61,13 @@ class FileConverter(TableConverter):
                 logger.error(e)
                 return
 
-            if created_table_name_set:
-                self._add_source_info(
-                    dirname, basename, format_name="ipynb", size=filesize, mtime=mtime
-                )
+            for table_name in created_table_name_set:
+                record = source_info_record_base.copy()
+                record.update({
+                    "format_name": "ipynb",
+                    "dst_table_name": table_name,
+                })
+                self._add_source_info(**record)
 
             return
 
@@ -75,7 +84,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
 
-        source_info_record = (dirname, basename, loader.format_name, filesize, mtime)
+        source_info_record_base["format_name"] = loader.format_name
 
         try:
             for table_data in loader.load():
@@ -94,7 +103,9 @@ class FileConverter(TableConverter):
                     result_counter.inc_fail()
                     return
 
-            self._add_source_info(*source_info_record)
+                record = source_info_record_base.copy()
+                record.update({"dst_table_name": sqlite_tabledata.table_name})
+                self._add_source_info(**record)
         except ptr.OpenError as e:
             logger.error(
                 "{:s}: open error: file={}, message='{}'".format(
@@ -103,8 +114,11 @@ class FileConverter(TableConverter):
             )
             result_counter.inc_fail()
         except ptr.ValidationError as e:
-            if loader.format_name == "json" and self._convert_complex_json(loader.loader):
-                self._add_source_info(*source_info_record)
+            if loader.format_name == "json":
+                for table_name in self._convert_complex_json(loader.loader):
+                    record = source_info_record_base.copy()
+                    record.update({"dst_table_name": table_name})
+                    self._add_source_info(**record)
             else:
                 logger.error(
                     "{:s}: invalid {} data format: path={}, message={}".format(

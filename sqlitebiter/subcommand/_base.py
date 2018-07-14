@@ -26,6 +26,7 @@ class SourceInfo(object):
     DIR_NAME = "dir_name"
     BASE_NAME = "base_name"
     FORMAT_NAME = "format"
+    DST_TABLE = "dst_table"
     SIZE = "size"
     MTIME = "mtime"
 
@@ -58,6 +59,7 @@ class TableConverter(object):
                 "{:s} TEXT".format(SourceInfo.DIR_NAME),
                 "{:s} TEXT NOT NULL".format(SourceInfo.BASE_NAME),
                 "{:s} TEXT NOT NULL".format(SourceInfo.FORMAT_NAME),
+                "{:s} TEXT NOT NULL".format(SourceInfo.DST_TABLE),
                 "{:s} INTEGER".format(SourceInfo.SIZE),
                 "{:s} INTEGER".format(SourceInfo.MTIME),
             ],
@@ -90,8 +92,9 @@ class TableConverter(object):
 
         return source_id + 1
 
-    def _add_source_info(self, dir_name, base_name, format_name, size=None, mtime=None):
-        self._con.insert(SOURCE_INFO_TABLE, (None, dir_name, base_name, format_name, size, mtime))
+    def _add_source_info(
+            self, dir_name, base_name, format_name, dst_table_name, size=None, mtime=None):
+        self._con.insert(SOURCE_INFO_TABLE, (None, dir_name, base_name, format_name, dst_table_name, size, mtime))
 
     def get_return_code(self):
         return self._result_counter.get_return_code()
@@ -157,16 +160,13 @@ class TableConverter(object):
             source=json_loader.source,
             index_list=self._index_list,
         )
-        is_success = False
 
         try:
             dict_converter.to_sqlite_table(json_loader.load_dict(), [])
         except AttributeError:
             pass
-        else:
-            is_success = True
 
-        return is_success
+        return dict_converter.converted_table_name_set
 
     def __get_dump_param(self):
         found_ptw = True
