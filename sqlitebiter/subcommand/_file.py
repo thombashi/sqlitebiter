@@ -33,7 +33,7 @@ class FileConverter(TableConverter):
             return
 
         logger.debug("converting '{}'".format(file_path))
-        existing_table_count = result_counter.total_count
+        success_count = result_counter.success_count
         source_info_record_base = self.__get_source_info_base(file_path.realpath())
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
@@ -120,7 +120,7 @@ class FileConverter(TableConverter):
             )
             result_counter.inc_fail()
 
-        if result_counter.total_count == existing_table_count:
+        if result_counter.success_count == success_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
     def __is_file(self, file_path):

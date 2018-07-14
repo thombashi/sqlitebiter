@@ -138,6 +138,7 @@ class TableConverter(object):
             logger.debug(database_path_msg)
 
     def _convert_nb(self, nb, source):
+        success_count = self._result_counter.success_count
         created_table_set = convert_nb(
             self._logger,
             source,
@@ -147,8 +148,9 @@ class TableConverter(object):
             source_id=self._fetch_next_source_id(),
         )
 
-        if not created_table_set:
+        if self._result_counter.success_count == success_count:
             self._logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(source))
+            return
 
         return created_table_set
 

@@ -81,6 +81,7 @@ class UrlConverter(TableConverter):
 
         loader = self.__create_loader(url)
         source_info_record_base[SourceInfo.FORMAT_NAME] = loader.format_name
+        success_count = result_counter.success_count
 
         try:
             for table_data in loader.load():
@@ -127,7 +128,7 @@ class UrlConverter(TableConverter):
             )
             result_counter.inc_fail()
 
-        if result_counter.total_count == 0:
+        if result_counter.success_count == success_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
 
     def __get_proxies(self):
