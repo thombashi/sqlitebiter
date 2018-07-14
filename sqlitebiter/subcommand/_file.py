@@ -41,6 +41,7 @@ class FileConverter(TableConverter):
                 source=file_path,
                 message="same path as the output file"
             ))
+            result_counter.inc_skip()
             return
 
         logger.debug("converting '{}'".format(file_path))
