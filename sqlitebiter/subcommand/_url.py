@@ -68,11 +68,13 @@ class UrlConverter(TableConverter):
 
             for table_name in created_table_name_set:
                 record = source_info_record_base.copy()
-                record.update({
-                    SourceInfo.FORMAT_NAME: "ipynb",
-                    SourceInfo.DST_TABLE: table_name,
-                    SourceInfo.SIZE: nb_size
-                })
+                record.update(
+                    {
+                        SourceInfo.FORMAT_NAME: "ipynb",
+                        SourceInfo.DST_TABLE: table_name,
+                        SourceInfo.SIZE: nb_size,
+                    }
+                )
                 self._add_source_info(**record)
 
             return

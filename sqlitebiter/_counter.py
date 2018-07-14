@@ -37,12 +37,14 @@ class ResultCounter(object):
         self.__skip_count = 0
 
     def __repr__(self):
-        return "results: " + ", ".join([
-            "success={:d}".format(self.__success_count),
-            "failed={:d}".format(self.__fail_count),
-            "skip={:s}".format(self.__skip_count),
-            "return_code={:d}".format(self.get_return_code()),
-        ])
+        return "results: " + ", ".join(
+            [
+                "success={:d}".format(self.__success_count),
+                "failed={:d}".format(self.__fail_count),
+                "skip={:s}".format(self.__skip_count),
+                "return_code={:d}".format(self.get_return_code()),
+            ]
+        )
 
     def inc_success(self, is_create_table):
         self.__success_count += 1

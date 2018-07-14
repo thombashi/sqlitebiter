@@ -49,10 +49,7 @@ class FileConverter(TableConverter):
 
             for table_name in created_table_name_set:
                 record = source_info_record_base.copy()
-                record.update({
-                    SourceInfo.FORMAT_NAME: "ipynb",
-                    SourceInfo.DST_TABLE: table_name,
-                })
+                record.update({SourceInfo.FORMAT_NAME: "ipynb", SourceInfo.DST_TABLE: table_name})
                 self._add_source_info(**record)
 
             return
@@ -135,10 +132,9 @@ class FileConverter(TableConverter):
             return False
 
         if file_path.realpath() == self._con.database_path:
-            self._logger.warn(SKIP_MSG_FORMAT.format(
-                source=file_path,
-                message="same path as the output file"
-            ))
+            self._logger.warn(
+                SKIP_MSG_FORMAT.format(source=file_path, message="same path as the output file")
+            )
             self._result_counter.inc_skip()
             return False
 

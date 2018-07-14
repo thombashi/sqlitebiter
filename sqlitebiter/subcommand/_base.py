@@ -92,9 +92,10 @@ class TableConverter(object):
 
         return source_id + 1
 
-    def _add_source_info(
-            self, dir_name, base_name, format, dst_table, size=None, mtime=None):
-        self._con.insert(SOURCE_INFO_TABLE, (None, dir_name, base_name, format, dst_table, size, mtime))
+    def _add_source_info(self, dir_name, base_name, format, dst_table, size=None, mtime=None):
+        self._con.insert(
+            SOURCE_INFO_TABLE, (None, dir_name, base_name, format, dst_table, size, mtime)
+        )
 
     def get_return_code(self):
         return self._result_counter.get_return_code()
