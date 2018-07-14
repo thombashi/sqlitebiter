@@ -67,9 +67,8 @@ class UrlConverter(TableConverter):
                 self._add_source_info(
                     url_dir_name, url_base_name, format_name="ipynb", size=nb_size
                 )
-                self.write_completion_message()
 
-            sys.exit(self.get_return_code())
+            return
 
         loader = self.__create_loader(url)
 
