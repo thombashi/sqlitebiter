@@ -11,6 +11,7 @@ import re
 import msgfy
 import pytablereader as ptr
 import six
+from simplesqlite import SQLiteTableDataSanitizer
 
 
 class DictConverter(object):
@@ -64,8 +65,6 @@ class DictConverter(object):
         return "_".join(key_list)
 
     def __write(self, table_data):
-        from simplesqlite import SQLiteTableDataSanitizer
-
         self.__logger.debug("loaded tabledata: {}".format(six.text_type(table_data)))
 
         sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
