@@ -42,13 +42,7 @@ class FileConverter(TableConverter):
 
         logger.debug("converting '{}'".format(file_path))
         existing_table_count = result_counter.total_count
-        dirname, basename, filesize, mtime = self.__get_source_info_base(file_path.realpath())
-        source_info_record_base = {
-            "dir_name": dirname,
-            "base_name": basename,
-            "size": filesize,
-            "mtime": mtime,
-        }
+        source_info_record_base = self.__get_source_info_base(file_path.realpath())
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
             import nbformat
@@ -142,4 +136,9 @@ class FileConverter(TableConverter):
 
     @staticmethod
     def __get_source_info_base(source):
-        return (source.dirname(), source.basename(), source.getsize(), source.getmtime())
+        return {
+            "dir_name": source.dirname(),
+            "base_name": source.basename(),
+            "size": source.getsize(),
+            "mtime": source.getmtime(),
+        }
