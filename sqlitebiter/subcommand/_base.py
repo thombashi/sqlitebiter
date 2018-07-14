@@ -64,15 +64,16 @@ class TableConverter(object):
         )
 
     def _fetch_source_id(self, dir_name, base_name, format_name, size=None, mtime=None):
-        where_list = []
+        where_list = [
+            Where(SourceInfo.BASE_NAME, base_name),
+            Where(SourceInfo.FORMAT_NAME, format_name),
+        ]
+
         if dir_name:
             where_list.append(Where(SourceInfo.DIR_NAME, dir_name))
-        where_list.extend(
-            [Where(SourceInfo.BASE_NAME, base_name), Where(SourceInfo.FORMAT_NAME, format_name)]
-        )
-        if size:
+        if size is not None:
             where_list.append(Where(SourceInfo.SIZE, size))
-        if mtime:
+        if mtime is not None:
             where_list.append(Where(SourceInfo.MTIME, mtime))
 
         return self._con.fetch_value(
