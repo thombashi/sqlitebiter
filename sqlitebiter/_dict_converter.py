@@ -43,7 +43,7 @@ class DictConverter(object):
                             key_list + [key, table_data.table_name]
                         )
 
-                    self.__write(table_data)
+                    self.__convert(table_data)
             except ptr.DataError:
                 self.to_sqlite_table(v, key_list + [key])
             except ptr.ValidationError as e:
@@ -59,12 +59,12 @@ class DictConverter(object):
             else:
                 table_data.table_name = "root"
 
-            self.__write(table_data)
+            self.__convert(table_data)
 
     def __make_table_name(self, key_list):
         return "_".join(key_list)
 
-    def __write(self, table_data):
+    def __convert(self, table_data):
         self.__logger.debug("loaded tabledata: {}".format(six.text_type(table_data)))
 
         sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
