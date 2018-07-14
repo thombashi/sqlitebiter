@@ -30,8 +30,8 @@ class FileConverter(TableConverter):
         result_counter = self._result_counter
 
         if not file_path.isfile():
-            result_counter.inc_fail()
             logger.warn("skip '{}': not a file".format(file_path))
+            result_counter.inc_skip()
             return
 
         if file_path.realpath() == con.database_path:
