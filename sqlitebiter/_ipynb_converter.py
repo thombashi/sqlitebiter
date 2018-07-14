@@ -12,6 +12,7 @@ import json
 import os.path
 import re
 
+import msgfy
 import nbformat
 import requests
 import six
@@ -33,7 +34,10 @@ def is_ipynb_url(url):
 
 def load_ipynb_file(file_path, encoding):
     with io.open(file_path, encoding=encoding) as f:
-        return nbformat.read(f, as_version=4)
+        try:
+            return nbformat.read(f, as_version=4)
+        except AttributeError as e:
+            raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
 
 
 def load_ipynb_url(url, proxies):
