@@ -32,7 +32,10 @@ def get_logging_url_path(url):
 def parse_source_info_url(url):
     result = urlparse(url)
 
-    return (result.netloc + os.path.dirname(result.path), os.path.basename(result.path))
+    return {
+        "dir_name": result.netloc + os.path.dirname(result.path),
+        "base_name": os.path.basename(result.path),
+    }
 
 
 def create_url_loader(logger, source_url, format_name, encoding, proxies):
@@ -57,11 +60,7 @@ class UrlConverter(TableConverter):
     def convert(self, url):
         logger = self._logger
         result_counter = self._result_counter
-        url_dir_name, url_base_name = parse_source_info_url(url)
-        source_info_record_base = {
-            "dir_name": url_dir_name,
-            "base_name": url_base_name,
-        }
+        source_info_record_base = parse_source_info_url(url)
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
