@@ -109,7 +109,7 @@ def finalize(con, converter, is_create_db):
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
     ctx.obj[Context.OUTPUT_PATH] = output_path
-    ctx.obj[Context.DUP_TABLE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
+    ctx.obj[Context.DUP_DATABASE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
@@ -143,7 +143,7 @@ def file(ctx, files, format_name, encoding):
         sys.exit(ExitCode.NO_INPUT)
 
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_TABLE])
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = FileConverter(
         logger=logger,
         con=con,
@@ -200,7 +200,7 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_null_string(proxy):
         proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
 
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_TABLE])
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = UrlConverter(
         logger=logger,
         con=con,
@@ -229,7 +229,7 @@ def gs(ctx, credentials, title):
     """
 
     logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_TABLE])
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = GoogleSheetsConverter(
         logger=logger,
         con=con,

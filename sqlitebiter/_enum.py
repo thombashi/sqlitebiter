@@ -10,7 +10,7 @@ from enum import Enum
 
 
 class Context(Enum):
-    DUP_TABLE = 1
+    DUP_DATABASE = 1
     INDEX_LIST = 2
     LOG_LEVEL = 3
     OUTPUT_PATH = 4
