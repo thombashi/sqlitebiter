@@ -133,9 +133,7 @@ class TableConverter(object):
             logger.debug(database_path_msg)
 
     def _convert_nb(self, nb, source):
-        existing_table_name_set = set(self._con.fetch_table_name_list())
-
-        convert_nb(
+        created_table_set = convert_nb(
             self._logger,
             source,
             self._con,
@@ -143,8 +141,6 @@ class TableConverter(object):
             nb=nb,
             source_id=self._fetch_next_source_id(),
         )
-
-        created_table_set = set(self._con.fetch_table_name_list()) - existing_table_name_set
 
         if not created_table_set:
             self._logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(source))

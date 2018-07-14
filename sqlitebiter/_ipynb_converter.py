@@ -377,6 +377,8 @@ class CellConverter(JupyterNotebookConverterBase):
 
 
 def convert_nb(logger, source, con, result_logger, nb, source_id):
+    existing_table_name_set = set(con.fetch_table_name_list())
+
     # TODO: source_id
     CellConverter(logger, source, con, result_logger, nb.cells).convert()
     MetaDataConverter(logger, source, con, result_logger, nb.metadata).convert()
@@ -393,3 +395,7 @@ def convert_nb(logger, source, con, result_logger, nb, source_id):
         result_logger.logging_success(
             "{}: {}".format(source, table_name), table_name, need_create_table
         )
+
+    con.commit()
+
+    return set(con.fetch_table_name_list()) - existing_table_name_set
