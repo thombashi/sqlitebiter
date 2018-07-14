@@ -24,6 +24,7 @@ class Test_file_subcommand_ipynb(object):
         "test/data/pytablewriter_examples.ipynb",
         "test/data/jupyter_notebook_example.ipynb",
         "test/data/DataProperty.ipynb",
+        "test/data/empty.ipynb",
     ]
 
     @pytest.mark.parametrize(
@@ -32,6 +33,7 @@ class Test_file_subcommand_ipynb(object):
             [IPYNB_FILE_LIST[0], ExitCode.SUCCESS],
             [IPYNB_FILE_LIST[1], ExitCode.SUCCESS],
             [IPYNB_FILE_LIST[2], ExitCode.SUCCESS],
+            [IPYNB_FILE_LIST[3], ExitCode.SUCCESS],
         ],
     )
     def test_smoke_one_file(self, file_path, expected):
@@ -55,3 +57,20 @@ class Test_file_subcommand_ipynb(object):
             assert result.exit_code == ExitCode.SUCCESS
         finally:
             os.remove(db_path)
+
+    @pytest.mark.parametrize(
+        ["content", "expected"], [["", ExitCode.NO_INPUT], ["{}", ExitCode.NO_INPUT]]
+    )
+    def test_abnormal_empty_file(self, content, expected):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = "empty.ipynb"
+
+            with open(file_path, "w") as f:
+                f.write(content)
+
+            result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
+            print_traceback(result)
+
+            assert result.exit_code == expected, file_path

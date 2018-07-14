@@ -57,7 +57,7 @@ class Test_sqlitebiter_file(object):
             [valid_utf8_csv_file, ExitCode.SUCCESS],
             [valid_json_symbols, ExitCode.SUCCESS],
             [invalid_csv_file, ExitCode.FAILED_CONVERT],
-            [invalid_json_single_file, ExitCode.FAILED_CONVERT],
+            [invalid_json_single_file, ExitCode.NO_INPUT],
             [invalid_excel_file_1, ExitCode.NO_INPUT],
             [invalid_excel_file_2, ExitCode.FAILED_CONVERT],
             [invalid_html_file, ExitCode.NO_INPUT],
@@ -341,7 +341,7 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
         expected = dedent(
             """\
-            _source_info_ (source_id, dir_name, base_name, format, size, mtime)
+            _source_info_ (source_id, dir_name, base_name, format, dst_table, size, mtime)
             dup_col (A, A_2, A_1)"""
         )
 
