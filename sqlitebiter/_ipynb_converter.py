@@ -46,7 +46,7 @@ def load_ipynb_file(file_path, encoding):
             return nbformat.read(f, as_version=4)
         except AttributeError as e:
             raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
-        except FileNotFoundError as e:
+        except IOError as e:
             _schema_not_found_error_handler(e)
             raise
 
@@ -57,7 +57,7 @@ def load_ipynb_url(url, proxies):
 
     try:
         return (nbformat.reads(response.text, as_version=4), len(response.content))
-    except FileNotFoundError as e:
+    except IOError as e:
         _schema_not_found_error_handler(e)
         raise
 
