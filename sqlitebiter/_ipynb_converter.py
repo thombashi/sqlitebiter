@@ -56,7 +56,11 @@ class NbAttr(object):
 
 
 class NbAttrDesc(object):
+    CELL_ID = "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID)
+    KEY = "{:s} TEXT NOT NULL".format(NbAttr.KEY)
+    LINE_NUMBER = "{:s} INTEGER NOT NULL".format(NbAttr.LINE_NUMBER)
     SOURECE_ID = "{:s} INTEGER NOT NULL".format(NbAttr.SOURECE_ID)
+    VALUE = "{:s} TEXT".format(NbAttr.VALUE)
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -128,11 +132,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         if len(record_list) > 0:
             self._con.create_table(
                 table_name,
-                [
-                    NbAttrDesc.SOURECE_ID,
-                    "{:s} TEXT NOT NULL".format(NbAttr.KEY),
-                    "{:s} TEXT NOT NULL".format(NbAttr.VALUE),
-                ],
+                [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, "{:s} TEXT NOT NULL".format(NbAttr.VALUE)],
             )
             self._con.insert_many(
                 table_name,
@@ -167,11 +167,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         if len(record_list) > 0:
             self._con.create_table(
                 table_name,
-                [
-                    NbAttrDesc.SOURECE_ID,
-                    "{:s} TEXT NOT NULL".format(NbAttr.KEY),
-                    "{:s} TEXT NOT NULL".format(NbAttr.VALUE),
-                ],
+                [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, "{:s} TEXT NOT NULL".format(NbAttr.VALUE)],
             )
             self._con.insert_many(table_name, record_list)
 
@@ -196,7 +192,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                     table_name,
                     [
                         NbAttrDesc.SOURECE_ID,
-                        "{:s} TEXT NOT NULL".format(NbAttr.KEY),
+                        NbAttrDesc.KEY,
                         "{:s} TEXT NOT NULL".format(NbAttr.VALUE),
                     ],
                 )
@@ -248,8 +244,8 @@ class CellConverter(JupyterNotebookConverterBase):
                 table_name,
                 [
                     NbAttrDesc.SOURECE_ID,
-                    "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID),
-                    "{:s} INTEGER NOT NULL".format(NbAttr.LINE_NUMBER),
+                    NbAttrDesc.CELL_ID,
+                    NbAttrDesc.LINE_NUMBER,
                     "{:s} TEXT".format("text"),
                 ],
             )
@@ -286,9 +282,9 @@ class CellConverter(JupyterNotebookConverterBase):
                 outputs_table_name,
                 [
                     NbAttrDesc.SOURECE_ID,
-                    "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID),
+                    NbAttrDesc.CELL_ID,
                     "type TEXT NOT NULL",
-                    "{:s} INTEGER".format(NbAttr.LINE_NUMBER),
+                    NbAttrDesc.LINE_NUMBER,
                     "{:s} BLOB".format("data"),
                 ],
             )
@@ -298,12 +294,7 @@ class CellConverter(JupyterNotebookConverterBase):
             )
             self._con.create_table(
                 outputs_kv_table_name,
-                [
-                    NbAttrDesc.SOURECE_ID,
-                    "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID),
-                    "{:s} TEXT NOT NULL".format(NbAttr.KEY),
-                    "{:s} TEXT".format(NbAttr.VALUE),
-                ],
+                [NbAttrDesc.SOURECE_ID, NbAttrDesc.CELL_ID, NbAttrDesc.KEY, NbAttrDesc.VALUE],
             )
 
             for output_data in cell_data.outputs:
@@ -332,12 +323,7 @@ class CellConverter(JupyterNotebookConverterBase):
         kv_table_name, need_create_kv_table = self._make_table_name([KEY_VALUE_TABLE])
         self._con.create_table(
             kv_table_name,
-            [
-                NbAttrDesc.SOURECE_ID,
-                "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID),
-                "{:s} TEXT NOT NULL".format(NbAttr.KEY),
-                "{:s} TEXT".format(NbAttr.VALUE),
-            ],
+            [NbAttrDesc.SOURECE_ID, NbAttrDesc.CELL_ID, NbAttrDesc.KEY, NbAttrDesc.VALUE],
         )
         self._con.insert_many(kv_table_name, kv_record_list)
 
@@ -434,8 +420,8 @@ def convert_nb(logger, source_info, con, result_logger, nb):
             table_name,
             [
                 NbAttrDesc.SOURECE_ID,
-                "{:s} TEXT NOT NULL".format("key"),
-                "{:s} TEXT".format("value"),
+                NbAttrDesc.KEY,
+                NbAttrDesc.VALUE,
             ],
         )
         con.insert_many(table_name, kv_record_list)
