@@ -10,25 +10,26 @@ File formats are automatically detected from the extensions.
         sample_data.csv  sample_data.xlsx  sample_data_multi.json  sample_data_single.json
         $ sqlitebiter -o sample.sqlite file *
         [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
-        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
-        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
         [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_a' table
         [INFO] sqlitebiter file: convert 'sample_data_multi.json' to 'table_b' table
         [INFO] sqlitebiter file: convert 'sample_data_single.json' to 'sample_data_single' table
-        [INFO] sqlitebiter file: number of created tables: 6
-        [INFO] sqlitebiter file: database path: sample.sqlite
+        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
+        [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
+        [INFO] sqlitebiter file: converted results: source=4, success=6, created-table=6
+        [INFO] sqlitebiter file: database path: /home/sqlitebiter/sample.sqlite
 
 :Output:
     .. code-block:: console
 
         $ sqlite3 sample.sqlite
         sqlite> .schema
-        CREATE TABLE 'sample_data' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
-        CREATE TABLE 'samplesheet1' (a INTEGER, b REAL, c TEXT);
-        CREATE TABLE 'samplesheet3' (aa INTEGER, ab TEXT, ac TEXT);
-        CREATE TABLE 'table_b' (a INTEGER, b REAL);
-        CREATE TABLE 'table_a' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
-        CREATE TABLE 'sample_data_single' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+        CREATE TABLE IF NOT EXISTS '_source_info_' (source_id INTEGER NOT NULL, dir_name TEXT, base_name TEXT NOT NULL, format_name TEXT NOT NULL, dst_table TEXT NOT NULL, size INTEGER, mtime INTEGER);
+        CREATE TABLE IF NOT EXISTS 'sample_data' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+        CREATE TABLE IF NOT EXISTS 'table_a' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+        CREATE TABLE IF NOT EXISTS 'table_b' (a INTEGER, b REAL);
+        CREATE TABLE IF NOT EXISTS 'sample_data_single' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
+        CREATE TABLE IF NOT EXISTS 'samplesheet1' (a INTEGER, b REAL, c TEXT);
+        CREATE TABLE IF NOT EXISTS 'samplesheet3' (aa INTEGER, ab TEXT, ac TEXT);
 
 Designate multiple file path to convert:
 
@@ -39,8 +40,8 @@ Designate multiple file path to convert:
         [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
-        [INFO] sqlitebiter file: number of created tables: 3
-        [INFO] sqlitebiter file: database path: out.sqlite
+        [INFO] sqlitebiter file: converted results: source=2, success=3, created-table=3
+        [INFO] sqlitebiter file: database path: /home/sqlitebiter/out.sqlite
 
 .. note::
 
@@ -53,6 +54,6 @@ You could specify converting file format with the ``--format`` option
     .. code-block:: console
 
         $ sqlitebiter file --format csv sample_data
-        [INFO] sqlitebiter file: convert 'sample_data' to 'sample_data' table
-        [INFO] sqlitebiter file: number of created tables: 1
-        [INFO] sqlitebiter file: database path: out.sqlite
+        [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
+        [INFO] sqlitebiter file: converted results: source=1, success=1, created-table=1
+        [INFO] sqlitebiter file: database path: /home/sqlitebiter/out.sqlite
