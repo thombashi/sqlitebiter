@@ -61,7 +61,12 @@ class UrlConverter(TableConverter):
         source_info_record_base.source_id = self._fetch_next_source_id()
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
-            nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
+            try:
+                nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
+            except RuntimeError as e:
+                logger.error(e)
+                return
+
             changed_table_name_set = self._convert_nb(nb, source_info=source_info_record_base)
 
             for table_name in changed_table_name_set:

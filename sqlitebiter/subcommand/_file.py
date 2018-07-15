@@ -46,7 +46,7 @@ class FileConverter(TableConverter):
                     nb=load_ipynb_file(file_path, encoding=self._encoding),
                     source_info=source_info_record_base,
                 )
-            except nbformat.reader.NotJSONError as e:
+            except (nbformat.reader.NotJSONError, RuntimeError) as e:
                 logger.error(e)
                 return
 
