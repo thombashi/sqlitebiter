@@ -127,20 +127,16 @@ class MetaDataConverter(JupyterNotebookConverterBase):
     def __convert_kernelspec(self):
         target = "kernelspec"
         table_name, need_create_table = self._make_table_name([target])
-        record_list = [[key, value] for key, value in self.__metadata.get(target).items()]
+        record_list = [
+            [self.source_id, key, value] for key, value in self.__metadata.get(target).items()
+        ]
 
         if len(record_list) > 0:
             self._con.create_table(
                 table_name,
                 [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, "{:s} TEXT NOT NULL".format(NbAttr.VALUE)],
             )
-            self._con.insert_many(
-                table_name,
-                [
-                    [self.source_id, key, value]
-                    for key, value in self.__metadata.get(target).items()
-                ],
-            )
+            self._con.insert_many(table_name, record_list)
 
             self._result_logger.logging_success(
                 self._get_log_header(target), table_name, need_create_table
