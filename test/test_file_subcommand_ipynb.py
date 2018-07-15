@@ -24,7 +24,6 @@ class Test_file_subcommand_ipynb(object):
     IPYNB_FILE_LIST = [
         "test/data/pytablewriter_examples.ipynb",
         "test/data/jupyter_notebook_example.ipynb",
-        "test/data/DataProperty.ipynb",
         "test/data/empty.ipynb",
     ]
 
@@ -34,7 +33,6 @@ class Test_file_subcommand_ipynb(object):
             [IPYNB_FILE_LIST[0], ExitCode.SUCCESS],
             [IPYNB_FILE_LIST[1], ExitCode.SUCCESS],
             [IPYNB_FILE_LIST[2], ExitCode.SUCCESS],
-            [IPYNB_FILE_LIST[3], ExitCode.SUCCESS],
         ],
     )
     def test_smoke_one_file(self, file_path, expected):
@@ -47,6 +45,7 @@ class Test_file_subcommand_ipynb(object):
             assert result.exit_code == expected, file_path
         finally:
             if platform.system() != "Windows":
+                # avoid a test execution error on AppVeyor
                 os.remove(db_path)
 
     def test_smoke_multi_file(self):
@@ -58,7 +57,9 @@ class Test_file_subcommand_ipynb(object):
 
             assert result.exit_code == ExitCode.SUCCESS
         finally:
-            os.remove(db_path)
+            if platform.system() != "Windows":
+                # avoid a test execution error on AppVeyor
+                os.remove(db_path)
 
     @pytest.mark.parametrize(
         ["content", "expected"], [["", ExitCode.NO_INPUT], ["{}", ExitCode.NO_INPUT]]
