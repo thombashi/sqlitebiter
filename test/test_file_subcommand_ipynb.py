@@ -7,6 +7,7 @@
 from __future__ import print_function
 
 import os
+import platform
 
 import pytest
 from click.testing import CliRunner
@@ -45,7 +46,8 @@ class Test_file_subcommand_ipynb(object):
 
             assert result.exit_code == expected, file_path
         finally:
-            os.remove(db_path)
+            if platform.system() != "Windows":
+                os.remove(db_path)
 
     def test_smoke_multi_file(self):
         runner = CliRunner()
