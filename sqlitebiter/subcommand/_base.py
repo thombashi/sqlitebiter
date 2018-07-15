@@ -58,15 +58,18 @@ class TableConverter(object):
         SourceInfo.hidden = True
         SourceInfo.create()
 
-    def _fetch_source_id(self, dir_name, base_name, format, size=None, mtime=None):
-        where_list = [Where(SourceInfo.BASE_NAME, base_name), Where(SourceInfo.FORMAT_NAME, format)]
+    def _fetch_source_id(self, source_info):
+        where_list = [
+            Where("base_name", source_info.base_name),
+            Where("format_name", source_info.format_name),
+        ]
 
-        if dir_name:
-            where_list.append(Where(SourceInfo.DIR_NAME, dir_name))
-        if size is not None:
-            where_list.append(Where(SourceInfo.SIZE, size))
-        if mtime is not None:
-            where_list.append(Where(SourceInfo.MTIME, mtime))
+        if source_info.dir_name:
+            where_list.append(Where("dir_name", source_info.dir_name))
+        if source_info.size is not None:
+            where_list.append(Where("size", source_info.size))
+        if source_info.mtime is not None:
+            where_list.append(Where("mtime", source_info.mtime))
 
         return self._con.fetch_value(
             select=Attr("source_id"), table_name=SourceInfo.get_table_name(), where=And(where_list)
