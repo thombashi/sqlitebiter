@@ -7,6 +7,6 @@ msgfy>=0.0.2
 nbformat>=4.4.0
 path.py
 pytablereader>=0.20.4
-SimpleSQLite>=0.27.1
+SimpleSQLite>=0.28.0
 sqliteschema>=0.11.2
 typepy>=0.1.1

@@ -9,6 +9,7 @@ from __future__ import absolute_import, unicode_literals
 import errno
 import os
 import sys
+from copy import deepcopy
 
 import msgfy
 import pytablereader as ptr
@@ -31,6 +32,12 @@ def get_logging_url_path(url):
 
 def parse_source_info_url(url):
     result = urlparse(url)
+
+    source_info = SourceInfo()
+    source_info.dir_name = result.netloc + os.path.dirname(result.path)
+    source_info.base_name = os.path.basename(result.path)
+
+    return source_info
 
     return {
         SourceInfo.DIR_NAME: result.netloc + os.path.dirname(result.path),
@@ -60,27 +67,25 @@ class UrlConverter(TableConverter):
     def convert(self, url):
         logger = self._logger
         result_counter = self._result_counter
+
         source_info_record_base = parse_source_info_url(url)
+        source_info_record_base.source_id = self._fetch_next_source_id()
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
-            created_table_name_set = self._convert_nb(nb, source=get_logging_url_path(url))
+            created_table_name_set = self._convert_nb(nb, source_info=source_info_record_base)
 
             for table_name in created_table_name_set:
-                record = source_info_record_base.copy()
-                record.update(
-                    {
-                        SourceInfo.FORMAT_NAME: "ipynb",
-                        SourceInfo.DST_TABLE: table_name,
-                        SourceInfo.SIZE: nb_size,
-                    }
-                )
-                self._add_source_info(**record)
+                record = deepcopy(source_info_record_base)
+                record.format_name = "ipynb"
+                record.dst_table = table_name
+                record.size = nb_size
+                SourceInfo.insert(record)
 
             return
 
         loader = self.__create_loader(url)
-        source_info_record_base[SourceInfo.FORMAT_NAME] = loader.format_name
+        source_info_record_base.format_name = loader.format_name
         success_count = result_counter.success_count
 
         try:
@@ -110,15 +115,15 @@ class UrlConverter(TableConverter):
                     result_counter.inc_fail()
                     continue
 
-                record = source_info_record_base.copy()
-                record.update({SourceInfo.DST_TABLE: sqlite_tabledata.table_name})
-                self._add_source_info(**record)
+                record = deepcopy(source_info_record_base)
+                record.dst_table = sqlite_tabledata.table_name
+                SourceInfo.insert(record)
         except ptr.ValidationError as e:
             if loader.format_name == "json":
                 for table_name in self._convert_complex_json(loader.loader):
-                    record = source_info_record_base.copy()
-                    record.update({SourceInfo.DST_TABLE: table_name})
-                    self._add_source_info(**record)
+                    record = deepcopy(source_info_record_base)
+                    record.dst_table = table_name
+                    SourceInfo.insert(record)
             else:
                 logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
                 result_counter.inc_fail()

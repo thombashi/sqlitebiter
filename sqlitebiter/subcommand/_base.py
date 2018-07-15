@@ -6,29 +6,25 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from simplesqlite import Model
 from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
 
 from .._common import ResultLogger
-from .._const import (
-    MAX_VERBOSITY_LEVEL,
-    PROGRAM_NAME,
-    SOURCE_INFO_TABLE,
-    TABLE_NOT_FOUND_MSG_FORMAT,
-)
+from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, TABLE_NOT_FOUND_MSG_FORMAT
 from .._counter import ResultCounter
 from .._ipynb_converter import convert_nb
 from .._table_creator import TableCreator
 
 
-class SourceInfo(object):
-    SOURCE_ID = "source_id"
-    DIR_NAME = "dir_name"
-    BASE_NAME = "base_name"
-    FORMAT_NAME = "format"
-    DST_TABLE = "dst_table"
-    SIZE = "size"
-    MTIME = "mtime"
+class SourceInfo(Model):
+    source_id = "INTEGER NOT NULL"
+    dir_name = "TEXT"
+    base_name = "TEXT NOT NULL"
+    format_name = "TEXT NOT NULL"
+    dst_table = "TEXT NOT NULL"
+    size = "INTEGER"
+    mtime = "INTEGER"
 
 
 class TableConverter(object):
@@ -52,24 +48,12 @@ class TableConverter(object):
             verbosity_level=verbosity_level,
         )
 
-        self._con.create_table(
-            SOURCE_INFO_TABLE,
-            [
-                "{:s} INTEGER PRIMARY KEY AUTOINCREMENT".format(SourceInfo.SOURCE_ID),
-                "{:s} TEXT".format(SourceInfo.DIR_NAME),
-                "{:s} TEXT NOT NULL".format(SourceInfo.BASE_NAME),
-                "{:s} TEXT NOT NULL".format(SourceInfo.FORMAT_NAME),
-                "{:s} TEXT NOT NULL".format(SourceInfo.DST_TABLE),
-                "{:s} INTEGER".format(SourceInfo.SIZE),
-                "{:s} INTEGER".format(SourceInfo.MTIME),
-            ],
-        )
+        SourceInfo.connection = con
+        SourceInfo.hidden = True
+        SourceInfo.create()
 
-    def _fetch_source_id(self, dir_name, base_name, format_name, size=None, mtime=None):
-        where_list = [
-            Where(SourceInfo.BASE_NAME, base_name),
-            Where(SourceInfo.FORMAT_NAME, format_name),
-        ]
+    def _fetch_source_id(self, dir_name, base_name, format, size=None, mtime=None):
+        where_list = [Where(SourceInfo.BASE_NAME, base_name), Where(SourceInfo.FORMAT_NAME, format)]
 
         if dir_name:
             where_list.append(Where(SourceInfo.DIR_NAME, dir_name))
@@ -79,23 +63,18 @@ class TableConverter(object):
             where_list.append(Where(SourceInfo.MTIME, mtime))
 
         return self._con.fetch_value(
-            select=Attr(SourceInfo.SOURCE_ID), table_name=SOURCE_INFO_TABLE, where=And(where_list)
+            select=Attr("source_id"), table_name=SourceInfo.get_table_name(), where=And(where_list)
         )
 
     def _fetch_next_source_id(self):
         source_id = self._con.fetch_value(
-            select="MAX({})".format(Attr(SourceInfo.SOURCE_ID)), table_name=SOURCE_INFO_TABLE
+            select="MAX({})".format("source_id"), table_name=SourceInfo.get_table_name()
         )
 
         if source_id is None:
             return 1
 
         return source_id + 1
-
-    def _add_source_info(self, dir_name, base_name, format, dst_table, size=None, mtime=None):
-        self._con.insert(
-            SOURCE_INFO_TABLE, (None, dir_name, base_name, format, dst_table, size, mtime)
-        )
 
     def get_return_code(self):
         return self._result_counter.get_return_code()
@@ -137,19 +116,18 @@ class TableConverter(object):
         else:
             logger.debug(database_path_msg)
 
-    def _convert_nb(self, nb, source):
+    def _convert_nb(self, nb, source_info):
         success_count = self._result_counter.success_count
         created_table_set = convert_nb(
-            self._logger,
-            source,
-            self._con,
-            self._result_logger,
+            logger=self._logger,
+            source_info=source_info,
+            con=self._con,
+            result_logger=self._result_logger,
             nb=nb,
-            source_id=self._fetch_next_source_id(),
         )
 
         if self._result_counter.success_count == success_count:
-            self._logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(source))
+            self._logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(source_info.base_name))
             return
 
         return created_table_set

@@ -12,7 +12,7 @@ import simplesqlite as sqlite
 import six
 
 from .._common import dup_col_handler
-from ._base import TableConverter
+from ._base import SourceInfo, TableConverter
 
 
 class GoogleSheetsConverter(TableConverter):
@@ -43,7 +43,14 @@ class GoogleSheetsConverter(TableConverter):
                 except (ptr.ValidationError, ptr.DataError):
                     result_counter.inc_fail()
 
-            self._add_source_info(None, title, format_name="google sheets")
+            SourceInfo.insert(
+                SourceInfo(
+                    base_name=title,
+                    dst_table=sqlite_tabledata.table_name,
+                    format_name="google sheets",
+                    source_id=self._fetch_next_source_id(),
+                )
+            )
         except ptr.OpenError as e:
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()
