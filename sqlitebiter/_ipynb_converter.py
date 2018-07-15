@@ -38,6 +38,14 @@ def load_ipynb_file(file_path, encoding):
             return nbformat.read(f, as_version=4)
         except AttributeError as e:
             raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
+        except IOError as e:
+            if re.search("No such file or directory: .+schema.json", six.text_type(e)):
+                raise nbformat.reader.NotJSONError(
+                    "ipynb file format conversion not supported for the binary version."
+                    "please try to install sqlitebiter via pip."
+                )
+            else:
+                raise
 
 
 def load_ipynb_url(url, proxies):
