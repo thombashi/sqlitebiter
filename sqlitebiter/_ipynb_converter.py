@@ -66,7 +66,7 @@ class JupyterNotebookConverterInterface(object):
         pass
 
 
-class JupyterNotebookConverterBase(object):
+class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
     @abc.abstractproperty
     def _base_table_name(self):  # pragma: no cover
         pass
