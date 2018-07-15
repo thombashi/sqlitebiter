@@ -55,8 +55,15 @@ class FileConverter(TableConverter):
                 record.format_name = "ipynb"
                 record.dst_table = table_name
                 SourceInfo.insert(record)
+        else:
+            self.__convert(file_path, source_info_record_base)
 
-            return
+        if result_counter.success_count == success_count:
+            logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+
+    def __convert(self, file_path, source_info_record_base):
+        logger = self._logger
+        result_counter = self._result_counter
 
         try:
             loader = ptr.TableFileLoader(
@@ -127,9 +134,6 @@ class FileConverter(TableConverter):
                 )
             )
             result_counter.inc_fail()
-
-        if result_counter.success_count == success_count:
-            logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
     def __is_file(self, file_path):
         SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
