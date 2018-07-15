@@ -33,7 +33,6 @@ class SourceInfo(Model):
         return self.dir_name.joinpath(self.base_name)
 
 
-
 class TableConverter(object):
     def __init__(self, logger, con, index_list, verbosity_level, format_name=None, encoding=None):
         self._logger = logger

@@ -414,14 +414,7 @@ def convert_nb(logger, source_info, con, result_logger, nb):
     ]
 
     if len(kv_record_list) > 0:
-        con.create_table(
-            table_name,
-            [
-                NbAttrDesc.SOURECE_ID,
-                NbAttrDesc.KEY,
-                NbAttrDesc.VALUE,
-            ],
-        )
+        con.create_table(table_name, [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, NbAttrDesc.VALUE])
         con.insert_many(table_name, kv_record_list)
 
         result_logger.logging_success(
