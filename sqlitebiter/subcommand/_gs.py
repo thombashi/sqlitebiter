@@ -19,6 +19,7 @@ class GoogleSheetsConverter(TableConverter):
     def convert(self, credentials, title):
         logger = self._logger
         result_counter = self._result_counter
+        source_id = self._fetch_next_source_id()
 
         loader = ptr.GoogleSheetsTableLoader()
         loader.source = credentials
@@ -40,17 +41,16 @@ class GoogleSheetsConverter(TableConverter):
                     self._table_creator.create(
                         sqlite_tabledata, self._index_list, source="google sheets"
                     )
+                    SourceInfo.insert(
+                        SourceInfo(
+                            base_name=title,
+                            dst_table=sqlite_tabledata.table_name,
+                            format_name="google sheets",
+                            source_id=source_id,
+                        )
+                    )
                 except (ptr.ValidationError, ptr.DataError):
                     result_counter.inc_fail()
-
-            SourceInfo.insert(
-                SourceInfo(
-                    base_name=title,
-                    dst_table=sqlite_tabledata.table_name,
-                    format_name="google sheets",
-                    source_id=self._fetch_next_source_id(),
-                )
-            )
         except ptr.OpenError as e:
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()
