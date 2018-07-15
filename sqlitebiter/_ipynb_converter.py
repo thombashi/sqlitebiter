@@ -88,7 +88,9 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
 
     def _get_log_header(self, info_name):
         return "{:s}: {:s}({:s})".format(
-            self._source_info.base_name, self._base_table_name, info_name
+            self._source_info.get_name(self._result_logger.verbosity_level),
+            self._base_table_name,
+            info_name,
         )
 
     def _need_create_table(self, table_name):

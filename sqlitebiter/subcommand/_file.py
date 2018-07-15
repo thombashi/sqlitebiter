@@ -82,7 +82,9 @@ class FileConverter(TableConverter):
                 ).normalize()
 
                 try:
-                    self._table_creator.create(sqlite_tabledata, self._index_list, source=file_path)
+                    self._table_creator.create(
+                        sqlite_tabledata, self._index_list, source_info=source_info_record_base
+                    )
                 except (ValueError, IOError) as e:
                     logger.debug(
                         "exception={:s}, path={}, message={}".format(type(e).__name__, file_path, e)
@@ -102,7 +104,9 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
         except ptr.ValidationError as e:
             if loader.format_name == "json":
-                for table_name in self._convert_complex_json(loader.loader):
+                for table_name in self._convert_complex_json(
+                    loader.loader, source_info_record_base
+                ):
                     record = deepcopy(source_info_record_base)
                     record.dst_table = table_name
                     SourceInfo.insert(record)

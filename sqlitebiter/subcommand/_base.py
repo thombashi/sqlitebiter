@@ -26,6 +26,13 @@ class SourceInfo(Model):
     size = "INTEGER"
     mtime = "INTEGER"
 
+    def get_name(self, verbosity_level):
+        if verbosity_level == 0 or self.dir_name is None:
+            return self.base_name
+
+        return self.dir_name.joinpath(self.base_name)
+
+
 
 class TableConverter(object):
     def __init__(self, logger, con, index_list, verbosity_level, format_name=None, encoding=None):
@@ -137,14 +144,11 @@ class TableConverter(object):
 
         return created_table_set
 
-    def _convert_complex_json(self, json_loader):
+    def _convert_complex_json(self, json_loader, source_info):
         from .._dict_converter import DictConverter
 
         dict_converter = DictConverter(
-            self._logger,
-            self._table_creator,
-            source=json_loader.source,
-            index_list=self._index_list,
+            self._logger, self._table_creator, source_info=source_info, index_list=self._index_list
         )
 
         try:

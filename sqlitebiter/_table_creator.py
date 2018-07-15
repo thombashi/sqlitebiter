@@ -19,7 +19,7 @@ class TableCreator(object):
 
         self.__schema_extractor = SQLiteSchemaExtractor(dst_con)
 
-    def create(self, table_data, index_list, source):
+    def create(self, table_data, index_list, source_info):
         con_mem = simplesqlite.connect_sqlite_memdb()
         con_mem.create_table_from_tabledata(table_data)
         need_rename = self.__require_rename_table(con_mem, table_data.table_name)
@@ -48,7 +48,9 @@ class TableCreator(object):
 
         self.__dst_con.create_index_list(dst_table_name, index_list)
 
-        self.__result_logger.logging_success(source, dst_table_name, is_create_table)
+        self.__result_logger.logging_success(
+            source_info.get_name(self.__verbosity_level), dst_table_name, is_create_table
+        )
 
     def __require_rename_table(self, src_con, src_table_name):
         if not self.__dst_con.has_table(src_table_name):

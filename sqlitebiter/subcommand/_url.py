@@ -98,7 +98,7 @@ class UrlConverter(TableConverter):
 
                 try:
                     self._table_creator.create(
-                        sqlite_tabledata, self._index_list, source=get_logging_url_path(url)
+                        sqlite_tabledata, self._index_list, source_info=source_info_record_base
                     )
                 except sqlite.OperationalError as e:
                     logger.error(
@@ -120,7 +120,9 @@ class UrlConverter(TableConverter):
                 SourceInfo.insert(record)
         except ptr.ValidationError as e:
             if loader.format_name == "json":
-                for table_name in self._convert_complex_json(loader.loader):
+                for table_name in self._convert_complex_json(
+                    loader.loader, source_info_record_base
+                ):
                     record = deepcopy(source_info_record_base)
                     record.dst_table = table_name
                     SourceInfo.insert(record)

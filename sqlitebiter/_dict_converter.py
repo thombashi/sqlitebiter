@@ -19,11 +19,11 @@ class DictConverter(object):
     def converted_table_name_set(self):
         return self.__converted_table_name_set
 
-    def __init__(self, logger, table_creator, source, index_list):
+    def __init__(self, logger, table_creator, source_info, index_list):
         self.__logger = logger
         self.__table_creator = table_creator
         self.__index_list = index_list
-        self.__source = source
+        self.__source_info = source_info
         self.__converted_table_name_set = set([])
 
     def to_sqlite_table(self, data, key_list):
@@ -73,5 +73,7 @@ class DictConverter(object):
         self.__logger.debug("loaded tabledata: {}".format(six.text_type(table_data)))
 
         sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
-        self.__table_creator.create(sqlite_tabledata, self.__index_list, source=self.__source)
+        self.__table_creator.create(
+            sqlite_tabledata, self.__index_list, source_info=self.__source_info
+        )
         self.__converted_table_name_set.add(sqlite_tabledata.table_name)

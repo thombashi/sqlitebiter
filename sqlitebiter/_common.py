@@ -11,6 +11,10 @@ dup_col_handler = "rename"
 
 
 class ResultLogger(object):
+    @property
+    def verbosity_level(self):
+        return self.__verbosity_level
+
     def __init__(self, logger, schema_extractor, result_counter, verbosity_level):
         self.__logger = logger
         self.__schema_extractor = schema_extractor
