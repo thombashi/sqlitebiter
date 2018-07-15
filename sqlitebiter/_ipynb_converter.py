@@ -296,9 +296,10 @@ class CellConverter(JupyterNotebookConverterBase):
             )
 
             for output_data in cell_data.outputs:
-                self.__convert_output_text(output_data, need_create_output_table)
-                need_create_output_table = False
-                self.__convert_output_data(output_data, need_create_output_table)
+                if self.__convert_output_text(output_data, need_create_output_table):
+                    need_create_output_table = False
+                if self.__convert_output_data(output_data, need_create_output_table):
+                    need_create_output_table = False
 
                 self._con.insert_many(outputs_kv_table_name, self.__to_kv_record_list(output_data))
                 self._result_logger.logging_success(
@@ -333,7 +334,7 @@ class CellConverter(JupyterNotebookConverterBase):
     def __convert_output_text(self, output_data, need_create_table):
         data_type = "text"
         if data_type not in output_data:
-            return
+            return False
 
         table_name, _ = self._make_table_name(["outputs"])
 
@@ -348,17 +349,19 @@ class CellConverter(JupyterNotebookConverterBase):
         del output_data[data_type]
 
         if num_record == 0:
-            return
+            return False
 
         self._result_logger.logging_success(
             self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
         )
         self._changed_table_name_set.add(table_name)
 
+        return True
+
     def __convert_output_data(self, output_data, need_create_table):
         output_key = "data"
         if output_key not in output_data:
-            return
+            return False
 
         table_name, _ = self._make_table_name(["outputs"])
         image_regexp = re.compile("^image/.+")
@@ -390,12 +393,14 @@ class CellConverter(JupyterNotebookConverterBase):
         del output_data[output_key]
 
         if num_record == 0:
-            return
+            return False
 
         self._result_logger.logging_success(
             self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
         )
         self._changed_table_name_set.add(table_name)
+
+        return True
 
 
 def convert_nb(logger, source_info, con, result_logger, nb):
