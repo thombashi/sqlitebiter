@@ -24,12 +24,6 @@ from .._ipynb_converter import is_ipynb_url, load_ipynb_url
 from ._base import SourceInfo, TableConverter
 
 
-def get_logging_url_path(url):
-    result = urlparse(url)
-
-    return result.netloc + result.path
-
-
 def parse_source_info_url(url):
     result = urlparse(url)
 
