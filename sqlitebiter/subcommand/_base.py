@@ -89,7 +89,12 @@ class TableConverter(object):
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
         logger.info(
             "converted results: sources={}, success={} tables={}".format(
-                1, self.get_success_count(), self._result_counter.created_table_count
+                self._con.fetch_value(
+                    select="COUNT(DISTINCT({}))".format("source_id"),
+                    table_name=SourceInfo.get_table_name(),
+                ),
+                self.get_success_count(),
+                self._result_counter.created_table_count,
             )
         )
         if self.get_success_count() > 0:
