@@ -93,16 +93,26 @@ class TableConverter(object):
         database_path_msg = "database path: {:s}".format(self._con.database_path)
 
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
-        logger.info(
-            "converted results: sources={}, success={} tables={}".format(
+
+        log_list = [
+            "source={}".format(
                 self._con.fetch_value(
                     select="COUNT(DISTINCT({}))".format("source_id"),
                     table_name=SourceInfo.get_table_name(),
-                ),
-                self.get_success_count(),
-                self._result_counter.created_table_count,
+                )
             )
-        )
+        ]
+        if self.get_success_count() > 0:
+            log_list.append("success={}".format(self.get_success_count()))
+        if self._result_counter.fail_count > 0:
+            log_list.append("fail={}".format(self._result_counter.fail_count))
+        if self._result_counter.skip_count > 0:
+            log_list.append("skip={}".format(self._result_counter.skip_count))
+        if self._result_counter.created_table_count > 0:
+            log_list.append("created-table={}".format(self._result_counter.created_table_count))
+
+        logger.info("converted results: {}".format(", ".join(log_list)))
+
         if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
