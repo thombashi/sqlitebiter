@@ -14,9 +14,9 @@ import pytest
 import simplesqlite
 from click.testing import CliRunner
 from pytablereader.interface import TableLoader
-from sqlitebiter._const import SOURCE_INFO_TABLE
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
+from sqlitebiter.subcommand._base import SourceInfo
 from sqliteschema import SQLiteSchemaExtractor
 
 from .common import print_test_result, print_traceback
@@ -224,7 +224,7 @@ class Test_sqlitebiter_file(object):
                 "testtitle_html2",
                 "tsv_a",
                 "valid_mdtable_markdown1",
-                SOURCE_INFO_TABLE,
+                SourceInfo.get_table_name(),
             ]
             actual_table_list = con.fetch_table_name_list()
 
@@ -257,7 +257,7 @@ class Test_sqlitebiter_file(object):
                 "valid_mdtable_markdown1": [(1, 123.1, "a"), (2, 2.2, "bb"), (3, 3.3, "ccc")],
             }
             for table in con.fetch_table_name_list():
-                if table == SOURCE_INFO_TABLE:
+                if table == SourceInfo.get_table_name():
                     continue
 
                 result = con.select("*", table_name=table)
@@ -362,7 +362,7 @@ class Test_sqlitebiter_file(object):
         with runner.isolated_filesystem():
             file_list = [valid_json_multi_file_2_1()]
             table_name = "multij2"
-            expected_table_list = [table_name, SOURCE_INFO_TABLE]
+            expected_table_list = [table_name, SourceInfo.get_table_name()]
 
             # first execution without --append option (new) ---
             result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
@@ -443,7 +443,7 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
-            expected_table_list = ["multij2", SOURCE_INFO_TABLE]
+            expected_table_list = ["multij2", SourceInfo.get_table_name()]
             actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
@@ -462,7 +462,7 @@ class Test_sqlitebiter_file(object):
             }
 
             for table in con.fetch_table_name_list():
-                if table == SOURCE_INFO_TABLE:
+                if table == SourceInfo.get_table_name():
                     continue
 
                 expected_data = expected_data_table.get(table)
@@ -489,7 +489,7 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
-            expected_table_list = ["multij2", "multij2_1", SOURCE_INFO_TABLE]
+            expected_table_list = ["multij2", "multij2_1", SourceInfo.get_table_name()]
             actual_table_list = con.fetch_table_name_list()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
@@ -502,7 +502,7 @@ class Test_sqlitebiter_file(object):
             }
 
             for table in con.fetch_table_name_list():
-                if table == SOURCE_INFO_TABLE:
+                if table == SourceInfo.get_table_name():
                     continue
 
                 expected_data = expected_data_table.get(table)
@@ -540,7 +540,7 @@ class Test_sqlitebiter_file(object):
                     "tags",
                     "versions",
                     "root",
-                    SOURCE_INFO_TABLE,
+                    SourceInfo.get_table_name(),
                 ]
             )
 

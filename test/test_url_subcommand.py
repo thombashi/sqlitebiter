@@ -10,9 +10,9 @@ import pytest
 import responses
 import simplesqlite
 from click.testing import CliRunner
-from sqlitebiter._const import SOURCE_INFO_TABLE
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
+from sqlitebiter.subcommand._base import SourceInfo
 
 from .common import print_traceback
 from .dataset import complex_json
@@ -52,7 +52,7 @@ class Test_url_subcommand(object):
                     "tags",
                     "versions",
                     "root",
-                    SOURCE_INFO_TABLE,
+                    SourceInfo.get_table_name(),
                 ]
             )
 

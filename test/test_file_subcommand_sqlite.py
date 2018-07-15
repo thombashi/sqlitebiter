@@ -10,9 +10,9 @@ import pytest
 from click.testing import CliRunner
 from pytablereader import SqliteFileLoader
 from simplesqlite import SimpleSQLite
-from sqlitebiter._const import SOURCE_INFO_TABLE
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
+from sqlitebiter.subcommand._base import SourceInfo
 from tabledata import TableData
 
 from .common import print_traceback
@@ -76,7 +76,7 @@ class Test_sqlitebiter_file_sqlite_merge(object):
                 row_list=[[1, 2], [3, 4], [11, 12], [13, 14]],
             )
             for tabledata in SqliteFileLoader(out_db_path).load():
-                if tabledata.table_name == SOURCE_INFO_TABLE:
+                if tabledata.table_name == SourceInfo.get_table_name():
                     continue
 
                 assert tabledata == expected
@@ -105,7 +105,7 @@ class Test_sqlitebiter_file_sqlite_merge(object):
                 ),
             ]
             for tabledata in SqliteFileLoader(out_db_path).load():
-                if tabledata.table_name == SOURCE_INFO_TABLE:
+                if tabledata.table_name == SourceInfo.get_table_name():
                     continue
 
                 print("[actual]\n{}".format(tabledata))
