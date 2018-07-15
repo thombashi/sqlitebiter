@@ -33,11 +33,6 @@ def parse_source_info_url(url):
 
     return source_info
 
-    return {
-        SourceInfo.DIR_NAME: result.netloc + os.path.dirname(result.path),
-        SourceInfo.BASE_NAME: os.path.basename(result.path),
-    }
-
 
 def create_url_loader(logger, source_url, format_name, encoding, proxies):
     try:
