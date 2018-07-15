@@ -73,9 +73,9 @@ class UrlConverter(TableConverter):
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             nb, nb_size = load_ipynb_url(url, proxies=self.__get_proxies())
-            created_table_name_set = self._convert_nb(nb, source_info=source_info_record_base)
+            changed_table_name_set = self._convert_nb(nb, source_info=source_info_record_base)
 
-            for table_name in created_table_name_set:
+            for table_name in changed_table_name_set:
                 record = deepcopy(source_info_record_base)
                 record.format_name = "ipynb"
                 record.dst_table = table_name

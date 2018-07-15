@@ -42,7 +42,7 @@ class FileConverter(TableConverter):
             import nbformat
 
             try:
-                created_table_name_set = self._convert_nb(
+                changed_table_name_set = self._convert_nb(
                     nb=load_ipynb_file(file_path, encoding=self._encoding),
                     source_info=source_info_record_base,
                 )
@@ -50,7 +50,7 @@ class FileConverter(TableConverter):
                 logger.error(e)
                 return
 
-            for table_name in created_table_name_set:
+            for table_name in changed_table_name_set:
                 record = deepcopy(source_info_record_base)
                 record.format_name = "ipynb"
                 record.dst_table = table_name

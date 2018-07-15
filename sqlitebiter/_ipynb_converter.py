@@ -80,6 +80,7 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
         self._source_info = source_info
         self._con = con
         self._result_logger = result_logger
+        self._changed_table_name_set = set([])
 
     def _get_log_header(self, info_name):
         return "{:s}: {:s}({:s})".format(
@@ -117,6 +118,8 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         if self.__metadata:
             self._logger.debug("cannot convert: {}".format(json.dumps(self.__metadata, indent=4)))
 
+        return self._changed_table_name_set
+
     def __convert_kernelspec(self):
         target = "kernelspec"
         table_name, need_create_table = self._make_table_name([target])
@@ -142,6 +145,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
             self._result_logger.logging_success(
                 self._get_log_header(target), table_name, need_create_table
             )
+            self._changed_table_name_set.add(table_name)
 
         del self.__metadata[target]
 
@@ -174,6 +178,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
             self._result_logger.logging_success(
                 self._get_log_header(target), table_name, need_create_table
             )
+            self._changed_table_name_set.add(table_name)
 
         del self.__metadata[target]
 
@@ -200,6 +205,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                 self._result_logger.logging_success(
                     self._get_log_header(target), table_name, need_create_table
                 )
+                self._changed_table_name_set.add(table_name)
 
             del self.__metadata[target]
 
@@ -219,6 +225,8 @@ class CellConverter(JupyterNotebookConverterBase):
         for cell_id, cell_data in enumerate(self.__cells):
             self._cell_id = cell_id
             self.__convert_cell(cell_data)
+
+        return self._changed_table_name_set
 
     def _get_log_header(self, info_name):
         return "{:s}: {:s}#{:d}({:s})".format(
@@ -250,6 +258,7 @@ class CellConverter(JupyterNotebookConverterBase):
             self._result_logger.logging_success(
                 self._get_log_header(target), table_name, need_create_table
             )
+            self._changed_table_name_set.add(table_name)
 
     def __to_kv_record_list(self, data_map):
         record_list = []
@@ -308,6 +317,7 @@ class CellConverter(JupyterNotebookConverterBase):
                     outputs_kv_table_name,
                     need_create_output_kv_table,
                 )
+                self._changed_table_name_set.add(outputs_kv_table_name)
                 need_create_output_kv_table = False
 
             del cell_data[category]
@@ -334,6 +344,7 @@ class CellConverter(JupyterNotebookConverterBase):
         self._result_logger.logging_success(
             self._get_log_header(KEY_VALUE_TABLE), kv_table_name, need_create_kv_table
         )
+        self._changed_table_name_set.add(kv_table_name)
 
     def __convert_output_text(self, output_data, need_create_table):
         data_type = "text"
@@ -358,6 +369,7 @@ class CellConverter(JupyterNotebookConverterBase):
         self._result_logger.logging_success(
             self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
         )
+        self._changed_table_name_set.add(table_name)
 
     def __convert_output_data(self, output_data, need_create_table):
         output_key = "data"
@@ -399,13 +411,17 @@ class CellConverter(JupyterNotebookConverterBase):
         self._result_logger.logging_success(
             self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
         )
+        self._changed_table_name_set.add(table_name)
 
 
 def convert_nb(logger, source_info, con, result_logger, nb):
-    existing_table_name_set = set(con.fetch_table_name_list())
-
-    CellConverter(logger, source_info, con, result_logger, nb.cells).convert()
-    MetaDataConverter(logger, source_info, con, result_logger, nb.metadata).convert()
+    changed_table_name_set = set([])
+    changed_table_name_set |= CellConverter(
+        logger, source_info, con, result_logger, nb.cells
+    ).convert()
+    changed_table_name_set |= MetaDataConverter(
+        logger, source_info, con, result_logger, nb.metadata
+    ).convert()
 
     table_name = KEY_VALUE_TABLE
     need_create_table = not con.has_table(table_name)
@@ -423,10 +439,12 @@ def convert_nb(logger, source_info, con, result_logger, nb):
             ],
         )
         con.insert_many(table_name, kv_record_list)
+
         result_logger.logging_success(
             "{}: {}".format(source_info.base_name, table_name), table_name, need_create_table
         )
+        changed_table_name_set.add(table_name)
 
     con.commit()
 
-    return set(con.fetch_table_name_list()) - existing_table_name_set
+    return changed_table_name_set
