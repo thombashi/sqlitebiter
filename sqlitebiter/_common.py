@@ -6,6 +6,8 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from ._clrm import bright, cyan, green
+
 
 dup_col_handler = "rename"
 
@@ -27,9 +29,13 @@ class ResultLogger(object):
         self.__result_counter.inc_success(is_create_table)
         self.__logger.info(
             "convert '{source:s}' to '{table_info:s}' table".format(
-                source=source,
-                table_info=table_schema.dumps(
-                    output_format="text", verbosity_level=self.__verbosity_level
+                source=cyan(source),
+                table_info=bright(
+                    green(
+                        table_schema.dumps(
+                            output_format="text", verbosity_level=self.__verbosity_level
+                        )
+                    )
                 ),
             )
         )

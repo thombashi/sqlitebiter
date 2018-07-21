@@ -10,6 +10,7 @@ from simplesqlite import Model
 from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
 
+from .._clrm import bright, green, red, yellow
 from .._common import ResultLogger
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, TABLE_NOT_FOUND_MSG_FORMAT
 from .._counter import ResultCounter
@@ -93,28 +94,32 @@ class TableConverter(object):
 
     def write_completion_message(self):
         logger = self._logger
-        database_path_msg = "database path: {:s}".format(self._con.database_path)
 
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
 
         log_list = [
             "source={}".format(
-                self._con.fetch_value(
-                    select="COUNT(DISTINCT({}))".format("source_id"),
-                    table_name=SourceInfo.get_table_name(),
+                bright(
+                    self._con.fetch_value(
+                        select="COUNT(DISTINCT({}))".format("source_id"),
+                        table_name=SourceInfo.get_table_name(),
+                    )
                 )
             )
         ]
         if self.get_success_count() > 0:
-            log_list.append("success={}".format(self.get_success_count()))
+            log_list.append(green("success={}".format(bright(self.get_success_count()))))
         if self._result_counter.fail_count > 0:
-            log_list.append("fail={}".format(self._result_counter.fail_count))
+            log_list.append(red("fail={}".format(bright(self._result_counter.fail_count))))
         if self._result_counter.skip_count > 0:
-            log_list.append("skip={}".format(self._result_counter.skip_count))
+            log_list.append(yellow("skip={}".format(bright(self._result_counter.skip_count))))
         if self._result_counter.created_table_count > 0:
-            log_list.append("created-table={}".format(self._result_counter.created_table_count))
+            log_list.append(
+                "created-table={}".format(bright(self._result_counter.created_table_count))
+            )
 
         logger.info("converted results: {}".format(", ".join(log_list)))
+        database_path_msg = "database path: {:s}".format(bright(self._con.database_path))
 
         if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
