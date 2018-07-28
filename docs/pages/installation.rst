@@ -20,8 +20,8 @@ Installation for Debian/Ubuntu from a deb package
 :Example:
     .. code:: console
 
-        $ wget https://github.com/thombashi/sqlitebiter/releases/download/v0.12.0/sqlitebiter_0.12.0_amd64.deb
-        $ sudo dpkg -i sqlitebiter_0.12.0_amd64.deb
+        $ wget https://github.com/thombashi/sqlitebiter/releases/download/v0.20.0/sqlitebiter_0.20.0_amd64.deb
+        $ sudo dpkg -i sqlitebiter_0.20.0_amd64.deb
 
 
 Installing executable files in Windows
@@ -37,16 +37,19 @@ Installing executable files in Windows
 
     >cd sqlitebiter_win_x64
     >sqlitebiter.exe -h
-    Usage: sqlitebiter.exe [OPTIONS] COMMAND [ARGS]...
+    Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --version         Show the version and exit.
-      -a, --append      append table(s) to existing database.
-      -i, --index TEXT  comma separated attribute names to create indices.
+      --version               Show the version and exit.
+      -o, --output-path PATH  Output path of the SQLite database file. Defaults to
+                              'out.sqlite'.
+      -a, --append            append table(s) to existing database.
+      -i, --index TEXT        comma separated attribute names to create indices.
+      --replace-symbol TEXT   Replace symbols in attributes.
       -v, --verbose
-      --debug           for debug print.
-      --quiet           suppress execution log messages.
-      -h, --help        Show this message and exit.
+      --debug                 for debug print.
+      -q, --quiet             suppress execution log messages.
+      -h, --help              Show this message and exit.
 
     Commands:
       configure  Configure the following application settings:...
@@ -90,9 +93,12 @@ Following mandatory Python packages are automatically installed during
 
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
 - `click <http://click.pocoo.org/>`__
-- `nbformat <http://jupyter.org/>`__
+- `colorama <https://github.com/tartley/colorama>`__
 - `logbook <http://logbook.readthedocs.io/en/stable/>`__
+- `msgfy <https://github.com/thombashi/msgfy>`__
+- `nbformat <http://jupyter.org/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
+- `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
@@ -100,8 +106,8 @@ Following mandatory Python packages are automatically installed during
 
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Following Python packages are required to 
-`manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_ 
+Following Python packages are required to
+`manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
 when you use Google Sheets feature:
 
 - `gspread <https://github.com/burnash/gspread>`_

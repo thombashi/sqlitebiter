@@ -14,3 +14,6 @@
       -p, --proxy PROXY               Specify a proxy in the form
                                       [user:passwd@]proxy.server:port.
       -h, --help                      Show this message and exit.
+
+      Documentation: http://sqlitebiter.rtfd.io/ Issue tracker:
+      https://github.com/thombashi/sqlitebiter/issues

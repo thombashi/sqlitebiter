@@ -1,17 +1,20 @@
 Example
 ~~~~~~~
 
-.. code-block:: console
+:Example:
+    .. code-block:: console
 
-    $ sqlitebiter -o sample.sqlite gs credentials-xxxxxxxxxxxx.json samplebook
-    [INFO] sqlitebiter gs: convert 'samplebook' to 'sheet3' table
-    [INFO] sqlitebiter gs: convert 'samplebook' to 'sheet1' table
-    [INFO] sqlitebiter gs: converted results: source=1, success=2, created-table=2
-    [INFO] sqlitebiter gs: database path: /home/sqlitebiter/sample.sqlite
+        $ sqlitebiter -o sample.sqlite gs credentials-xxxxxxxxxxxx.json samplebook
+        [INFO] sqlitebiter gs: convert 'samplebook' to 'sheet3' table
+        [INFO] sqlitebiter gs: convert 'samplebook' to 'sheet1' table
+        [INFO] sqlitebiter gs: converted results: source=1, success=2, created-table=2
+        [INFO] sqlitebiter gs: database path: sample.sqlite
 
-    $ sqlite3 sample.sqlite
-    $ sqlite> .schema
-    CREATE TABLE sqlite_sequence(name,seq);
-    CREATE TABLE IF NOT EXISTS '_source_info_' (source_id INTEGER NOT NULL, dir_name TEXT, base_name TEXT NOT NULL, format_name TEXT NOT NULL, dst_table TEXT NOT NULL, size INTEGER, mtime INTEGER);
-    CREATE TABLE IF NOT EXISTS 'sheet3' (a INTEGER, b REAL, c TEXT);
-    CREATE TABLE IF NOT EXISTS 'sheet1' (a INTEGER, b REAL, c TEXT);
+:Output:
+    .. code-block:: sql
+
+        $ sqlite3 sample.sqlite .schema
+        CREATE TABLE sqlite_sequence(name,seq);
+        CREATE TABLE IF NOT EXISTS '_source_info_' ("source_id" INTEGER NOT NULL, "dir_name" TEXT, "base_name" TEXT NOT NULL, "format_name" TEXT NOT NULL, "dst_table" TEXT NOT NULL, size INTEGER, mtime INTEGER);
+        CREATE TABLE IF NOT EXISTS 'sheet3' (a INTEGER, b REAL, c TEXT);
+        CREATE TABLE IF NOT EXISTS 'sheet1' (a INTEGER, b REAL, c TEXT);

@@ -16,3 +16,6 @@
       --encoding ENCODING             Encoding to load files. Auto-detection from
                                       files in default.
       -h, --help                      Show this message and exit.
+
+      Documentation: http://sqlitebiter.rtfd.io/ Issue tracker:
+      https://github.com/thombashi/sqlitebiter/issues

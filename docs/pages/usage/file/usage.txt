@@ -16,14 +16,13 @@ File formats are automatically detected from the extensions.
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
         [INFO] sqlitebiter file: converted results: source=4, success=6, created-table=6
-        [INFO] sqlitebiter file: database path: /home/sqlitebiter/sample.sqlite
+        [INFO] sqlitebiter file: database path: sample.sqlite
 
 :Output:
-    .. code-block:: console
+    .. code-block:: sql
 
-        $ sqlite3 sample.sqlite
-        sqlite> .schema
-        CREATE TABLE IF NOT EXISTS '_source_info_' (source_id INTEGER NOT NULL, dir_name TEXT, base_name TEXT NOT NULL, format_name TEXT NOT NULL, dst_table TEXT NOT NULL, size INTEGER, mtime INTEGER);
+        $ sqlite3 sample.sqlite .schema
+        CREATE TABLE IF NOT EXISTS '_source_info_' ("source_id" INTEGER NOT NULL, "dir_name" TEXT, "base_name" TEXT NOT NULL, "format_name" TEXT NOT NULL, "dst_table" TEXT NOT NULL, size INTEGER, mtime INTEGER);
         CREATE TABLE IF NOT EXISTS 'sample_data' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
         CREATE TABLE IF NOT EXISTS 'table_a' ("attr_a" INTEGER, "attr_b" REAL, "attr_c" TEXT);
         CREATE TABLE IF NOT EXISTS 'table_b' (a INTEGER, b REAL);
@@ -41,7 +40,7 @@ Designate multiple file path to convert:
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet1' table
         [INFO] sqlitebiter file: convert 'sample_data.xlsx' to 'samplesheet3' table
         [INFO] sqlitebiter file: converted results: source=2, success=3, created-table=3
-        [INFO] sqlitebiter file: database path: /home/sqlitebiter/out.sqlite
+        [INFO] sqlitebiter file: database path: out.sqlite
 
 .. note::
 
@@ -56,4 +55,4 @@ You could specify converting file format with the ``--format`` option
         $ sqlitebiter file --format csv sample_data
         [INFO] sqlitebiter file: convert 'sample_data.csv' to 'sample_data' table
         [INFO] sqlitebiter file: converted results: source=1, success=1, created-table=1
-        [INFO] sqlitebiter file: database path: /home/sqlitebiter/out.sqlite
+        [INFO] sqlitebiter file: database path: out.sqlite
