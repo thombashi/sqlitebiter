@@ -6,7 +6,9 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from simplesqlite import Model
+import os.path
+
+from simplesqlite.model import Integer, Model, Text
 from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
 
@@ -19,19 +21,19 @@ from .._table_creator import TableCreator
 
 
 class SourceInfo(Model):
-    source_id = "INTEGER NOT NULL"
-    dir_name = "TEXT"
-    base_name = "TEXT NOT NULL"
-    format_name = "TEXT NOT NULL"
-    dst_table = "TEXT NOT NULL"
-    size = "INTEGER"
-    mtime = "INTEGER"
+    source_id = Integer(not_null=True)
+    dir_name = Text()
+    base_name = Text(not_null=True)
+    format_name = Text(not_null=True)
+    dst_table = Text(not_null=True)
+    size = Integer()
+    mtime = Integer()
 
     def get_name(self, verbosity_level):
         if verbosity_level == 0 or self.dir_name is None:
             return self.base_name
 
-        return self.dir_name.joinpath(self.base_name)
+        return os.path.join(self.dir_name, self.base_name)
 
 
 class TableConverter(object):
@@ -55,8 +57,7 @@ class TableConverter(object):
             verbosity_level=verbosity_level,
         )
 
-        SourceInfo.connection = con
-        SourceInfo.hidden = True
+        SourceInfo.attach(con, is_hidden=True)
         SourceInfo.create()
 
     def _fetch_source_id(self, source_info):
