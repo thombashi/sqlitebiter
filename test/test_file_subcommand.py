@@ -355,6 +355,24 @@ class Test_sqlitebiter_file(object):
             print_test_result(expected=expected, actual=extractor.dumps(**options))
             assert len(extractor.dumps(**options)) > 100
 
+    def test_normal_symbols_attr(self):
+        db_path = "test_symbols_attr.sqlite"
+        runner = CliRunner()
+        expected = dedent("symbols_attr (A1_A, B2B, C3_C)")
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(
+                cmd, ["-o", db_path, "--replace-symbol", "_", "file", symbols_attr_csv_file()]
+            )
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            extractor = SQLiteSchemaExtractor(db_path)
+            options = {"output_format": "text", "verbosity_level": 1}
+            schema = extractor.fetch_table_schema("symbols_attr")
+            print_test_result(expected=expected, actual=schema.dumps(**options))
+            assert schema.dumps(**options) == expected
+
     def test_normal_append(self):
         db_path = "test.sqlite"
         runner = CliRunner()

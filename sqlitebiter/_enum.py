@@ -15,6 +15,7 @@ class Context(Enum):
     LOG_LEVEL = 3
     OUTPUT_PATH = 4
     VERBOSITY_LEVEL = 5
+    SYMBOL_REPLACE_VALUE = 6
 
 
 class ExitCode(object):

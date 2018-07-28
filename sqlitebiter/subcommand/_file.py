@@ -14,7 +14,6 @@ import pytablereader as ptr
 import six
 from simplesqlite import SQLiteTableDataSanitizer
 
-from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
 from ._base import SourceInfo, TableConverter
@@ -84,9 +83,7 @@ class FileConverter(TableConverter):
             for table_data in loader.load():
                 logger.debug("loaded tabledata: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = SQLiteTableDataSanitizer(
-                    table_data, dup_col_handler=dup_col_handler
-                ).normalize()
+                sqlite_tabledata = self.normalize_table(table_data)
 
                 try:
                     self._table_creator.create(

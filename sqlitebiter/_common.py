@@ -9,7 +9,7 @@ from __future__ import absolute_import, unicode_literals
 from ._clrm import bright, cyan, green
 
 
-dup_col_handler = "rename"
+DEFAULT_DUP_COL_HANDLER = "rename"
 
 
 class ResultLogger(object):

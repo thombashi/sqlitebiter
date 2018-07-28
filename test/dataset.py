@@ -222,6 +222,18 @@ def dup_col_csv_file():
     return file_path
 
 
+def symbols_attr_csv_file():
+    file_path = "symbols_attr.csv"
+    with open(file_path, "w") as f:
+        f.write("\n".join([
+            '"A1-!A","#B2B$","C3@C==^"',
+            '4,1,"a"',
+            '2.1,2,"bb"',
+        ]))
+
+    return file_path
+
+
 def invalid_csv_file():
     file_path = "invalid_csv.csv"
 

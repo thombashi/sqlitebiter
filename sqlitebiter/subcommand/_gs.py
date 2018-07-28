@@ -11,7 +11,6 @@ import pytablereader as ptr
 import simplesqlite as sqlite
 import six
 
-from .._common import dup_col_handler
 from ._base import SourceInfo, TableConverter
 
 
@@ -33,9 +32,7 @@ class GoogleSheetsConverter(TableConverter):
             for table_data in loader.load():
                 logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(
-                    table_data, dup_col_handler=dup_col_handler
-                ).normalize()
+                sqlite_tabledata = self.normalize_table(table_data)
                 source_info = SourceInfo(
                     base_name=title,
                     dst_table=sqlite_tabledata.table_name,

@@ -17,7 +17,6 @@ import simplesqlite as sqlite
 import six
 from six.moves.urllib.parse import urlparse
 
-from .._common import dup_col_handler
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._enum import ExitCode
 from .._ipynb_converter import is_ipynb_url, load_ipynb_url
@@ -46,9 +45,19 @@ def create_url_loader(logger, source_url, format_name, encoding, proxies):
 
 
 class UrlConverter(TableConverter):
-    def __init__(self, logger, con, index_list, verbosity_level, format_name, encoding, proxy):
+    def __init__(
+        self,
+        logger,
+        con,
+        symbol_replace_value,
+        index_list,
+        verbosity_level,
+        format_name,
+        encoding,
+        proxy,
+    ):
         super(UrlConverter, self).__init__(
-            logger, con, index_list, verbosity_level, format_name, encoding
+            logger, con, symbol_replace_value, index_list, verbosity_level, format_name, encoding
         )
 
         self.__proxy = proxy
@@ -86,9 +95,7 @@ class UrlConverter(TableConverter):
             for table_data in loader.load():
                 logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
 
-                sqlite_tabledata = sqlite.SQLiteTableDataSanitizer(
-                    table_data, dup_col_handler=dup_col_handler
-                ).normalize()
+                sqlite_tabledata = self.normalize_table(table_data)
 
                 try:
                     self._table_creator.create(

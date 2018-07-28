@@ -13,7 +13,7 @@ from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
 
 from .._clrm import bright, green, red, yellow
-from .._common import ResultLogger
+from .._common import DEFAULT_DUP_COL_HANDLER, ResultLogger
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, TABLE_NOT_FOUND_MSG_FORMAT
 from .._counter import ResultCounter
 from .._ipynb_converter import convert_nb
@@ -37,9 +37,19 @@ class SourceInfo(Model):
 
 
 class TableConverter(object):
-    def __init__(self, logger, con, index_list, verbosity_level, format_name=None, encoding=None):
+    def __init__(
+        self,
+        logger,
+        con,
+        symbol_replace_value,
+        index_list,
+        verbosity_level,
+        format_name=None,
+        encoding=None,
+    ):
         self._logger = logger
         self._con = con
+        self._symbol_replace_value = symbol_replace_value
         self._index_list = index_list
         self._verbosity_level = verbosity_level
         self._format_name = format_name
@@ -92,6 +102,36 @@ class TableConverter(object):
 
     def get_success_count(self):
         return self._result_counter.success_count
+
+    def normalize_table(self, table_data, dup_col_handler=None):
+        from tabledata import TableData
+        from pathvalidate import replace_symbol, replace_unprintable_char
+        from simplesqlite import SQLiteTableDataSanitizer
+
+        if dup_col_handler is None:
+            dup_col_handler = DEFAULT_DUP_COL_HANDLER
+
+        normalized_table_data = SQLiteTableDataSanitizer(
+            table_data, dup_col_handler=dup_col_handler
+        ).normalize()
+
+        if self._symbol_replace_value is None:
+            return normalized_table_data
+
+        return TableData(
+            table_name=normalized_table_data.table_name,
+            header_list=[
+                replace_symbol(
+                    replace_unprintable_char(header),
+                    self._symbol_replace_value,
+                    is_replace_consecutive_chars=True,
+                    is_strip=True,
+                )
+                for header in normalized_table_data.header_list
+            ],
+            row_list=normalized_table_data.row_list,
+            dp_extractor=normalized_table_data.dp_extractor,
+        )
 
     def write_completion_message(self):
         logger = self._logger

@@ -20,7 +20,7 @@ import simplesqlite as sqlite
 import typepy
 
 from .__version__ import __version__
-from ._common import dup_col_handler
+from ._common import DEFAULT_DUP_COL_HANDLER
 from ._config import ConfigKey, app_config_manager
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
 from ._enum import Context, DupDatabase, ExitCode
@@ -101,6 +101,7 @@ def finalize(con, converter, is_create_db):
     default="",
     help="comma separated attribute names to create indices.",
 )
+@click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="for debug print.")
 @click.option(
@@ -111,14 +112,17 @@ def finalize(con, converter, is_create_db):
     help="suppress execution log messages.",
 )
 @click.pass_context
-def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
+def cmd(
+    ctx, output_path, is_append_table, index_list, symbol_replace_value, verbosity_level, log_level
+):
     ctx.obj[Context.OUTPUT_PATH] = output_path
+    ctx.obj[Context.SYMBOL_REPLACE_VALUE] = symbol_replace_value
     ctx.obj[Context.DUP_DATABASE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
 
-    sqlite.SimpleSQLite.dup_col_handler = dup_col_handler
+    sqlite.SimpleSQLite.dup_col_handler = DEFAULT_DUP_COL_HANDLER
 
 
 @cmd.command()
@@ -151,6 +155,7 @@ def file(ctx, files, format_name, encoding):
     converter = FileConverter(
         logger=logger,
         con=con,
+        symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         index_list=ctx.obj.get(Context.INDEX_LIST),
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
@@ -208,6 +213,7 @@ def url(ctx, url, format_name, encoding, proxy):
     converter = UrlConverter(
         logger=logger,
         con=con,
+        symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         index_list=ctx.obj.get(Context.INDEX_LIST),
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
@@ -237,6 +243,7 @@ def gs(ctx, credentials, title):
     converter = GoogleSheetsConverter(
         logger=logger,
         con=con,
+        symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         index_list=ctx.obj.get(Context.INDEX_LIST),
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
     )
