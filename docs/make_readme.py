@@ -26,7 +26,7 @@ def write_examples(maker):
     maker.inc_indent_level()
     maker.write_chapter("Create SQLite database from files")
 
-    maker.write_line_list([".. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/docs/svg/master/usage_example.svg"])
+    maker.write_line_list([".. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/master/docs/svg/usage_example.svg"])
 
     maker.write_chapter("Create SQLite database from URL")
     maker.write_file(usage_root.joinpath("url", "usage.txt"))

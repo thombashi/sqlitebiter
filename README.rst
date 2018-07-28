@@ -50,7 +50,7 @@ Usage
 =======
 Create SQLite database from files
 -----------------------------------
-.. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/docs/svg/master/usage_example.svg
+.. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/master/docs/svg/usage_example.svg
 
 Create SQLite database from URL
 ---------------------------------
