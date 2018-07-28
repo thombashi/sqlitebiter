@@ -104,7 +104,7 @@ def finalize(con, converter, is_create_db):
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="for debug print.")
 @click.option(
-    "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL, help="suppress execution log messages."
+    "-q", "--quiet", "log_level", flag_value=QUIET_LOG_LEVEL, help="suppress execution log messages."
 )
 @click.pass_context
 def cmd(ctx, output_path, is_append_table, index_list, verbosity_level, log_level):
