@@ -8,6 +8,7 @@ from __future__ import absolute_import, unicode_literals
 
 import os.path
 
+from path import Path
 from simplesqlite.model import Integer, Model, Text
 from simplesqlite.query import And, Attr, Where
 from sqliteschema import SQLiteSchemaExtractor
@@ -160,7 +161,9 @@ class TableConverter(object):
             )
 
         logger.info("converted results: {}".format(", ".join(log_list)))
-        database_path_msg = "database path: {:s}".format(bright(self._con.database_path))
+        database_path_msg = "database path: {:s}".format(
+            bright(Path(self._con.database_path).relpath())
+        )
 
         if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
