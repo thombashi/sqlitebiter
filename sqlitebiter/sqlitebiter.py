@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import errno
 import os
 import sys
+from textwrap import dedent
 
 import click
 import logbook
@@ -29,6 +30,12 @@ from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})
 QUIET_LOG_LEVEL = logbook.NOTSET
+COMMAND_EPILOG = dedent(
+    """\
+    Documentation: http://sqlitebiter.rtfd.io/
+    Issue tracker: https://github.com/thombashi/sqlitebiter/issues
+    """
+)
 
 logbook.more.ColorizedStderrHandler(
     level=logbook.DEBUG, format_string="[{record.level_name}] {record.channel}: {record.message}"
@@ -125,7 +132,7 @@ def cmd(
     sqlite.SimpleSQLite.dup_col_handler = DEFAULT_DUP_COL_HANDLER
 
 
-@cmd.command()
+@cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("files", type=str, nargs=-1)
 @click.option(
     "-f",
@@ -168,7 +175,7 @@ def file(ctx, files, format_name, encoding):
     sys.exit(finalize(con, converter, is_create_db))
 
 
-@cmd.command()
+@cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("url", type=str)
 @click.option(
     "-f",
@@ -226,7 +233,7 @@ def url(ctx, url, format_name, encoding, proxy):
     sys.exit(finalize(con, converter, is_create_db))
 
 
-@cmd.command()
+@cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("credentials", type=click.Path(exists=True))
 @click.argument("title", type=str)
 @click.pass_context
