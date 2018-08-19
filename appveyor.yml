@@ -17,9 +17,8 @@ install:
     - ps: (new-object net.webclient).DownloadFile('https://bootstrap.pypa.io/get-pip.py', 'C:/get-pip.py')
     - "%PYTHON%/python.exe C:/get-pip.py"
     - "%PYTHON%/Scripts/pip.exe --version"
-    - "%PYTHON%/Scripts/pip.exe install -r requirements/requirements.txt"
-    - "%PYTHON%/Scripts/pip.exe install -r requirements/test_requirements.txt"
-    - "%PYTHON%/Scripts/pip.exe install -r requirements/build_requirements.txt"
+    - "%PYTHON%/Scripts/pip.exe install .[test]"
+    - "%PYTHON%/Scripts/pip.exe install .[build]"
 
 test_script:
     - "%PYTHON%/python.exe invoke_pytest.py"
