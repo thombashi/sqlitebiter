@@ -36,7 +36,7 @@ def write_examples(maker):
     maker.write_line_list(
         [
             "More examples are available at ",
-            "http://{:s}.rtfd.io/en/latest/pages/{:s}/index.html".format(
+            "https://{:s}.rtfd.io/en/latest/pages/{:s}/index.html".format(
                 PROJECT_NAME.lower(), maker.examples_dir_name
             ),
         ]
@@ -58,7 +58,7 @@ def main():
 
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")
-    maker.write_line_list(["http://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
+    maker.write_line_list(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
 
     return 0
 

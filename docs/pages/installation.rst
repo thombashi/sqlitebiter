@@ -107,7 +107,7 @@ Following mandatory Python packages are automatically installed during
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following Python packages are required to
-`manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
+`manual installation <https://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
 when you use Google Sheets feature:
 
 - `gspread <https://github.com/burnash/gspread>`_

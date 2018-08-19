@@ -32,7 +32,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})
 QUIET_LOG_LEVEL = logbook.NOTSET
 COMMAND_EPILOG = dedent(
     """\
-    Documentation: http://sqlitebiter.rtfd.io/
+    Documentation: https://sqlitebiter.rtfd.io/
     Issue tracker: https://github.com/thombashi/sqlitebiter/issues
     """
 )
