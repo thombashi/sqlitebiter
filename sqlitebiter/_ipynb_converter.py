@@ -8,7 +8,6 @@ from __future__ import absolute_import, unicode_literals
 
 import abc
 import io
-import json
 import os.path
 import re
 
@@ -17,6 +16,12 @@ import nbformat
 import requests
 import six
 from six.moves.urllib.parse import urlparse
+
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 
 KEY_VALUE_TABLE = "kv"
