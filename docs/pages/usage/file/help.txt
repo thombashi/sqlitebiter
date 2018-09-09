@@ -10,6 +10,11 @@
       database file.
 
     Options:
+      -r, --recursive                 Read all files under each directory,
+                                      recursively.
+      --pattern PATTERN               Convert files matching PATTERN.
+      --exclude PATTERN               Exclude files matching PATTERN.
+      --follow-symlinks               Follow symlinks.
       -f, --format [csv|excel|html|json|json_lines|jsonl|ldjson|ltsv|markdown|mediawiki|ndjson|sqlite|ssv|tsv|ipynb]
                                       Data format to loading (auto-detect from
                                       file extensions in default).
@@ -17,5 +22,5 @@
                                       files in default.
       -h, --help                      Show this message and exit.
 
-      Documentation: http://sqlitebiter.rtfd.io/ Issue tracker:
+      Documentation: https://sqlitebiter.rtfd.io/ Issue tracker:
       https://github.com/thombashi/sqlitebiter/issues

@@ -12,6 +12,7 @@ from textwrap import dedent, indent
 
 from subprocrunner import SubprocessRunner
 
+
 env = dict(os.environ, LC_ALL="C.UTF-8")
 
 proc = SubprocessRunner("sqlitebiter -h")

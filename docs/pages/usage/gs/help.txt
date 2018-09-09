@@ -13,5 +13,5 @@
     Options:
       -h, --help  Show this message and exit.
 
-      Documentation: http://sqlitebiter.rtfd.io/ Issue tracker:
+      Documentation: https://sqlitebiter.rtfd.io/ Issue tracker:
       https://github.com/thombashi/sqlitebiter/issues

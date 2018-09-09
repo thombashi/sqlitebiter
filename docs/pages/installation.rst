@@ -94,9 +94,9 @@ Following mandatory Python packages are automatically installed during
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
 - `click <http://click.pocoo.org/>`__
 - `colorama <https://github.com/tartley/colorama>`__
-- `logbook <http://logbook.readthedocs.io/en/stable/>`__
+- `logbook <https://logbook.readthedocs.io/en/stable/>`__
 - `msgfy <https://github.com/thombashi/msgfy>`__
-- `nbformat <http://jupyter.org/>`__
+- `nbformat <https://jupyter.org/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
@@ -123,14 +123,14 @@ The above packages can be installed with the following pip command;
 Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `pytablewriter <https://github.com/thombashi/pytablewriter>`__
-- `pytest <http://pytest.org/latest/>`__
+- `pytest <https://docs.pytest.org/en/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
 Misc dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- `lxml <http://lxml.de/installation.html>`__
+- `lxml <https://lxml.de/installation.html>`__
 - `pypandoc <https://github.com/bebraw/pypandoc>`__
     - required when converting MediaWiki files
 
@@ -138,4 +138,4 @@ Misc dependencies (Optional)
 Dependencies other than Python packages (Optional)
 ------------------------------------------------------------
 - ``libxml2`` (faster HTML/Markdown conversion)
-- `pandoc <http://pandoc.org/>`__ (required when converting MediaWiki files)
+- `pandoc <https://pandoc.org/>`__ (required when converting MediaWiki files)
