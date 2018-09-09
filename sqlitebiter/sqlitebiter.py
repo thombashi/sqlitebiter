@@ -90,7 +90,7 @@ def finalize(con, converter, is_create_db):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(version=__version__)
+@click.version_option(version=__version__, message=u"%(prog)s %(version)s")
 @click.option(
     "-o",
     "--output-path",
