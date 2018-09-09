@@ -33,7 +33,7 @@ Features
         - Microsoft Excel :superscript:`TM`
         - HTML
         - JSON
-        - `Jupyter Notebook <http://jupyter.org/>`__
+        - `Jupyter Notebook <https://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__/NDJSON/JSON Lines
         - Markdown
@@ -119,8 +119,8 @@ In the following example shows replace symbols to underscores.
 
 For more information
 ~~~~~~~~~~~~~~~~~~~~~~
-More examples are available at 
-http://sqlitebiter.rtfd.io/en/latest/pages/usage/index.html
+More examples are available at
+https://sqlitebiter.rtfd.io/en/latest/pages/usage/index.html
 
 Installation
 ============
@@ -218,9 +218,9 @@ Following mandatory Python packages are automatically installed during
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
 - `click <http://click.pocoo.org/>`__
 - `colorama <https://github.com/tartley/colorama>`__
-- `logbook <http://logbook.readthedocs.io/en/stable/>`__
+- `logbook <https://logbook.readthedocs.io/en/stable/>`__
 - `msgfy <https://github.com/thombashi/msgfy>`__
-- `nbformat <http://jupyter.org/>`__
+- `nbformat <https://jupyter.org/>`__
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
@@ -231,7 +231,7 @@ Following mandatory Python packages are automatically installed during
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Following Python packages are required to
-`manual installation <http://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
+`manual installation <https://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
 when you use Google Sheets feature:
 
 - `gspread <https://github.com/burnash/gspread>`_
@@ -247,14 +247,14 @@ The above packages can be installed with the following pip command;
 Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `pytablewriter <https://github.com/thombashi/pytablewriter>`__
-- `pytest <http://pytest.org/latest/>`__
+- `pytest <https://docs.pytest.org/en/latest/>`__
 - `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
 Misc dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- `lxml <http://lxml.de/installation.html>`__
+- `lxml <https://lxml.de/installation.html>`__
 - `pypandoc <https://github.com/bebraw/pypandoc>`__
     - required when converting MediaWiki files
 
@@ -262,9 +262,9 @@ Misc dependencies (Optional)
 Dependencies other than Python packages (Optional)
 ------------------------------------------------------------
 - ``libxml2`` (faster HTML/Markdown conversion)
-- `pandoc <http://pandoc.org/>`__ (required when converting MediaWiki files)
+- `pandoc <https://pandoc.org/>`__ (required when converting MediaWiki files)
 
 Documentation
 ===============
-http://sqlitebiter.rtfd.io/
+https://sqlitebiter.rtfd.io/
 
