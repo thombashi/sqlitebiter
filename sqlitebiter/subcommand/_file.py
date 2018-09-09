@@ -153,7 +153,9 @@ class FileConverter(TableConverter):
         SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
 
         if file_path.islink() and not self.__follow_symlinks:
-            self._logger.warn(SKIP_MSG_FORMAT.format(source=file_path, message="skip a symlink to a file"))
+            self._logger.warn(
+                SKIP_MSG_FORMAT.format(source=file_path, message="skip a symlink to a file")
+            )
             self._result_counter.inc_skip()
             return False
 
