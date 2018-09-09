@@ -24,6 +24,8 @@ def _get_format_type_from_path(file_path):
 
 
 class FileConverter(TableConverter):
+    SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
+
     def __init__(
         self,
         logger,
@@ -150,23 +152,21 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
 
     def __is_file(self, file_path):
-        SKIP_MSG_FORMAT = "skip '{source:s}': {message:s}"
-
         if file_path.islink() and not self.__follow_symlinks:
-            self._logger.warn(
-                SKIP_MSG_FORMAT.format(source=file_path, message="skip a symlink to a file")
+            self._logger.debug(
+                self.SKIP_MSG_FORMAT.format(source=file_path, message="skip a symlink to a file")
             )
             self._result_counter.inc_skip()
             return False
 
         if not file_path.isfile():
-            self._logger.warn(SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
+            self._logger.warn(self.SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
             self._result_counter.inc_skip()
             return False
 
         if file_path.realpath() == self._con.database_path:
             self._logger.warn(
-                SKIP_MSG_FORMAT.format(source=file_path, message="same path as the output file")
+                self.SKIP_MSG_FORMAT.format(source=file_path, message="same path as the output file")
             )
             self._result_counter.inc_skip()
             return False
