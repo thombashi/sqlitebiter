@@ -135,6 +135,10 @@ def cmd(
 @cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("files", type=str, nargs=-1)
 @click.option(
+    "-r", "--recursive", is_flag=True, help="Read all files under each directory, recursively."
+)
+@click.option("--follow-symlinks", is_flag=True, help="Follow symlinks.")
+@click.option(
     "-f",
     "--format",
     "format_name",
@@ -147,7 +151,7 @@ def cmd(
     help="Encoding to load files. Auto-detection from files in default.",
 )
 @click.pass_context
-def file(ctx, files, format_name, encoding):
+def file(ctx, files, recursive, follow_symlinks, format_name, encoding):
     """
     Convert tabular data within
     CSV/Excel/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
@@ -169,10 +173,25 @@ def file(ctx, files, format_name, encoding):
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
         encoding=encoding,
+        follow_symlinks=follow_symlinks,
     )
 
     for file_path in files:
-        converter.convert(file_path)
+        dir_path_obj = path.Path(file_path)
+
+        if not follow_symlinks and dir_path_obj.islink() and dir_path_obj.isdir():
+            logger.debug(
+                "skip symlink to a directory: {} -> {}".format(
+                    dir_path_obj, dir_path_obj.readlink()
+                )
+            )
+            continue
+
+        if recursive and dir_path_obj.isdir():
+            for file_path_obj in dir_path_obj.walkfiles():
+                converter.convert(file_path_obj)
+        else:
+            converter.convert(file_path)
 
     sys.exit(finalize(con, converter, is_create_db))
 
