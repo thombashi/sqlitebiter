@@ -1,4 +1,4 @@
-pytablewriter>=0.31.0
+pytablewriter>=0.31.1
 pytest
 responses
 tox
