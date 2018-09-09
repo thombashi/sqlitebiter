@@ -35,12 +35,14 @@ class FileConverter(TableConverter):
         verbosity_level,
         format_name,
         encoding,
+        exclude_pattern,
         follow_symlinks,
     ):
         super(FileConverter, self).__init__(
             logger, con, symbol_replace_value, index_list, verbosity_level, format_name, encoding
         )
 
+        self.__exclude_pattern = exclude_pattern
         self.__follow_symlinks = follow_symlinks
 
     def convert(self, file_path):
@@ -50,6 +52,13 @@ class FileConverter(TableConverter):
 
         if not self.__is_file(file_path):
             return
+
+        if self.__exclude_pattern and file_path.fnmatch(self.__exclude_pattern):
+            logger.debug(
+                self.SKIP_MSG_FORMAT.format(source=file_path, message="matching an exclude pattern")
+            )
+            self._result_counter.inc_skip()
+            return False
 
         logger.debug("converting '{}'".format(file_path))
         success_count = result_counter.success_count
@@ -166,7 +175,9 @@ class FileConverter(TableConverter):
 
         if file_path.realpath() == self._con.database_path:
             self._logger.warn(
-                self.SKIP_MSG_FORMAT.format(source=file_path, message="same path as the output file")
+                self.SKIP_MSG_FORMAT.format(
+                    source=file_path, message="same path as the output file"
+                )
             )
             self._result_counter.inc_skip()
             return False

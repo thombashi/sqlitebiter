@@ -137,6 +137,8 @@ def cmd(
 @click.option(
     "-r", "--recursive", is_flag=True, help="Read all files under each directory, recursively."
 )
+@click.option("--pattern", metavar="PATTERN", help="Convert files matching PATTERN.")
+@click.option("--exclude", metavar="PATTERN", help="Exclude files matching PATTERN.")
 @click.option("--follow-symlinks", is_flag=True, help="Follow symlinks.")
 @click.option(
     "-f",
@@ -151,7 +153,7 @@ def cmd(
     help="Encoding to load files. Auto-detection from files in default.",
 )
 @click.pass_context
-def file(ctx, files, recursive, follow_symlinks, format_name, encoding):
+def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, encoding):
     """
     Convert tabular data within
     CSV/Excel/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
@@ -173,6 +175,7 @@ def file(ctx, files, recursive, follow_symlinks, format_name, encoding):
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
         encoding=encoding,
+        exclude_pattern=exclude,
         follow_symlinks=follow_symlinks,
     )
 
@@ -188,7 +191,7 @@ def file(ctx, files, recursive, follow_symlinks, format_name, encoding):
             continue
 
         if recursive and dir_path_obj.isdir():
-            for file_path_obj in dir_path_obj.walkfiles():
+            for file_path_obj in dir_path_obj.walkfiles(pattern):
                 converter.convert(file_path_obj)
         else:
             converter.convert(file_path)
