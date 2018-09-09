@@ -154,10 +154,12 @@ def file(ctx, files, format_name, encoding):
     file(s) to a SQLite database file.
     """
 
+    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
     if typepy.is_empty_sequence(files):
+        logger.error("require at least one file specification.\n\n{}".format(ctx.get_help()))
         sys.exit(ExitCode.NO_INPUT)
 
-    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = FileConverter(
         logger=logger,
