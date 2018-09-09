@@ -7,7 +7,6 @@
 from __future__ import absolute_import, unicode_literals
 
 import simplesqlite
-from sqliteschema import SQLiteSchemaExtractor
 
 
 class TableCreator(object):
@@ -16,8 +15,6 @@ class TableCreator(object):
         self.__dst_con = dst_con
         self.__result_logger = result_logger
         self.__verbosity_level = verbosity_level
-
-        self.__schema_extractor = SQLiteSchemaExtractor(dst_con)
 
     def create(self, table_data, index_list, source_info):
         con_mem = simplesqlite.connect_memdb()
@@ -56,8 +53,8 @@ class TableCreator(object):
         if not self.__dst_con.has_table(src_table_name):
             return False
 
-        lhs = self.__schema_extractor.fetch_table_schema(src_table_name).as_dict()
-        rhs = SQLiteSchemaExtractor(src_con).fetch_table_schema(src_table_name).as_dict()
+        lhs = self.__dst_con.schema_extractor.fetch_table_schema(src_table_name).as_dict()
+        rhs = src_con.schema_extractor.fetch_table_schema(src_table_name).as_dict()
 
         return lhs != rhs
 

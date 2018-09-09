@@ -11,7 +11,6 @@ import os.path
 from path import Path
 from simplesqlite.model import Integer, Model, Text
 from simplesqlite.query import And, Attr, Where
-from sqliteschema import SQLiteSchemaExtractor
 
 from .._clrm import bright, green, red, yellow
 from .._common import DEFAULT_DUP_COL_HANDLER, ResultLogger
@@ -56,10 +55,9 @@ class TableConverter(object):
         self._format_name = format_name
         self._encoding = encoding
 
-        self._schema_extractor = SQLiteSchemaExtractor(con)
         self._result_counter = ResultCounter()
         self._result_logger = ResultLogger(
-            logger, self._schema_extractor, self._result_counter, self._verbosity_level
+            logger, self._con.schema_extractor, self._result_counter, self._verbosity_level
         )
         self._table_creator = TableCreator(
             logger=self._logger,
@@ -179,7 +177,7 @@ class TableConverter(object):
             logger.debug(
                 "----- database schema -----\n{}".format(
                     indent(
-                        self._schema_extractor.dumps(
+                        self._con.schema_extractor.dumps(
                             output_format=output_format, verbosity_level=verbosity_level
                         ),
                         "    ",
