@@ -6,6 +6,8 @@
 
 from __future__ import absolute_import, unicode_literals
 
+import os
+import stat
 from copy import deepcopy
 
 import msgfy
@@ -159,6 +161,9 @@ class FileConverter(TableConverter):
             )
             result_counter.inc_fail()
 
+    def __is_fifo(self, file_path):
+        return stat.S_ISFIFO(os.stat(file_path).st_mode)
+
     def __is_file(self, file_path):
         if file_path.islink() and not self.__follow_symlinks:
             self._logger.debug(
@@ -167,7 +172,7 @@ class FileConverter(TableConverter):
             self._result_counter.inc_skip()
             return False
 
-        if not file_path.isfile():
+        if not file_path.isfile() and not self.__is_fifo(file_path):
             self._logger.warn(self.SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
             self._result_counter.inc_skip()
             return False

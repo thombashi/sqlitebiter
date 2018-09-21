@@ -7,7 +7,7 @@ msgfy>=0.0.3
 nbformat>=4.4.0
 path.py
 pathvalidate>=0.21.1
-pytablereader>=0.20.7
 SimpleSQLite>=0.32.0
 sqliteschema>=0.13.0
+pytablereader>=0.21.0
 typepy>=0.2.1
