@@ -157,7 +157,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     """
     Convert tabular data within
     CSV/Excel/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
-    file(s) to a SQLite database file.
+    file(s) or named pipes to a SQLite database file.
     """
 
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
