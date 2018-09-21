@@ -12,7 +12,6 @@ import msgfy
 import path
 import pytablereader as ptr
 import six
-from simplesqlite import SQLiteTableDataSanitizer
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
