@@ -6,8 +6,8 @@
     Usage: sqlitebiter file [OPTIONS] [FILES]...
 
       Convert tabular data within CSV/Excel/HTML/JSON/Jupyter
-      Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV file(s) to a SQLite
-      database file.
+      Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV file(s) or named
+      pipes to a SQLite database file.
 
     Options:
       -r, --recursive                 Read all files under each directory,

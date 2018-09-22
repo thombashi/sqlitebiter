@@ -2,7 +2,7 @@
     :target: https://badge.fury.io/py/sqlitebiter
 
 .. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
-   :target: https://pypi.python.org/pypi/sqlitebiter
+   :target: https://pypi.org/project/sqlitebiter
 
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux/macOS
    :target: https://travis-ci.org/thombashi/sqlitebiter

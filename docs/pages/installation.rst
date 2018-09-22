@@ -69,11 +69,11 @@ Installation for macOS via Homebrew
 - `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
-Bash Auto Completion
+Command Completion for bash
 ----------------------------------------------------------
 .. code:: console
 
-    $ wget https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/sqlitebiter-complete.sh -O - >> ~/.bash_profile
+    $ sqlitebiter completion >> ~/.bash_profile
     $ source ~/.bash_profile
 
 
@@ -101,7 +101,6 @@ Following mandatory Python packages are automatically installed during
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
-- `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `typepy <https://github.com/thombashi/typepy>`__
 
 Google Sheets dependencies (Optional)
@@ -124,8 +123,9 @@ Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <https://docs.pytest.org/en/latest/>`__
-- `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
+- `pytest-runner <https://github.com/pytest-dev/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
+- `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
 Misc dependencies (Optional)
