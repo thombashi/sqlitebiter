@@ -11,7 +11,7 @@ A CLI tool to convert CSV / Excel / HTML / JSON / Jupyter Notebook / LDJSON / LT
     :target: https://badge.fury.io/py/sqlitebiter
 
 .. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
-   :target: https://pypi.python.org/pypi/sqlitebiter
+   :target: https://pypi.org/project/sqlitebiter
 
 .. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux/macOS
    :target: https://travis-ci.org/thombashi/sqlitebiter
@@ -119,7 +119,7 @@ In the following example shows replace symbols to underscores.
 
 For more information
 ~~~~~~~~~~~~~~~~~~~~~~
-More examples are available at
+More examples are available at 
 https://sqlitebiter.rtfd.io/en/latest/pages/usage/index.html
 
 Installation
@@ -193,11 +193,11 @@ Installation for macOS via Homebrew
 - `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
-Bash Auto Completion
+Command Completion for bash
 ----------------------------------------------------------
 .. code:: console
 
-    $ wget https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/sqlitebiter-complete.sh -O - >> ~/.bash_profile
+    $ sqlitebiter completion >> ~/.bash_profile
     $ source ~/.bash_profile
 
 
@@ -225,7 +225,6 @@ Following mandatory Python packages are automatically installed during
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
-- `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `typepy <https://github.com/thombashi/typepy>`__
 
 Google Sheets dependencies (Optional)
@@ -248,8 +247,9 @@ Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <https://docs.pytest.org/en/latest/>`__
-- `pytest-runner <https://pypi.python.org/pypi/pytest-runner>`__
+- `pytest-runner <https://github.com/pytest-dev/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
+- `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `tox <https://testrun.org/tox/latest/>`__
 
 Misc dependencies (Optional)
