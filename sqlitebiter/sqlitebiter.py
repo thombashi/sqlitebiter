@@ -310,5 +310,34 @@ def configure(ctx):
         sys.exit(errno.EINTR)
 
 
+@cmd.command(epilog=COMMAND_EPILOG)
+@click.pass_context
+def completion(ctx):
+    """
+    A helper command to setup command completion.
+
+    To setup for bash:
+    
+        sqlitebiter completion >> ~/.bash_profile
+    """
+
+    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
+    click.echo(
+        dedent(
+            """\
+        _sqlitebiter_completion() {
+            COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \
+                        COMP_CWORD=$COMP_CWORD \
+                        _SQLITEBITER_COMPLETE=complete $1 ) )
+            return 0
+        }
+
+        complete -F _sqlitebiter_completion -o default sqlitebiter;
+    """
+        )
+    )
+
+
 if __name__ == "__main__":
     cmd()
