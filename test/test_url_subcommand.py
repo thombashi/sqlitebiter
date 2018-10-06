@@ -83,11 +83,11 @@ class Test_url_subcommand(object):
         ["url", "expected"],
         [
             [
-                "https://raw.githubusercontent.com/fastai/fastai/master/tutorials/meanshift.ipynb",
+                "https://raw.githubusercontent.com/fastai/fastai/master/old/tutorials/meanshift.ipynb",
                 ExitCode.SUCCESS,
             ],
             [
-                "https://raw.githubusercontent.com/fastai/fastai/master/tutorials/linalg_pytorch.ipynb",
+                "https://raw.githubusercontent.com/fastai/fastai/master/old/tutorials/linalg_pytorch.ipynb",
                 ExitCode.SUCCESS,
             ],
             [
