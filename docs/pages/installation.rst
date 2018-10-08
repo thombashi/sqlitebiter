@@ -52,10 +52,11 @@ Installing executable files in Windows
       -h, --help              Show this message and exit.
 
     Commands:
-      configure  Configure the following application settings:...
-      file       Convert tabular data within...
-      gs         Convert a spreadsheet in Google Sheets to a...
-      url        Scrape tabular data from a URL and convert...
+      completion  A helper command to setup command completion.
+      configure   Configure the following application settings: (1) Default...
+      file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
+      gs          Convert a spreadsheet in Google Sheets to a SQLite database...
+      url         Scrape tabular data from a URL and convert data to a SQLite...
 
 
 Installation for macOS via Homebrew
@@ -69,12 +70,17 @@ Installation for macOS via Homebrew
 - `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
-Command Completion for bash
+Command Completion
 ----------------------------------------------------------
 .. code:: console
 
-    $ sqlitebiter completion >> ~/.bash_profile
-    $ source ~/.bash_profile
+    To setup for bash:
+
+        sqlitebiter completion bash >> ~/.bashrc
+
+    To setup for zsh:
+
+        sqlitebiter completion zsh >> ~/.zshrc
 
 
 Dependencies
@@ -121,7 +127,6 @@ The above packages can be installed with the following pip command;
 
 Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <https://docs.pytest.org/en/latest/>`__
 - `pytest-runner <https://github.com/pytest-dev/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__

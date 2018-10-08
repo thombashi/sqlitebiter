@@ -2,19 +2,17 @@ Features
 --------
 - Create a SQLite database file from:
     - File(s):
-        - CSV
+        - CSV / Tab separated values (TSV) / Space separated values (SSV)
         - Microsoft Excel :superscript:`TM`
         - HTML
         - JSON
         - `Jupyter Notebook <https://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
-        - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__/NDJSON/JSON Lines
+        - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__ / NDJSON / JSON Lines
         - Markdown
         - Mediawiki
-        - Space separated values (SSV)
         - SQLite
-        - Tab separated values (TSV)
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
-    - URL (scrape data from web pages)
+    - URL (scrape tabular data from web pages)
 - Multi-byte character support
 - Automatic file encoding detection
