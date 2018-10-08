@@ -311,30 +311,71 @@ def configure(ctx):
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
+@click.argument("shell", type=click.Choice(["bash", "zsh"]))
 @click.pass_context
-def completion(ctx):
+def completion(ctx, shell):
     """
     A helper command to setup command completion.
 
     To setup for bash:
-    
-        sqlitebiter completion >> ~/.bash_profile
+
+        sqlitebiter completion bash >> ~/.bashrc
+
+    To setup for zsh:
+
+        sqlitebiter completion zsh >> ~/.zshrc
     """
 
-    click.echo(
-        dedent(
-            """\
-        _sqlitebiter_completion() {
-            COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \
-                        COMP_CWORD=$COMP_CWORD \
-                        _SQLITEBITER_COMPLETE=complete $1 ) )
-            return 0
-        }
+    if shell == "bash":
+        click.echo(
+            dedent(
+                """\
+            _sqlitebiter_completion() {
+                COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \
+                            COMP_CWORD=$COMP_CWORD \
+                            _SQLITEBITER_COMPLETE=complete $1 ) )
+                return 0
+            }
 
-        complete -F _sqlitebiter_completion -o default sqlitebiter;
-    """
+            complete -F _sqlitebiter_completion -o default sqlitebiter;
+            """
+            )
         )
-    )
+    elif shell == "zsh":
+        click.echo(
+            dedent(
+                """\
+                _sqlitebiter_completion() {
+                    local -a completions
+                    local -a completions_with_descriptions
+                    local -a response
+                    response=("${(@f)$( env COMP_WORDS="${words[*]}" \
+                                        COMP_CWORD=$((CURRENT-1)) \
+                                        _SQLITEBITER_COMPLETE="complete_zsh" \
+                                        sqlitebiter )}")
+
+                    for key descr in ${(kv)response}; do
+                    if [[ "$descr" == "_" ]]; then
+                        completions+=("$key")
+                    else
+                        completions_with_descriptions+=("$key":"$descr")
+                    fi
+                    done
+
+                    if [ -n "$completions_with_descriptions" ]; then
+                        _describe -V unsorted completions_with_descriptions -U -Q
+                    fi
+
+                    if [ -n "$completions" ]; then
+                        compadd -U -V unsorted -Q -a completions
+                    fi
+                    compstate[insert]="automenu"
+                }
+
+                compdef _sqlitebiter_completion sqlitebiter;
+                """
+            )
+        )
 
 
 if __name__ == "__main__":
