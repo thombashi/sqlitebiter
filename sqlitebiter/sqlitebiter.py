@@ -321,8 +321,6 @@ def completion(ctx):
         sqlitebiter completion >> ~/.bash_profile
     """
 
-    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-
     click.echo(
         dedent(
             """\
