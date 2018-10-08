@@ -5,7 +5,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import errno
 import os
@@ -90,7 +90,7 @@ def finalize(con, converter, is_create_db):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(version=__version__, message=u"%(prog)s %(version)s")
+@click.version_option(version=__version__, message="%(prog)s %(version)s")
 @click.option(
     "-o",
     "--output-path",
