@@ -12,7 +12,7 @@ rm -rf $DIST_DIR_NAME
 mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 
 pip install --upgrade pip
-pip install --upgrade .[excel,gs,mediawiki,sqlite,build]
+pip install --upgrade .[gs,mediawiki,build]
 
 PKG_VERSION=$(python -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
 

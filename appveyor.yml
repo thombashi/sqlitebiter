@@ -29,7 +29,7 @@ notifications:
       channel: notifications
 
 before_deploy:
-    - "%PYTHON%/Scripts/pip.exe install .[excel,gs,mediawiki,sqlite,build]"
+    - "%PYTHON%/Scripts/pip.exe install .[gs,sqlite,build]"
     - "build_win_package.bat"
     - ps: appveyor PushArtifact dist/sqlitebiter_win_x64.zip
 
