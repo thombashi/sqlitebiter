@@ -18,7 +18,6 @@ install:
     - "%PYTHON%/python.exe C:/get-pip.py"
     - "%PYTHON%/Scripts/pip.exe --version"
     - "%PYTHON%/Scripts/pip.exe install .[test]"
-    - "%PYTHON%/Scripts/pip.exe install .[build]"
 
 test_script:
     - "%PYTHON%/python.exe invoke_pytest.py"
@@ -30,6 +29,7 @@ notifications:
       channel: notifications
 
 before_deploy:
+    - "%PYTHON%/Scripts/pip.exe install .[excel,gs,mediawiki,sqlite,build]"
     - "build_win_package.bat"
     - ps: appveyor PushArtifact dist/sqlitebiter_win_x64.zip
 
