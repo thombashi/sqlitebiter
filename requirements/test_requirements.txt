@@ -2,3 +2,4 @@ pytest
 responses
 sqliteschema[dumps]>=0.13.3
 tox
+XlsxWriter
