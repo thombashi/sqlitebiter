@@ -85,6 +85,7 @@ setuptools.setup(
         "build": build_requires,
         "docs": docs_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
+        "mediawiki": ["pypandoc"],
         "release": ["releasecmd>=0.0.12"],
         "test": tests_requires,
     },
