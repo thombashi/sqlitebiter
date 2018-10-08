@@ -1,5 +1,4 @@
-pytablewriter>=0.32.0
 pytest
 responses
-sqliteschema>=0.13.1
+sqliteschema[dumps]>=0.13.3
 tox
