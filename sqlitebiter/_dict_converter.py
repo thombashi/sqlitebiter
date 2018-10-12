@@ -33,7 +33,7 @@ class DictConverter(object):
         root_maps = {}
 
         for key, v in data.items():
-            if isinstance(v, (six.text_type, int, float)) or v is None:
+            if isinstance(v, (six.text_type, float) + six.integer_types) or v is None:
                 root_maps[key] = v
                 continue
 
