@@ -5,7 +5,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import
 
 import errno
 import os
