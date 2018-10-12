@@ -165,6 +165,13 @@ class FileConverter(TableConverter):
         return stat.S_ISFIFO(os.stat(file_path).st_mode)
 
     def __is_file(self, file_path):
+        if not file_path.exists():
+            self._logger.debug(
+                self.SKIP_MSG_FORMAT.format(source=file_path, message="no such file or directory")
+            )
+            self._result_counter.inc_skip()
+            return False
+
         if file_path.islink() and not self.__follow_symlinks:
             self._logger.debug(
                 self.SKIP_MSG_FORMAT.format(source=file_path, message="skip a symlink to a file")

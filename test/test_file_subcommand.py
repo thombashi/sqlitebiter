@@ -563,3 +563,12 @@ class Test_sqlitebiter_file(object):
             )
 
             assert set(con.fetch_table_name_list()) == expected
+
+    def test_normal_not_exit_file(self):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(cmd, ["file", "not_exist.csv"])
+            print_traceback(result)
+
+            assert result.exit_code == ExitCode.NO_INPUT
