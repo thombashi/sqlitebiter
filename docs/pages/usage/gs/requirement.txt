@@ -11,5 +11,10 @@ Dependency Python package installation:
 
 ::
 
+    $ pip install sqlitebiter[gs]
+
+Or
+
+::
     $ sudo pip install gspread
     $ sudo pip install oauth2client pyopenssl
