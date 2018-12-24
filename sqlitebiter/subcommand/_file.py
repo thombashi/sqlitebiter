@@ -9,6 +9,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 import stat
 from copy import deepcopy
+from errno import EBADF, ENAMETOOLONG, ENOENT, ENOTDIR
 
 import msgfy
 import path
