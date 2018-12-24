@@ -6,9 +6,11 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
         brew upgrade python
     fi
 
-    pip3 install setuptools --upgrade
-    pip3 install .[test]
+    pip3 install setuptools tox --upgrade
 else
     pip install setuptools --upgrade
-    pip install .[test]
+
+    if [ "$TOXENV" != "build" ] ; then
+        pip install tox --upgrade
+    fi
 fi
