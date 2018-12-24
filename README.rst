@@ -29,20 +29,18 @@ Features
 --------
 - Create a SQLite database file from:
     - File(s):
-        - CSV
+        - CSV / Tab separated values (TSV) / Space separated values (SSV)
         - Microsoft Excel :superscript:`TM`
         - HTML
         - JSON
         - `Jupyter Notebook <https://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
-        - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__/NDJSON/JSON Lines
+        - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__ / NDJSON / JSON Lines
         - Markdown
         - Mediawiki
-        - Space separated values (SSV)
         - SQLite
-        - Tab separated values (TSV)
     - `Google Sheets <https://www.google.com/intl/en_us/sheets/about/>`_
-    - URL (scrape data from web pages)
+    - URL (scrape tabular data from web pages)
 - Multi-byte character support
 - Automatic file encoding detection
 
@@ -176,10 +174,11 @@ Installing executable files in Windows
       -h, --help              Show this message and exit.
 
     Commands:
-      configure  Configure the following application settings:...
-      file       Convert tabular data within...
-      gs         Convert a spreadsheet in Google Sheets to a...
-      url        Scrape tabular data from a URL and convert...
+      completion  A helper command to setup command completion.
+      configure   Configure the following application settings: (1) Default...
+      file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
+      gs          Convert a spreadsheet in Google Sheets to a SQLite database...
+      url         Scrape tabular data from a URL and convert data to a SQLite...
 
 
 Installation for macOS via Homebrew
@@ -193,19 +192,22 @@ Installation for macOS via Homebrew
 - `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
-Command Completion for bash
+Command Completion
 ----------------------------------------------------------
 .. code:: console
 
-    $ sqlitebiter completion >> ~/.bash_profile
-    $ source ~/.bash_profile
+    To setup for bash:
+
+        sqlitebiter completion bash >> ~/.bashrc
+
+    To setup for zsh:
+
+        sqlitebiter completion zsh >> ~/.zshrc
 
 
 Dependencies
 ============
 Python 2.7+ or 3.4+
-
-Python package dependencies are as follows.
 
 Python package dependencies
 ------------------------------------------------------------
@@ -229,9 +231,7 @@ Following mandatory Python packages are automatically installed during
 
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Following Python packages are required to
-`manual installation <https://sqlitebiter.readthedocs.io/en/latest/pages/usage/gs/index.html>`_
-when you use Google Sheets feature:
+Extra Python packages are required to install to use Google Sheets feature:
 
 - `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
@@ -245,7 +245,6 @@ The above packages can be installed with the following pip command;
 
 Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- `pytablewriter <https://github.com/thombashi/pytablewriter>`__
 - `pytest <https://docs.pytest.org/en/latest/>`__
 - `pytest-runner <https://github.com/pytest-dev/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
