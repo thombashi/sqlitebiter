@@ -162,7 +162,15 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
 
     def __is_fifo(self, file_path):
-        return stat.S_ISFIFO(os.stat(file_path).st_mode)
+        try:
+            return stat.S_ISFIFO(os.stat(file_path).st_mode)
+        except OSError as e:
+            if e.errno not in (EBADF, ENAMETOOLONG, ENOENT, ENOTDIR):
+                raise
+
+            return False
+        except ValueError:
+            return False
 
     def __is_file(self, file_path):
         if not file_path.exists():
