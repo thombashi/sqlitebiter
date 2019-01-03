@@ -1,15 +1,37 @@
+AUTHOR := thombashi
+PACKAGE := sqlitebiter
+BUILD_DIR := build
+BUILD_WORK_DIR := _work
 DOCS_DIR := docs
-BUILD_DIR := _build
+DOCS_BUILD_DIR := $(DOCS_DIR)/_build
+
 
 .PHONY: build
 build:
-	@make clean
-	@python setup.py build
-	@rm -rf build/
+	@rm -rf $(BUILD_WORK_DIR)/
+	@mkdir -p $(BUILD_WORK_DIR)/
+	@cd $(BUILD_WORK_DIR); \
+		git clone https://github.com/$(AUTHOR)/$(PACKAGE).git; \
+		cd $(PACKAGE); \
+		python setup.py build
+	ls $(BUILD_WORK_DIR)/$(PACKAGE)/dist/
 
 .PHONY: clean
 clean:
-	@rm -rf build dist .eggs/ .pytest_cache/ **/*/__pycache__/ *.egg-info/
+	@rm -rf $(PACKAGE)-*.*.*/ \
+		$(BUILD_DIR) \
+		$(BUILD_WORK_DIR) \
+		dist/ \
+		$(DOCS_BUILD_DIR) \
+		.eggs/ \
+		.pytest_cache/ \
+		.tox/ \
+		**/*/__pycache__/ \
+		*.egg-info/
+
+.PHONY: docs
+docs:
+	@python setup.py build_sphinx --source-dir=$(DOCS_DIR)/ --build-dir=$(DOCS_BUILD_DIR) --all-files
 
 .PHONY: fmt
 fmt:
@@ -22,5 +44,5 @@ readme:
 
 .PHONY: release
 release:
-	@python setup.py release
-	@rm -rf dist/
+	@cd $(BUILD_WORK_DIR)/$(PACKAGE); python setup.py release
+	@rm -rf $(BUILD_WORK_DIR)
