@@ -302,19 +302,18 @@ class Test_sqlitebiter_file(object):
                 "aa,ac",
                 dedent(
                     """\
-                .. table:: valid_csv_3_1
+                    .. table:: valid_csv_3_1
 
-                    +---------+-------+-----------+--------+------+-----+
-                    |Attribute| Type  |PRIMARY KEY|NOT NULL|UNIQUE|Index|
-                    +=========+=======+===========+========+======+=====+
-                    |aa       |REAL   |           |        |      |X    |
-                    +---------+-------+-----------+--------+------+-----+
-                    |ab       |INTEGER|           |        |      |     |
-                    +---------+-------+-----------+--------+------+-----+
-                    |ac       |TEXT   |           |        |      |X    |
-                    +---------+-------+-----------+--------+------+-----+
-
-                """
+                        +---------+-------+-----------+--------+------+-----+
+                        |Attribute| Type  |PRIMARY KEY|NOT NULL|UNIQUE|Index|
+                        +=========+=======+===========+========+======+=====+
+                        |aa       |REAL   |           |        |      |X    |
+                        +---------+-------+-----------+--------+------+-----+
+                        |ab       |INTEGER|           |        |      |     |
+                        +---------+-------+-----------+--------+------+-----+
+                        |ac       |TEXT   |           |        |      |X    |
+                        +---------+-------+-----------+--------+------+-----+
+                    """
                 ),
             ]
         ],
@@ -327,14 +326,12 @@ class Test_sqlitebiter_file(object):
             file_path = file_creator()
             result = runner.invoke(cmd, ["-o", db_path, "--index", index_list, "file", file_path])
             print_traceback(result)
-
             assert result.exit_code == ExitCode.SUCCESS
 
             extractor = SQLiteSchemaExtractor(db_path)
-
-            print_test_result(expected=expected, actual=extractor.dumps())
-
-            assert extractor.fetch_table_schema("valid_csv_3_1").dumps() == expected
+            output = extractor.fetch_table_schema("valid_csv_3_1").dumps()
+            print_test_result(expected=expected, actual=output)
+            assert output == expected
 
     def test_normal_dup_col_csv_file(self):
         db_path = "test_dup_col.sqlite"
