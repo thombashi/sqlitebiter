@@ -232,13 +232,14 @@ def url(ctx, url, format_name, encoding, proxy):
         sys.exit(ExitCode.NO_INPUT)
 
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    configs = app_config_manager.load()
 
     if typepy.is_empty_sequence(encoding):
-        encoding = app_config_manager.load().get(ConfigKey.DEFAULT_ENCODING)
+        encoding = configs.get(ConfigKey.DEFAULT_ENCODING)
         logger.debug("use default encoding: {}".format(encoding))
 
     if typepy.is_null_string(proxy):
-        proxy = app_config_manager.load().get(ConfigKey.PROXY_SERVER)
+        proxy = configs.get(ConfigKey.PROXY_SERVER)
 
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = UrlConverter(
