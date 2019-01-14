@@ -15,6 +15,7 @@ from textwrap import dedent
 import click
 import logbook
 import logbook.more
+import msgfy
 import path
 import pytablereader as ptr
 import simplesqlite as sqlite
@@ -232,7 +233,12 @@ def url(ctx, url, format_name, encoding, proxy):
         sys.exit(ExitCode.NO_INPUT)
 
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-    configs = app_config_manager.load()
+
+    try:
+        configs = app_config_manager.load()
+    except ValueError as e:
+        logger.debug(msgfy.to_debug_message(e))
+        configs = {}
 
     if typepy.is_empty_sequence(encoding):
         encoding = configs.get(ConfigKey.DEFAULT_ENCODING)
@@ -304,11 +310,7 @@ def configure(ctx):
         "{} configuration file existence: {}".format(PROGRAM_NAME, app_config_manager.exists)
     )
 
-    try:
-        sys.exit(app_config_manager.configure())
-    except KeyboardInterrupt:
-        click.echo()
-        sys.exit(errno.EINTR)
+    sys.exit(app_config_manager.configure())
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
