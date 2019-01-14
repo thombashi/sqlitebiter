@@ -24,7 +24,7 @@ class GoogleSheetsConverter(TableConverter):
         loader.title = title
 
         # if typepy.is_null_string(loader.source):
-        #     loader.source = app_config_manager.load().get(
+        #     loader.source = app_config_mgr.load().get(
         #         ConfigKey.GS_CREDENTIALS_FILE_PATH)
 
         try:

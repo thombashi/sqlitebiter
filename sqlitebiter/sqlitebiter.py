@@ -23,7 +23,7 @@ import typepy
 
 from .__version__ import __version__
 from ._common import DEFAULT_DUP_COL_HANDLER
-from ._config import ConfigKey, app_config_manager
+from ._config import ConfigKey, app_config_mgr
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
 from ._enum import Context, DupDatabase, ExitCode
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
@@ -235,7 +235,7 @@ def url(ctx, url, format_name, encoding, proxy):
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     try:
-        configs = app_config_manager.load()
+        configs = app_config_mgr.load()
     except ValueError as e:
         logger.debug(msgfy.to_debug_message(e))
         configs = {}
@@ -306,11 +306,9 @@ def configure(ctx):
 
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
-    logger.debug(
-        "{} configuration file existence: {}".format(PROGRAM_NAME, app_config_manager.exists)
-    )
+    logger.debug("{} configuration file existence: {}".format(PROGRAM_NAME, app_config_mgr.exists))
 
-    sys.exit(app_config_manager.configure())
+    sys.exit(app_config_mgr.configure())
 
 
 @cmd.command(epilog=COMMAND_EPILOG)

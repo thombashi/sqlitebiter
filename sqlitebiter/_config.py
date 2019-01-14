@@ -17,7 +17,7 @@ class ConfigKey(object):
     GS_CREDENTIALS_FILE_PATH = "gs_credentials_file_path"
 
 
-app_config_manager = ConfigManager(
+app_config_mgr = ConfigManager(
     PROGRAM_NAME,
     [
         ConfigItem(
