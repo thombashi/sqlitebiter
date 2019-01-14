@@ -1,17 +1,19 @@
 .. image:: https://badge.fury.io/py/sqlitebiter.svg
     :target: https://badge.fury.io/py/sqlitebiter
+    :alt: PyPI package version
 
 .. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
-   :target: https://pypi.org/project/sqlitebiter
+    :target: https://pypi.org/project/sqlitebiter
+    :alt: Supported Python versions
 
-.. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux/macOS
+.. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux/macOS%20CI
    :target: https://travis-ci.org/thombashi/sqlitebiter
-   :alt: Linux CI test status
+   :alt: Linux/macOS CI status
 
-.. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows
+.. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows%20CI
    :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
-   :alt: Windows CI test status
+   :alt: Windows CI status
 
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
-   :target: https://github.com/thombashi/sqlitebiter
-   :alt: GitHub repository
+    :target: https://github.com/thombashi/sqlitebiter
+    :alt: GitHub stars
