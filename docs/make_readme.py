@@ -9,8 +9,8 @@ from __future__ import unicode_literals
 
 import sys
 
-import readmemaker
 from path import Path
+from readmemaker import ReadmeMaker
 
 
 PROJECT_NAME = "sqlitebiter"
@@ -26,7 +26,7 @@ def write_examples(maker):
     maker.inc_indent_level()
     maker.write_chapter("Create SQLite database from files")
 
-    maker.write_line_list(
+    maker.write_lines(
         [
             ".. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/master/docs/svg/usage_example.svg"
         ]
@@ -37,7 +37,7 @@ def write_examples(maker):
 
     maker.inc_indent_level()
     maker.write_chapter("For more information")
-    maker.write_line_list(
+    maker.write_lines(
         [
             "More examples are available at ",
             "https://{:s}.rtfd.io/en/latest/pages/{:s}/index.html".format(
@@ -48,7 +48,12 @@ def write_examples(maker):
 
 
 def main():
-    maker = readmemaker.ReadmeMaker(PROJECT_NAME, OUTPUT_DIR, is_make_toc=True)
+    maker = ReadmeMaker(
+        PROJECT_NAME,
+        OUTPUT_DIR,
+        is_make_toc=True,
+        project_url="https://github.com/thombashi/{}".format(PROJECT_NAME),
+    )
     maker.examples_dir_name = "usage"
 
     maker.write_chapter("Summary")
@@ -62,7 +67,7 @@ def main():
 
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")
-    maker.write_line_list(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
+    maker.write_lines(["https://{:s}.rtfd.io/".format(PROJECT_NAME.lower())])
 
     return 0
 
