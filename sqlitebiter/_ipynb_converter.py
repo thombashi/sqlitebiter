@@ -149,16 +149,16 @@ class MetaDataConverter(JupyterNotebookConverterBase):
     def __convert_kernelspec(self):
         target = "kernelspec"
         table_name, need_create_table = self._make_table_name([target])
-        record_list = [
+        records = [
             [self.source_id, key, value] for key, value in self.__metadata.get(target).items()
         ]
 
-        if len(record_list) > 0:
+        if len(records) > 0:
             self._con.create_table(
                 table_name,
                 [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, "{:s} TEXT NOT NULL".format(NbAttr.VALUE)],
             )
-            self._con.insert_many(table_name, record_list)
+            self._con.insert_many(table_name, records)
 
             self._result_logger.logging_success(
                 self._get_log_header(target), table_name, need_create_table
@@ -201,11 +201,11 @@ class MetaDataConverter(JupyterNotebookConverterBase):
 
         if target in self.__metadata:
             table_name, need_create_table = self._make_table_name([KEY_VALUE_TABLE])
-            record_list = [
+            records = [
                 [self.source_id, key, value] for key, value in self.__metadata.get(target).items()
             ]
 
-            if len(record_list) > 0:
+            if len(records) > 0:
                 self._con.create_table(
                     table_name,
                     [
@@ -214,7 +214,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                         "{:s} TEXT NOT NULL".format(NbAttr.VALUE),
                     ],
                 )
-                self._con.insert_many(table_name, record_list)
+                self._con.insert_many(table_name, records)
 
                 self._result_logger.logging_success(
                     self._get_log_header(target), table_name, need_create_table
@@ -250,14 +250,14 @@ class CellConverter(JupyterNotebookConverterBase):
     def __convert_source(self, cell_data):
         target = "source"
         table_name, need_create_table = self._make_table_name([target])
-        record_list = [
+        records = [
             [self.source_id, self._cell_id, line_no, source_line.rstrip()]
             for line_no, source_line in enumerate(cell_data.get(target).splitlines())
         ]
 
         del cell_data[target]
 
-        if len(record_list) > 0:
+        if len(records) > 0:
             self._con.create_table(
                 table_name,
                 [
@@ -267,7 +267,7 @@ class CellConverter(JupyterNotebookConverterBase):
                     "{:s} TEXT".format("text"),
                 ],
             )
-            self._con.insert_many(table_name, record_list)
+            self._con.insert_many(table_name, records)
 
             self._result_logger.logging_success(
                 self._get_log_header(target), table_name, need_create_table
