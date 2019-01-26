@@ -118,17 +118,17 @@ class TableConverter(object):
             return normalized_table_data
 
         return TableData(
-            table_name=normalized_table_data.table_name,
-            header_list=[
+            normalized_table_data.table_name,
+            [
                 replace_symbol(
                     replace_unprintable_char(header),
                     self._symbol_replace_value,
                     is_replace_consecutive_chars=True,
                     is_strip=True,
                 )
-                for header in normalized_table_data.header_list
+                for header in normalized_table_data.headers
             ],
-            row_list=normalized_table_data.row_list,
+            normalized_table_data.rows,
             dp_extractor=normalized_table_data.dp_extractor,
         )
 
