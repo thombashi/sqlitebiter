@@ -144,7 +144,7 @@ def cmd(
     "-f",
     "--format",
     "format_name",
-    type=click.Choice(ptr.TableFileLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
+    type=click.Choice(ptr.TableFileLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST),
     help="Data format to loading (auto-detect from file extensions in default).",
 )
 @click.option(
@@ -205,7 +205,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     "-f",
     "--format",
     "format_name",
-    type=click.Choice(ptr.TableUrlLoader.get_format_name_list() + IPYNB_FORMAT_NAME_LIST),
+    type=click.Choice(ptr.TableUrlLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST),
     help="Data format to loading (defaults to html).",
 )
 @click.option(

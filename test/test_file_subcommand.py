@@ -226,7 +226,7 @@ class Test_sqlitebiter_file(object):
                 "valid_mdtable_markdown1",
                 SourceInfo.get_table_name(),
             ]
-            actual_table_list = con.fetch_table_name_list()
+            actual_table_list = con.fetch_table_names()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -256,7 +256,7 @@ class Test_sqlitebiter_file(object):
                 "tsv_a": [(1, 4.0, "tsv0"), (2, 2.1, "tsv1"), (3, 120.9, "tsv2")],
                 "valid_mdtable_markdown1": [(1, 123.1, "a"), (2, 2.2, "bb"), (3, 3.3, "ccc")],
             }
-            for table in con.fetch_table_name_list():
+            for table in con.fetch_table_names():
                 if table == SourceInfo.get_table_name():
                     continue
 
@@ -288,7 +288,7 @@ class Test_sqlitebiter_file(object):
             data = con.select_as_tabledata(table_name="ssv")
             expected = (
                 "table_name=ssv, "
-                "header_list=[USER, PID, %CPU, %MEM, VSZ, RSS, TTY, STAT, START, TIME, COMMAND], "
+                "headers=[USER, PID, %CPU, %MEM, VSZ, RSS, TTY, STAT, START, TIME, COMMAND], "
                 "rows=5"
             )
 
@@ -386,7 +386,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.fetch_table_name_list()
+            actual_table_list = con.fetch_table_names()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -406,7 +406,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.fetch_table_name_list()
+            actual_table_list = con.fetch_table_names()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -433,7 +433,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.fetch_table_name_list()
+            actual_table_list = con.fetch_table_names()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -459,7 +459,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_table_list = ["multij2", SourceInfo.get_table_name()]
-            actual_table_list = con.fetch_table_name_list()
+            actual_table_list = con.fetch_table_names()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -476,7 +476,7 @@ class Test_sqlitebiter_file(object):
                 ]
             }
 
-            for table in con.fetch_table_name_list():
+            for table in con.fetch_table_names():
                 if table == SourceInfo.get_table_name():
                     continue
 
@@ -505,7 +505,7 @@ class Test_sqlitebiter_file(object):
 
             con = simplesqlite.SimpleSQLite(db_path, "r")
             expected_table_list = ["multij2", "multij2_1", SourceInfo.get_table_name()]
-            actual_table_list = con.fetch_table_name_list()
+            actual_table_list = con.fetch_table_names()
 
             print_test_result(expected=expected_table_list, actual=actual_table_list)
 
@@ -516,7 +516,7 @@ class Test_sqlitebiter_file(object):
                 "multij2_1": [(u"abc", u"a", 4.0), (u"abc", u"bb", 2.1), (u"abc", u"ccc", 120.9)],
             }
 
-            for table in con.fetch_table_name_list():
+            for table in con.fetch_table_names():
                 if table == SourceInfo.get_table_name():
                     continue
 
@@ -559,7 +559,7 @@ class Test_sqlitebiter_file(object):
                 ]
             )
 
-            assert set(con.fetch_table_name_list()) == expected
+            assert set(con.fetch_table_names()) == expected
 
     def test_normal_not_exit_file(self):
         runner = CliRunner()

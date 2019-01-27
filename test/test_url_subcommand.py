@@ -56,7 +56,7 @@ class Test_url_subcommand(object):
                 ]
             )
 
-            assert set(con.fetch_table_name_list()) == expected
+            assert set(con.fetch_table_names()) == expected
 
     @pytest.mark.xfail(run=False)
     @pytest.mark.parametrize(
