@@ -37,10 +37,6 @@ COMMAND_EPILOG = dedent(
     """
 )
 
-logbook.more.ColorizedStderrHandler(
-    level=logbook.DEBUG, format_string="[{record.level_name}] {record.channel}: {record.message}"
-).push_application()
-
 
 class Default(object):
     OUTPUT_FILE = "out.sqlite"
@@ -76,6 +72,22 @@ def make_logger(channel_name, log_level):
     appconfigpy.set_log_level(log_level)
 
     return logger
+
+
+def initialize(log_level):
+    from logbook.more import ColorizedStderrHandler
+
+    debug_format_str = (
+        "[{record.level_name}] {record.channel} {record.func_name} "
+        "({record.lineno}): {record.message}"
+    )
+    if log_level == logbook.DEBUG:
+        info_format_str = debug_format_str
+    else:
+        info_format_str = "[{record.level_name}] {record.channel}: {record.message}"
+
+    ColorizedStderrHandler(level=logbook.DEBUG, format_string=debug_format_str).push_application()
+    ColorizedStderrHandler(level=logbook.INFO, format_string=info_format_str).push_application()
 
 
 def finalize(con, converter, is_create_db):
@@ -160,6 +172,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     file(s) or named pipes to a SQLite database file.
     """
 
+    initialize(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(files):
@@ -231,6 +244,7 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
+    initialize(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     try:
@@ -275,6 +289,7 @@ def gs(ctx, credentials, title):
     TITLE: Title of the Google Sheets to convert.
     """
 
+    initialize(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = GoogleSheetsConverter(
