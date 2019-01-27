@@ -79,7 +79,7 @@ setuptools.setup(
         "Tracker": "{:s}/issues".format(REPOSITORY_URL),
     },
 
-    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*',
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
     install_requires=SETUPTOOLS_REQUIRES + install_requires,
     setup_requires=SETUPTOOLS_REQUIRES + PYTEST_RUNNER_REQUIRES,
     tests_require=tests_requires,
@@ -88,7 +88,7 @@ setuptools.setup(
         "docs": docs_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "mediawiki": ["pypandoc"],
-        "release": ["releasecmd>=0.0.12,<0.1.0"],
+        "release": ["releasecmd>=0.0.14,<0.1.0"],
         "test": tests_requires,
     },
 
