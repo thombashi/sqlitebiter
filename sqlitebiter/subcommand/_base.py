@@ -130,6 +130,7 @@ class TableConverter(object):
             ],
             normalized_table_data.rows,
             dp_extractor=normalized_table_data.dp_extractor,
+            type_hints=table_data.type_hints,
         )
 
     def write_completion_message(self):
