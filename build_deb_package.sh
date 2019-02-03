@@ -11,7 +11,7 @@ PKG_NAME="sqlitebiter"
 rm -rf $DIST_DIR_NAME
 mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 
-pip install --upgrade pip
+pip install --upgrade pip==18.1
 pip install --upgrade .[gs,mediawiki,build]
 
 PKG_VERSION=$(python -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")

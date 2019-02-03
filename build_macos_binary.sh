@@ -20,7 +20,7 @@ fi
 # initialize
 rm -rf $DIST_DIR_NAME
 
-$PIP install --upgrade pip
+$PIP install --upgrade pip==18.1
 $PIP install --upgrade .[excel,gs,mediawiki,sqlite,build]
 
 PKG_VERSION=$(${PYTHON} -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
