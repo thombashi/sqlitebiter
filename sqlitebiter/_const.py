@@ -11,4 +11,4 @@ PROGRAM_NAME = "sqlitebiter"
 MAX_VERBOSITY_LEVEL = 2
 
 IPYNB_FORMAT_NAME_LIST = ["ipynb"]
-TABLE_NOT_FOUND_MSG_FORMAT = "table not found in {}"
+TABLE_NOT_FOUND_MSG_FORMAT = "convertible table not found in {}"
