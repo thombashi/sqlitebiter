@@ -30,6 +30,7 @@ clean:
 		.tox/ \
 		**/*/__pycache__/ \
 		*.egg-info/
+	@find . -not -path '*/\.*' -type f | grep -E .+\.py\.[a-z0-9]{32,}\.py$ | xargs -r rm
 
 .PHONY: docs
 docs:
@@ -38,6 +39,7 @@ docs:
 .PHONY: fmt
 fmt:
 	@black $(CURDIR)
+	@autoflake --in-place --recursive --remove-all-unused-imports --exclude "__init__.py" .
 	@isort --apply --recursive
 
 .PHONY: readme
