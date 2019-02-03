@@ -88,7 +88,7 @@ setuptools.setup(
         "docs": docs_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "mediawiki": ["pypandoc"],
-        "release": ["releasecmd>=0.0.14,<0.1.0"],
+        "release": ["releasecmd>=0.0.18,<0.1.0"],
         "test": tests_requires,
     },
 
