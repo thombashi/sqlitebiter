@@ -6,8 +6,16 @@ DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 
 
-.PHONY: cbuild
-cbuild:
+.PHONY: build
+build:
+	@make clean
+	@python setup.py build
+	@twine check dist/*
+	@python setup.py clean --all
+	ls -lh dist/*
+
+.PHONY: releasebuild
+releasebuild:
 	@rm -rf $(BUILD_WORK_DIR)/
 	@mkdir -p $(BUILD_WORK_DIR)/
 	@cd $(BUILD_WORK_DIR); \
@@ -15,7 +23,7 @@ cbuild:
 		cd $(PACKAGE); \
 		python setup.py build
 	@twine check $(DIST_DIR)/*
-	ls -l $(DIST_DIR)/*
+	ls -lh $(DIST_DIR)/*
 
 .PHONY: clean
 clean:
