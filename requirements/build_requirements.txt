@@ -1,3 +1,0 @@
-pyinstaller>=3.4
-twine
-wheel
