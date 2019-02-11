@@ -7,8 +7,8 @@ DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 
 
-.PHONY: build
-build:
+.PHONY: cbuild
+cbuild:
 	@rm -rf $(BUILD_WORK_DIR)/
 	@mkdir -p $(BUILD_WORK_DIR)/
 	@cd $(BUILD_WORK_DIR); \
