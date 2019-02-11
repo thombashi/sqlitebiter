@@ -1,6 +1,5 @@
 AUTHOR := thombashi
 PACKAGE := sqlitebiter
-BUILD_DIR := build
 BUILD_WORK_DIR := _work
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
@@ -16,18 +15,19 @@ cbuild:
 		cd $(PACKAGE); \
 		python setup.py build
 	@twine check $(DIST_DIR)/*
-	ls $(DIST_DIR)
+	ls -l $(DIST_DIR)/*
 
 .PHONY: clean
 clean:
 	@rm -rf $(PACKAGE)-*.*.*/ \
-		$(BUILD_DIR) \
 		$(BUILD_WORK_DIR) \
-		dist/ \
 		$(DOCS_BUILD_DIR) \
+		dist/ \
+		pip-wheel-metadata/ \
 		.eggs/ \
 		.pytest_cache/ \
 		.tox/ \
+		**/__pycache__/ \
 		**/*/__pycache__/ \
 		*.egg-info/
 	@find . -not -path '*/\.*' -type f | grep -E .+\.py\.[a-z0-9]{32,}\.py$ | xargs -r rm
