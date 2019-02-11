@@ -15,7 +15,7 @@ init:
 
 install:
     - ps: (new-object net.webclient).DownloadFile('https://bootstrap.pypa.io/get-pip.py', 'C:/get-pip.py')
-    - "%PYTHON%/python.exe C:/get-pip.py pip==18.1"
+    - "%PYTHON%/python.exe C:/get-pip.py pip>=19.0.2"
     - "%PYTHON%/Scripts/pip.exe --version"
     - "%PYTHON%/Scripts/pip.exe install .[test]"
 
@@ -29,7 +29,7 @@ notifications:
       channel: notifications
 
 before_deploy:
-    - "%PYTHON%/Scripts/pip.exe install .[gs,sqlite,build]"
+    - "%PYTHON%/Scripts/pip.exe install .[excel,gs,mediawiki,sqlite,buildexe]"
     - "build_win_package.bat"
     - ps: appveyor PushArtifact dist/sqlitebiter_win_x64.zip
 
