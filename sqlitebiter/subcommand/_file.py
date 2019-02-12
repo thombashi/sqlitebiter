@@ -64,6 +64,7 @@ class FileConverter(TableConverter):
 
         logger.debug("converting '{}'".format(file_path))
         success_count = result_counter.success_count
+        fail_count = result_counter.fail_count
         source_info_record_base = self.__get_source_info_base(file_path.realpath())
         source_info_record_base.source_id = self._fetch_next_source_id()
 
@@ -87,6 +88,9 @@ class FileConverter(TableConverter):
         else:
             self.__convert(file_path, source_info_record_base)
 
+        if result_counter.fail_count > fail_count:
+            return
+
         if result_counter.success_count == success_count:
             logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
@@ -103,7 +107,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
         except ptr.LoaderNotFoundError:
-            logger.debug("loader not found that coincide with '{}'".format(file_path))
+            logger.warn("not supported file format: ext={}, path={}".format(file_path.ext, file_path))
             result_counter.inc_fail()
             return
 
