@@ -6,8 +6,8 @@ Logbook>=1.1.0,<2.0.0
 msgfy>=0.0.5,<0.1.0
 nbformat>=4.4.0,<5.0.0
 path.py
-pathvalidate>=0.24.0,<1.0.0
-pytablereader[excel,sqlite,url]>=0.24.1,<1.0.0
+pathvalidate>=0.24.1,<1.0.0
+pytablereader[excel,sqlite,url]>=0.24.2,<1.0.0
 simplejson>=3.16.0,<4.0.0
 SimpleSQLite>=0.39.1,<1.0.0
 typepy>=0.4.0,<1.0.0
