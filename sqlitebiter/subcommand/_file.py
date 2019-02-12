@@ -60,7 +60,7 @@ class FileConverter(TableConverter):
                 self.SKIP_MSG_FORMAT.format(source=file_path, message="matching an exclude pattern")
             )
             self._result_counter.inc_skip()
-            return False
+            return
 
         logger.debug("converting '{}'".format(file_path))
         success_count = result_counter.success_count
