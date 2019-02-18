@@ -107,7 +107,9 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
         except ptr.LoaderNotFoundError:
-            logger.warn("not supported file format: ext={}, path={}".format(file_path.ext, file_path))
+            logger.warn(
+                "not supported file format: ext={}, path={}".format(file_path.ext, file_path)
+            )
             result_counter.inc_fail()
             return
 
