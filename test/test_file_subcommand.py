@@ -11,9 +11,9 @@ from textwrap import dedent
 
 import path
 import pytest
-import simplesqlite
 from click.testing import CliRunner
 from pytablereader.interface import TableLoader
+from simplesqlite import SimpleSQLite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqlitebiter.subcommand._base import SourceInfo
@@ -208,7 +208,7 @@ class Test_sqlitebiter_file(object):
             result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
             expected_table_list = [
                 "singlejson",
                 "multij1",
@@ -284,7 +284,7 @@ class Test_sqlitebiter_file(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
             data = con.select_as_tabledata(table_name="ssv")
             expected = (
                 "table_name=ssv, "
@@ -384,7 +384,7 @@ class Test_sqlitebiter_file(object):
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
 
             actual_table_list = con.fetch_table_names()
 
@@ -404,7 +404,7 @@ class Test_sqlitebiter_file(object):
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
 
             actual_table_list = con.fetch_table_names()
 
@@ -431,7 +431,7 @@ class Test_sqlitebiter_file(object):
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
 
             actual_table_list = con.fetch_table_names()
 
@@ -457,7 +457,7 @@ class Test_sqlitebiter_file(object):
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
             expected_table_list = ["multij2", SourceInfo.get_table_name()]
             actual_table_list = con.fetch_table_names()
 
@@ -503,7 +503,7 @@ class Test_sqlitebiter_file(object):
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
             expected_table_list = ["multij2", "multij2_1", SourceInfo.get_table_name()]
             actual_table_list = con.fetch_table_names()
 
@@ -543,7 +543,7 @@ class Test_sqlitebiter_file(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(db_path, "r")
+            con = SimpleSQLite(db_path, "r")
             expected = set(
                 [
                     "ratings",
