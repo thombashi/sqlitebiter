@@ -8,8 +8,8 @@ from __future__ import print_function
 
 import pytest
 import responses
-import simplesqlite
 from click.testing import CliRunner
+from simplesqlite import SimpleSQLite
 from sqlitebiter._enum import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqlitebiter.subcommand._base import SourceInfo
@@ -40,7 +40,7 @@ class Test_url_subcommand(object):
 
             assert result.exit_code == ExitCode.SUCCESS
 
-            con = simplesqlite.SimpleSQLite(self.db_path, "r")
+            con = SimpleSQLite(self.db_path, "r")
             expected = set(
                 [
                     "ratings",
