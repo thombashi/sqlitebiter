@@ -21,6 +21,7 @@ from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._enum import ExitCode
 from .._ipynb_converter import is_ipynb_url, load_ipynb_url
 from ._base import SourceInfo, TableConverter
+from ._common import TYPE_HINT_FROM_HEADER_RULES
 
 
 def parse_source_info_url(url):
@@ -33,9 +34,15 @@ def parse_source_info_url(url):
     return source_info
 
 
-def create_url_loader(logger, source_url, format_name, encoding, proxies):
+def create_url_loader(logger, source_url, format_name, encoding, type_hint_rules, proxies):
     try:
-        return ptr.TableUrlLoader(source_url, format_name, encoding=encoding, proxies=proxies)
+        return ptr.TableUrlLoader(
+            source_url,
+            format_name,
+            encoding=encoding,
+            type_hint_rules=type_hint_rules,
+            proxies=proxies,
+        )
     except (ptr.HTTPError, ptr.UrlError) as e:
         logger.error(msgfy.to_error_message(e))
         sys.exit(ExitCode.FAILED_HTTP)
@@ -51,13 +58,21 @@ class UrlConverter(TableConverter):
         con,
         symbol_replace_value,
         index_list,
+        is_type_hint_header,
         verbosity_level,
         format_name,
         encoding,
         proxy,
     ):
         super(UrlConverter, self).__init__(
-            logger, con, symbol_replace_value, index_list, verbosity_level, format_name, encoding
+            logger,
+            con,
+            symbol_replace_value,
+            index_list,
+            is_type_hint_header,
+            verbosity_level,
+            format_name,
+            encoding,
         )
 
         self.__proxy = proxy
@@ -144,15 +159,18 @@ class UrlConverter(TableConverter):
 
     def __create_loader(self, url):
         logger = self._logger
+        type_hint_rules = TYPE_HINT_FROM_HEADER_RULES if self._is_type_hint_header else None
         proxies = self.__get_proxies()
 
         try:
-            return create_url_loader(logger, url, self._format_name, self._encoding, proxies)
+            return create_url_loader(
+                logger, url, self._format_name, self._encoding, type_hint_rules, proxies
+            )
         except ptr.LoaderNotFoundError as e:
             logger.debug(e)
 
         try:
-            return create_url_loader(logger, url, "html", self._encoding, proxies)
+            return create_url_loader(logger, url, "html", self._encoding, type_hint_rules, proxies)
         except ptr.LoaderNotFoundError as e:
             logger.error(msgfy.to_error_message(e))
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)

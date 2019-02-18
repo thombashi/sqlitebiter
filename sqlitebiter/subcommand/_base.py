@@ -43,6 +43,7 @@ class TableConverter(object):
         con,
         symbol_replace_value,
         index_list,
+        is_type_hint_header,
         verbosity_level,
         format_name=None,
         encoding=None,
@@ -51,6 +52,7 @@ class TableConverter(object):
         self._con = con
         self._symbol_replace_value = symbol_replace_value
         self._index_list = index_list
+        self._is_type_hint_header = is_type_hint_header
         self._verbosity_level = verbosity_level
         self._format_name = format_name
         self._encoding = encoding

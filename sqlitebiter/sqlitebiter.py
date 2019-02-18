@@ -120,6 +120,21 @@ def finalize(con, converter, is_create_db):
     default="",
     help="comma separated attribute names to create indices.",
 )
+@click.option(
+    "--type-hint-header",
+    "is_type_hint_header",
+    is_flag=True,
+    help=dedent(
+        """\
+        Use headers suffix as type hints.
+        If there are type hints, converting columns by datatype corresponding with type hints.
+        The following suffixes can be recognized as type hints (case insensitive):
+        "text": TEXT datatype.
+        "integer": INTEGER datatype.
+        "real": REAL datatype.
+        """
+    ),
+)
 @click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="for debug print.")
@@ -132,12 +147,20 @@ def finalize(con, converter, is_create_db):
 )
 @click.pass_context
 def cmd(
-    ctx, output_path, is_append_table, index_list, symbol_replace_value, verbosity_level, log_level
+    ctx,
+    output_path,
+    is_append_table,
+    index_list,
+    is_type_hint_header,
+    symbol_replace_value,
+    verbosity_level,
+    log_level,
 ):
     ctx.obj[Context.OUTPUT_PATH] = output_path
     ctx.obj[Context.SYMBOL_REPLACE_VALUE] = symbol_replace_value
     ctx.obj[Context.DUP_DATABASE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
+    ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
 
@@ -185,6 +208,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
         encoding=encoding,
@@ -266,6 +290,7 @@ def url(ctx, url, format_name, encoding, proxy):
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
         encoding=encoding,
@@ -297,6 +322,7 @@ def gs(ctx, credentials, title):
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
     )
 

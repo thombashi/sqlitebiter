@@ -569,3 +569,32 @@ class Test_sqlitebiter_file(object):
             print_traceback(result)
 
             assert result.exit_code == ExitCode.NO_INPUT
+
+    def test_normal_type_hint_header(self):
+        runner = CliRunner()
+        basename = "type_hint_header"
+        file_path = "{}.csv".format(basename)
+        db_path = "{}.sqlite".format(basename)
+
+        with runner.isolated_filesystem():
+            with open(file_path, "w") as f:
+                f.write(
+                    dedent(
+                        """\
+                        "a text","b integer","c real"
+                        1,"1","1.1"
+                        2,"2","1.2"
+                        3,"3","1.3"
+                        """
+                    )
+                )
+                f.flush()
+
+            result = runner.invoke(cmd, ["--type-hint-header", "-o", db_path, "file", file_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = SimpleSQLite(db_path, "r")
+            tbldata = con.select_as_tabledata(basename)
+            assert tbldata.headers == ["a text", "b integer", "c real"]
+            assert tbldata.rows == [("1", 1, 1.1), ("2", 2, 1.2), ("3", 3, 1.3)]

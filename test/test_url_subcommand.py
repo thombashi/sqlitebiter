@@ -6,6 +6,8 @@
 
 from __future__ import print_function
 
+from textwrap import dedent
+
 import pytest
 import responses
 from click.testing import CliRunner
@@ -57,6 +59,39 @@ class Test_url_subcommand(object):
             )
 
             assert set(con.fetch_table_names()) == expected
+
+    @responses.activate
+    def test_normal_type_hint_header(self):
+        url = "https://example.com/type_hint_header.csv"
+        responses.add(
+            responses.GET,
+            url,
+            body=dedent(
+                """\
+                "a text","b integer","c real"
+                1,"1","1.1"
+                2,"2","1.2"
+                3,"3","1.3"
+                """
+            ),
+            content_type="text/plain; charset=utf-8",
+            status=200,
+        )
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(cmd, ["--type-hint-header", "-o", self.db_path, "url", url])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = SimpleSQLite(self.db_path, "r")
+            table_names = list(set(con.fetch_table_names()) - set([SourceInfo.get_table_name()]))
+
+            # table name may change test execution order
+            tbldata = con.select_as_tabledata(table_names[0])
+
+            assert tbldata.headers == ["a text", "b integer", "c real"]
+            assert tbldata.rows == [("1", 1, 1.1), ("2", 2, 1.2), ("3", 3, 1.3)]
 
     @pytest.mark.xfail(run=False)
     @pytest.mark.parametrize(

@@ -19,6 +19,7 @@ import six
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
 from ._base import SourceInfo, TableConverter
+from ._common import TYPE_HINT_FROM_HEADER_RULES
 
 
 def _get_format_type_from_path(file_path):
@@ -34,6 +35,7 @@ class FileConverter(TableConverter):
         con,
         symbol_replace_value,
         index_list,
+        is_type_hint_header,
         verbosity_level,
         format_name,
         encoding,
@@ -41,7 +43,14 @@ class FileConverter(TableConverter):
         follow_symlinks,
     ):
         super(FileConverter, self).__init__(
-            logger, con, symbol_replace_value, index_list, verbosity_level, format_name, encoding
+            logger,
+            con,
+            symbol_replace_value,
+            index_list,
+            is_type_hint_header,
+            verbosity_level,
+            format_name,
+            encoding,
         )
 
         self.__exclude_pattern = exclude_pattern
@@ -100,7 +109,10 @@ class FileConverter(TableConverter):
 
         try:
             loader = ptr.TableFileLoader(
-                file_path, format_name=self._format_name, encoding=self._encoding
+                file_path,
+                format_name=self._format_name,
+                encoding=self._encoding,
+                type_hint_rules=TYPE_HINT_FROM_HEADER_RULES if self._is_type_hint_header else None,
             )
         except ptr.InvalidFilePathError as e:
             logger.debug(msgfy.to_debug_message(e))
