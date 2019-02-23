@@ -49,7 +49,7 @@ Usage
 =======
 Create SQLite database from files
 -----------------------------------
-.. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/master/docs/svg/usage_example.svg
+.. image:: https://cdn.jsdelivr.net/gh/thombashi/sqlitebiter@master/docs/svg/usage_example.svg
 
 Create SQLite database from URL
 ---------------------------------
@@ -116,6 +116,46 @@ In the following example shows replace symbols to underscores.
         CREATE TABLE IF NOT EXISTS 'Comparison_of_firewalls_Wikipedia_html10' (A TEXT, B TEXT);
         CREATE TABLE IF NOT EXISTS 'Comparison_of_firewalls_Wikipedia_html11' (A TEXT, B TEXT);
 
+Command help
+--------------
+::
+
+    Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
+
+    Options:
+      --version                       Show the version and exit.
+      -o, --output-path PATH          Output path of the SQLite database file.
+                                      Defaults to 'out.sqlite'.
+      -a, --append                    append table(s) to existing database.
+      --add-primary-key PRIMARY_KEY_NAME
+                                      add PRIMARY KEY AUTOINCREMENT column with
+                                      the specified name.
+      -i, --index INDEX_ATTR          comma separated attribute names to create
+                                      indices.
+      --type-hint-header              Use headers suffix as type hints.
+                                      If there
+                                      are type hints, converting columns by
+                                      datatype corresponding with type hints.
+                                      The
+                                      following suffixes can be recognized as type
+                                      hints (case insensitive):
+                                      "text": TEXT
+                                      datatype.
+                                      "integer": INTEGER datatype.
+                                      "real": REAL datatype.
+      --replace-symbol TEXT           Replace symbols in attributes.
+      -v, --verbose
+      --debug                         for debug print.
+      -q, --quiet                     suppress execution log messages.
+      -h, --help                      Show this message and exit.
+
+    Commands:
+      completion  A helper command to setup command completion.
+      configure   Configure the following application settings: (1) Default...
+      file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
+      gs          Convert a spreadsheet in Google Sheets to a SQLite database...
+      url         Scrape tabular data from a URL and convert data to a SQLite...
+
 For more information
 ~~~~~~~~~~~~~~~~~~~~~~
 More examples are available at 
@@ -155,31 +195,6 @@ Installing executable files in Windows
 #. Download the latest version of the ``sqlitebiter_win_x64.zip``
 #. Unzip the file
 #. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
-
-.. code-block:: batch
-
-    >cd sqlitebiter_win_x64
-    >sqlitebiter.exe -h
-    Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-      --version               Show the version and exit.
-      -o, --output-path PATH  Output path of the SQLite database file. Defaults to
-                              'out.sqlite'.
-      -a, --append            append table(s) to existing database.
-      -i, --index TEXT        comma separated attribute names to create indices.
-      --replace-symbol TEXT   Replace symbols in attributes.
-      -v, --verbose
-      --debug                 for debug print.
-      -q, --quiet             suppress execution log messages.
-      -h, --help              Show this message and exit.
-
-    Commands:
-      completion  A helper command to setup command completion.
-      configure   Configure the following application settings: (1) Default...
-      file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
-      gs          Convert a spreadsheet in Google Sheets to a SQLite database...
-      url         Scrape tabular data from a URL and convert data to a SQLite...
 
 
 Installation for macOS via Homebrew
