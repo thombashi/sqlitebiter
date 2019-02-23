@@ -19,11 +19,10 @@ class TableCreator(object):
     def create(self, table_data, index_list, source_info):
         con_mem = simplesqlite.connect_memdb()
         con_mem.create_table_from_tabledata(table_data)
-        need_rename = self.__require_rename_table(con_mem, table_data.table_name)
         src_table_name = con_mem.fetch_table_names()[0]
         dst_table_name = src_table_name
 
-        if need_rename:
+        if self.__require_rename_table(con_mem, table_data.table_name):
             dst_table_name = self.__make_unique_table_name(src_table_name)
 
             self.__logger.debug(
