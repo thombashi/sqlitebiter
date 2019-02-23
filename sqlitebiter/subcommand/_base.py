@@ -42,6 +42,7 @@ class TableConverter(object):
         logger,
         con,
         symbol_replace_value,
+        add_pri_key_name,
         index_list,
         is_type_hint_header,
         verbosity_level,
@@ -64,6 +65,7 @@ class TableConverter(object):
         self._table_creator = TableCreator(
             logger=self._logger,
             dst_con=con,
+            add_pri_key_name=add_pri_key_name,
             result_logger=self._result_logger,
             verbosity_level=verbosity_level,
         )

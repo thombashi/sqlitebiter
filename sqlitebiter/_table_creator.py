@@ -10,15 +10,23 @@ import simplesqlite
 
 
 class TableCreator(object):
-    def __init__(self, logger, dst_con, result_logger, verbosity_level):
+    def __init__(self, logger, dst_con, add_pri_key_name, result_logger, verbosity_level):
         self.__logger = logger
         self.__dst_con = dst_con
+        self.__add_pri_key_name = add_pri_key_name
         self.__result_logger = result_logger
         self.__verbosity_level = verbosity_level
 
     def create(self, table_data, index_list, source_info):
         con_mem = simplesqlite.connect_memdb()
-        con_mem.create_table_from_tabledata(table_data)
+
+        if self.__add_pri_key_name:
+            con_mem.create_table_from_tabledata(
+                table_data, primary_key=self.__add_pri_key_name, add_primary_key_column=True
+            )
+        else:
+            con_mem.create_table_from_tabledata(table_data)
+
         src_table_name = con_mem.fetch_table_names()[0]
         dst_table_name = src_table_name
 

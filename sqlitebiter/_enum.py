@@ -12,6 +12,7 @@ from enum import Enum
 class Context(Enum):
     DUP_DATABASE = 1
     INDEX_LIST = 10
+    ADD_PRIMARY_KEY_NAME = 15
     TYPE_HINT_HEADER = 20
     LOG_LEVEL = 30
     OUTPUT_PATH = 40

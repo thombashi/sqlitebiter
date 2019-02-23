@@ -114,6 +114,12 @@ def finalize(con, converter, is_create_db):
     "-a", "--append", "is_append_table", is_flag=True, help="append table(s) to existing database."
 )
 @click.option(
+    "--add-primary-key",
+    "add_pri_key_name",
+    metavar="PRIMARY_KEY_NAME",
+    help="add PRIMARY KEY AUTOINCREMENT column with the specified name.",
+)
+@click.option(
     "-i",
     "--index",
     "index_list",
@@ -151,6 +157,7 @@ def cmd(
     ctx,
     output_path,
     is_append_table,
+    add_pri_key_name,
     index_list,
     is_type_hint_header,
     symbol_replace_value,
@@ -160,6 +167,7 @@ def cmd(
     ctx.obj[Context.OUTPUT_PATH] = output_path
     ctx.obj[Context.SYMBOL_REPLACE_VALUE] = symbol_replace_value
     ctx.obj[Context.DUP_DATABASE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
+    ctx.obj[Context.ADD_PRIMARY_KEY_NAME] = add_pri_key_name
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
@@ -208,6 +216,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         logger=logger,
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
+        add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
@@ -290,6 +299,7 @@ def url(ctx, url, format_name, encoding, proxy):
         logger=logger,
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
+        add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
@@ -322,6 +332,7 @@ def gs(ctx, credentials, title):
         logger=logger,
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
+        add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
