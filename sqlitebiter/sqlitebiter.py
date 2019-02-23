@@ -117,6 +117,7 @@ def finalize(con, converter, is_create_db):
     "-i",
     "--index",
     "index_list",
+    metavar="INDEX_ATTR",
     default="",
     help="comma separated attribute names to create indices.",
 )
