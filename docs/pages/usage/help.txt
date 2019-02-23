@@ -3,16 +3,31 @@
     Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --version               Show the version and exit.
-      -o, --output-path PATH  Output path of the SQLite database file. Defaults to
-                              'out.sqlite'.
-      -a, --append            append table(s) to existing database.
-      -i, --index TEXT        comma separated attribute names to create indices.
-      --replace-symbol TEXT   Replace symbols in attributes.
+      --version                       Show the version and exit.
+      -o, --output-path PATH          Output path of the SQLite database file.
+                                      Defaults to 'out.sqlite'.
+      -a, --append                    append table(s) to existing database.
+      --add-primary-key PRIMARY_KEY_NAME
+                                      add PRIMARY KEY AUTOINCREMENT column with
+                                      the specified name.
+      -i, --index INDEX_ATTR          comma separated attribute names to create
+                                      indices.
+      --type-hint-header              Use headers suffix as type hints.
+                                      If there
+                                      are type hints, converting columns by
+                                      datatype corresponding with type hints.
+                                      The
+                                      following suffixes can be recognized as type
+                                      hints (case insensitive):
+                                      "text": TEXT
+                                      datatype.
+                                      "integer": INTEGER datatype.
+                                      "real": REAL datatype.
+      --replace-symbol TEXT           Replace symbols in attributes.
       -v, --verbose
-      --debug                 for debug print.
-      -q, --quiet             suppress execution log messages.
-      -h, --help              Show this message and exit.
+      --debug                         for debug print.
+      -q, --quiet                     suppress execution log messages.
+      -h, --help                      Show this message and exit.
 
     Commands:
       completion  A helper command to setup command completion.

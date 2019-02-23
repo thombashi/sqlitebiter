@@ -33,31 +33,6 @@ Installing executable files in Windows
 #. Unzip the file
 #. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
-.. code-block:: batch
-
-    >cd sqlitebiter_win_x64
-    >sqlitebiter.exe -h
-    Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
-
-    Options:
-      --version               Show the version and exit.
-      -o, --output-path PATH  Output path of the SQLite database file. Defaults to
-                              'out.sqlite'.
-      -a, --append            append table(s) to existing database.
-      -i, --index TEXT        comma separated attribute names to create indices.
-      --replace-symbol TEXT   Replace symbols in attributes.
-      -v, --verbose
-      --debug                 for debug print.
-      -q, --quiet             suppress execution log messages.
-      -h, --help              Show this message and exit.
-
-    Commands:
-      completion  A helper command to setup command completion.
-      configure   Configure the following application settings: (1) Default...
-      file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
-      gs          Convert a spreadsheet in Google Sheets to a SQLite database...
-      url         Scrape tabular data from a URL and convert data to a SQLite...
-
 
 Installation for macOS via Homebrew
 ----------------------------------------------------------

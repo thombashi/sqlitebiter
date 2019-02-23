@@ -28,12 +28,15 @@ def write_examples(maker):
 
     maker.write_lines(
         [
-            ".. image:: https://cdn.rawgit.com/thombashi/sqlitebiter/master/docs/svg/usage_example.svg"
+            ".. image:: https://cdn.jsdelivr.net/gh/thombashi/sqlitebiter@master/docs/svg/usage_example.svg"
         ]
     )
 
     maker.write_chapter("Create SQLite database from URL")
     maker.write_file(usage_root.joinpath("url", "usage.txt"))
+
+    maker.write_chapter("Command help")
+    maker.write_file(usage_root.joinpath("help.txt"))
 
     maker.inc_indent_level()
     maker.write_chapter("For more information")
