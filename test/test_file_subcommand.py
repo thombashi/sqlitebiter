@@ -307,11 +307,11 @@ class Test_sqlitebiter_file(object):
                         +-----+-------+----+---+-------+-----+-----+
                         |Field| Type  |Null|Key|Default|Index|Extra|
                         +=====+=======+====+===+=======+=====+=====+
-                        |aa   |REAL   |NO  |   |NULL   |  X  |     |
+                        |aa   |REAL   |YES |   |NULL   |  X  |     |
                         +-----+-------+----+---+-------+-----+-----+
-                        |ab   |INTEGER|NO  |   |NULL   |     |     |
+                        |ab   |INTEGER|YES |   |NULL   |     |     |
                         +-----+-------+----+---+-------+-----+-----+
-                        |ac   |TEXT   |NO  |   |NULL   |  X  |     |
+                        |ac   |TEXT   |YES |   |NULL   |  X  |     |
                         +-----+-------+----+---+-------+-----+-----+
                     """
                 ),
