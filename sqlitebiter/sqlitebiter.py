@@ -74,7 +74,7 @@ def make_logger(channel_name, log_level):
     return logger
 
 
-def initialize(log_level):
+def initialize_log_handler(log_level):
     from logbook.more import ColorizedStderrHandler
 
     debug_format_str = (
@@ -204,7 +204,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     file(s) or named pipes to a SQLite database file.
     """
 
-    initialize(ctx.obj[Context.LOG_LEVEL])
+    initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(files):
@@ -278,7 +278,7 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    initialize(ctx.obj[Context.LOG_LEVEL])
+    initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     try:
@@ -325,7 +325,7 @@ def gs(ctx, credentials, title):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    initialize(ctx.obj[Context.LOG_LEVEL])
+    initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = GoogleSheetsConverter(
