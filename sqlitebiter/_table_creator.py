@@ -66,16 +66,16 @@ class TableCreator(object):
         return lhs != rhs
 
     def __make_unique_table_name(self, table_name_base):
-        exist_table_name_list = self.__dst_con.fetch_table_names()
+        exist_table_names = self.__dst_con.fetch_table_names()
 
-        if table_name_base not in exist_table_name_list:
+        if table_name_base not in exist_table_names:
             return table_name_base
 
         suffix_id = 1
         while True:
             table_name_candidate = "{:s}_{:d}".format(table_name_base, suffix_id)
 
-            if table_name_candidate not in exist_table_name_list:
+            if table_name_candidate not in exist_table_names:
                 return table_name_candidate
 
             suffix_id += 1
