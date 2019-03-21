@@ -28,16 +28,16 @@ class Test_sqlitebiter_file(object):
         TableLoader.clear_table_count()
 
     @pytest.mark.parametrize(
-        ["option_list", "expected"],
+        ["options", "expected"],
         [
             [["-h"], ExitCode.SUCCESS],
             [["file", "-h"], ExitCode.SUCCESS],
             [["gs", "-h"], ExitCode.SUCCESS],
         ],
     )
-    def test_help(self, option_list, expected):
+    def test_help(self, options, expected):
         runner = CliRunner()
-        result = runner.invoke(cmd, option_list)
+        result = runner.invoke(cmd, options)
         assert result.exit_code == expected
 
     @pytest.mark.parametrize(
@@ -101,7 +101,7 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            file_list = [
+            files = [
                 valid_json_single_file(),
                 valid_json_multi_file_1(),
                 valid_jsonlines_file(),
@@ -116,7 +116,7 @@ class Test_sqlitebiter_file(object):
                 valid_utf16_csv_file(),
             ]
 
-            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
 
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -152,7 +152,7 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            file_list = [
+            files = [
                 invalid_csv_file(),
                 invalid_json_single_file(),
                 invalid_excel_file_1(),
@@ -163,7 +163,7 @@ class Test_sqlitebiter_file(object):
                 not_supported_format_file(),
             ]
 
-            for file_path in file_list:
+            for file_path in files:
                 result = runner.invoke(cmd, ["-o", db_path, "file", file_path])
 
                 assert result.exit_code in (ExitCode.FAILED_CONVERT, ExitCode.NO_INPUT), file_path
@@ -184,7 +184,7 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            file_list = [
+            files = [
                 valid_json_single_file(),
                 invalid_json_single_file(),
                 valid_json_multi_file_1(),
@@ -205,7 +205,7 @@ class Test_sqlitebiter_file(object):
                 not_supported_format_file(),
             ]
 
-            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(db_path, "r")
@@ -375,12 +375,12 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            file_list = [valid_json_multi_file_2_1()]
+            files = [valid_json_multi_file_2_1()]
             table_name = "multij2"
             expected_table_list = [table_name, SourceInfo.get_table_name()]
 
             # first execution without --append option (new) ---
-            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -400,7 +400,7 @@ class Test_sqlitebiter_file(object):
             assert expected_data == actual_data
 
             # second execution with --append option ---
-            result = runner.invoke(cmd, ["-o", db_path, "--append", "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "--append", "file"] + files)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -427,7 +427,7 @@ class Test_sqlitebiter_file(object):
             assert expected_data == actual_data
 
             # third execution without --append option (overwrite) ---
-            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -451,9 +451,9 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            file_list = [valid_json_multi_file_2_1(), valid_json_multi_file_2_2()]
+            files = [valid_json_multi_file_2_1(), valid_json_multi_file_2_2()]
 
-            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
@@ -497,9 +497,9 @@ class Test_sqlitebiter_file(object):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            file_list = [valid_json_multi_file_2_2(), valid_json_multi_file_2_3()]
+            files = [valid_json_multi_file_2_2(), valid_json_multi_file_2_3()]
 
-            result = runner.invoke(cmd, ["-o", db_path, "file"] + file_list)
+            result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
             print_traceback(result)
             assert result.exit_code == ExitCode.SUCCESS
 
