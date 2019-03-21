@@ -13,7 +13,6 @@ import re
 
 import msgfy
 import nbformat
-import requests
 import six
 from six.moves.urllib.parse import urlparse
 
@@ -45,6 +44,27 @@ def _schema_not_found_error_handler(e):
         )
 
 
+def make_requests_session(retries=5, status_forcelist=(500, 502, 504)):
+    from requests.adapters import HTTPAdapter
+    from requests.packages.urllib3.util.retry import Retry
+    from requests import Session
+
+    session = Session()
+    adapter = HTTPAdapter(
+        max_retries=Retry(
+            total=retries,
+            read=retries,
+            connect=retries,
+            backoff_factor=0.5,
+            status_forcelist=status_forcelist,
+        )
+    )
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+
+    return session
+
+
 def load_ipynb_file(file_path, encoding):
     with io.open(file_path, encoding=encoding) as f:
         try:
@@ -57,7 +77,7 @@ def load_ipynb_file(file_path, encoding):
 
 
 def load_ipynb_url(url, proxies):
-    response = requests.get(url, proxies=proxies)
+    response = make_requests_session().get(url, proxies=proxies)
     response.raise_for_status()
 
     try:
