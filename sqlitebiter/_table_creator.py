@@ -6,6 +6,9 @@
 
 from __future__ import absolute_import, unicode_literals
 
+from textwrap import dedent
+
+import simplejson as json
 import simplesqlite
 
 
@@ -63,7 +66,24 @@ class TableCreator(object):
         lhs = self.__dst_con.schema_extractor.fetch_table_schema(src_table_name).as_dict()
         rhs = src_con.schema_extractor.fetch_table_schema(src_table_name).as_dict()
 
-        return lhs != rhs
+        if lhs != rhs:
+            self.__logger.debug(
+                dedent(
+                    """\
+                    require rename '{table}' because of src table and dst table has
+                    a different schema with the same table name:
+                    dst-schema={dst_schema}
+                    src-schema={src_schema}
+                    """
+                ).format(
+                    table=src_table_name,
+                    src_schema=json.dumps(lhs, indent=4),
+                    dst_schema=json.dumps(rhs, indent=4),
+                )
+            )
+            return True
+
+        return False
 
     def __make_unique_table_name(self, table_name_base):
         exist_table_names = self.__dst_con.fetch_table_names()
