@@ -274,7 +274,7 @@ class CellConverter(JupyterNotebookConverterBase):
             )
             self._changed_table_name_set.add(table_name)
 
-    def __to_kv_record_list(self, data_map):
+    def __to_kv_records(self, data_map):
         record_list = []
         for key, value in data_map.items():
             if key == "metadata":
@@ -321,7 +321,7 @@ class CellConverter(JupyterNotebookConverterBase):
                 if self.__convert_output_data(output_data, need_create_output_table):
                     need_create_output_table = False
 
-                self._con.insert_many(outputs_kv_table_name, self.__to_kv_record_list(output_data))
+                self._con.insert_many(outputs_kv_table_name, self.__to_kv_records(output_data))
                 self._result_logger.logging_success(
                     self._get_log_header("{} {}".format(category, KEY_VALUE_TABLE)),
                     outputs_kv_table_name,
@@ -335,7 +335,7 @@ class CellConverter(JupyterNotebookConverterBase):
         if not cell_data:
             return
 
-        kv_records = self.__to_kv_record_list(cell_data)
+        kv_records = self.__to_kv_records(cell_data)
         if len(kv_records) == 0:
             return
 
