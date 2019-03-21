@@ -335,8 +335,8 @@ class CellConverter(JupyterNotebookConverterBase):
         if not cell_data:
             return
 
-        kv_record_list = self.__to_kv_record_list(cell_data)
-        if len(kv_record_list) == 0:
+        kv_records = self.__to_kv_record_list(cell_data)
+        if len(kv_records) == 0:
             return
 
         kv_table_name, need_create_kv_table = self._make_table_name([KEY_VALUE_TABLE])
@@ -344,7 +344,7 @@ class CellConverter(JupyterNotebookConverterBase):
             kv_table_name,
             [NbAttrDesc.SOURECE_ID, NbAttrDesc.CELL_ID, NbAttrDesc.KEY, NbAttrDesc.VALUE],
         )
-        self._con.insert_many(kv_table_name, kv_record_list)
+        self._con.insert_many(kv_table_name, kv_records)
 
         self._result_logger.logging_success(
             self._get_log_header(KEY_VALUE_TABLE), kv_table_name, need_create_kv_table
@@ -434,13 +434,13 @@ def convert_nb(logger, source_info, con, result_logger, nb):
 
     table_name = KEY_VALUE_TABLE
     need_create_table = not con.has_table(table_name)
-    kv_record_list = [
+    kv_records = [
         [source_info.source_id, key, nb.get(key)] for key in ("nbformat", "nbformat_minor")
     ]
 
-    if len(kv_record_list) > 0:
+    if len(kv_records) > 0:
         con.create_table(table_name, [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, NbAttrDesc.VALUE])
-        con.insert_many(table_name, kv_record_list)
+        con.insert_many(table_name, kv_records)
 
         result_logger.logging_success(
             "{}: {}".format(source_info.base_name, table_name), table_name, need_create_table
