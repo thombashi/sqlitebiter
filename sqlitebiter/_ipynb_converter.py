@@ -116,8 +116,8 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
     def _need_create_table(self, table_name):
         return not self._con.has_table(table_name)
 
-    def _make_table_name(self, name_list):
-        table_name = "_".join([self._base_table_name] + name_list)
+    def _make_table_name(self, names):
+        table_name = "_".join([self._base_table_name] + names)
 
         return (table_name, self._need_create_table(table_name))
 
