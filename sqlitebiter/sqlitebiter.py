@@ -101,6 +101,23 @@ def finalize(con, converter, is_create_db):
     return converter.get_return_code()
 
 
+def load_convert_config(logger, config_filepath, subcommand):
+    import simplejson as json
+    import io
+
+    if not config_filepath:
+        return {}
+
+    if not os.path.isfile(config_filepath):
+        logger.debug("{} not found".format(config_filepath))
+        return {}
+
+    with io.open(config_filepath, encoding="utf-8") as f:
+        configs = json.load(f)
+
+    return configs.get(subcommand)
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__, message="%(prog)s %(version)s")
 @click.option(
@@ -119,6 +136,7 @@ def finalize(con, converter, is_create_db):
     metavar="PRIMARY_KEY_NAME",
     help="add PRIMARY KEY AUTOINCREMENT column with the specified name.",
 )
+@click.option("--convert-config", help="[experimental] configurations for table conversion.")
 @click.option(
     "-i",
     "--index",
@@ -158,6 +176,7 @@ def cmd(
     output_path,
     is_append_table,
     add_pri_key_name,
+    convert_config,
     index_list,
     is_type_hint_header,
     symbol_replace_value,
@@ -169,6 +188,7 @@ def cmd(
     ctx.obj[Context.DUP_DATABASE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
     ctx.obj[Context.ADD_PRIMARY_KEY_NAME] = add_pri_key_name
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
+    ctx.obj[Context.CONVERT_CONFIG] = convert_config
     ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
@@ -211,12 +231,17 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         logger.error("require at least one file specification.\n\n{}".format(ctx.get_help()))
         sys.exit(ExitCode.NO_INPUT)
 
+    convert_configs = load_convert_config(
+        logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="file"
+    )
+
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = FileConverter(
         logger=logger,
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
+        convert_configs=convert_configs,
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
@@ -294,12 +319,15 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_null_string(proxy):
         proxy = app_configs.get(ConfigKey.PROXY_SERVER)
 
+    convert_configs = load_convert_config(logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="url")
+
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = UrlConverter(
         logger=logger,
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
+        convert_configs=convert_configs,
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
@@ -328,11 +356,16 @@ def gs(ctx, credentials, title):
     initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
     logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
+    convert_configs = load_convert_config(
+        logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="file"
+    )
+
     converter = GoogleSheetsConverter(
         logger=logger,
         con=con,
         symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
         add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
+        convert_configs=convert_configs,
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),

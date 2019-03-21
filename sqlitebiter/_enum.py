@@ -11,6 +11,7 @@ from enum import Enum
 
 class Context(Enum):
     DUP_DATABASE = 1
+    CONVERT_CONFIG = 5
     INDEX_LIST = 10
     ADD_PRIMARY_KEY_NAME = 15
     TYPE_HINT_HEADER = 20

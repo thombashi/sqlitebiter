@@ -16,3 +16,16 @@ TYPE_HINT_FROM_HEADER_RULES = {
     re.compile("[ -_]integer$", re.IGNORECASE): Integer,
     re.compile("[ -_]real$", re.IGNORECASE): RealNumber,
 }
+
+_to_type_hint = {
+    "integer": Integer,
+    "int": Integer,
+    "real": RealNumber,
+    "float": RealNumber,
+    "str": String,
+    "text": String,
+}
+
+
+def normalize_type_hint(type_hint_str):
+    return _to_type_hint[type_hint_str.strip().lower()]

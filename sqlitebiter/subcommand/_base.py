@@ -43,6 +43,7 @@ class TableConverter(object):
         con,
         symbol_replace_value,
         add_pri_key_name,
+        convert_configs,
         index_list,
         is_type_hint_header,
         verbosity_level,
@@ -52,6 +53,7 @@ class TableConverter(object):
         self._logger = logger
         self._con = con
         self._symbol_replace_value = symbol_replace_value
+        self._convert_configs = convert_configs
         self._index_list = index_list
         self._is_type_hint_header = is_type_hint_header
         self._verbosity_level = verbosity_level

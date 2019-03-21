@@ -35,6 +35,7 @@ class FileConverter(TableConverter):
         con,
         symbol_replace_value,
         add_pri_key_name,
+        convert_configs,
         index_list,
         is_type_hint_header,
         verbosity_level,
@@ -46,13 +47,14 @@ class FileConverter(TableConverter):
         super(FileConverter, self).__init__(
             logger,
             con,
-            symbol_replace_value,
-            add_pri_key_name,
-            index_list,
-            is_type_hint_header,
-            verbosity_level,
-            format_name,
-            encoding,
+            symbol_replace_value=symbol_replace_value,
+            add_pri_key_name=add_pri_key_name,
+            convert_configs=convert_configs,
+            index_list=index_list,
+            is_type_hint_header=is_type_hint_header,
+            verbosity_level=verbosity_level,
+            format_name=format_name,
+            encoding=encoding,
         )
 
         self.__exclude_pattern = exclude_pattern
