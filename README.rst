@@ -130,6 +130,8 @@ Command help
       --add-primary-key PRIMARY_KEY_NAME
                                       add PRIMARY KEY AUTOINCREMENT column with
                                       the specified name.
+      --convert-config TEXT           [experimental] configurations for table
+                                      conversion.
       -i, --index INDEX_ATTR          comma separated attribute names to create
                                       indices.
       --type-hint-header              Use headers suffix as type hints.
