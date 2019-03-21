@@ -282,17 +282,17 @@ def url(ctx, url, format_name, encoding, proxy):
     logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     try:
-        configs = app_config_mgr.load()
+        app_configs = app_config_mgr.load()
     except ValueError as e:
         logger.debug(msgfy.to_debug_message(e))
-        configs = {}
+        app_configs = {}
 
     if typepy.is_empty_sequence(encoding):
-        encoding = configs.get(ConfigKey.DEFAULT_ENCODING)
+        encoding = app_configs.get(ConfigKey.DEFAULT_ENCODING)
         logger.debug("use default encoding: {}".format(encoding))
 
     if typepy.is_null_string(proxy):
-        proxy = configs.get(ConfigKey.PROXY_SERVER)
+        proxy = app_configs.get(ConfigKey.PROXY_SERVER)
 
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     converter = UrlConverter(
