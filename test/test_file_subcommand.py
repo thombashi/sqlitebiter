@@ -209,7 +209,7 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(db_path, "r")
-            expected_table_list = [
+            expected_tables = [
                 "singlejson",
                 "multij1",
                 "multij2",
@@ -226,11 +226,11 @@ class Test_sqlitebiter_file(object):
                 "valid_mdtable_markdown1",
                 SourceInfo.get_table_name(),
             ]
-            actual_table_list = con.fetch_table_names()
+            actual_tables = con.fetch_table_names()
 
-            print_test_result(expected=expected_table_list, actual=actual_table_list)
+            print_test_result(expected=expected_tables, actual=actual_tables)
 
-            assert set(actual_table_list) == set(expected_table_list)
+            assert set(actual_tables) == set(expected_tables)
 
             expected_data_table = {
                 "singlejson": [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")],
@@ -377,7 +377,7 @@ class Test_sqlitebiter_file(object):
         with runner.isolated_filesystem():
             files = [valid_json_multi_file_2_1()]
             table_name = "multij2"
-            expected_table_list = [table_name, SourceInfo.get_table_name()]
+            expected_tables = [table_name, SourceInfo.get_table_name()]
 
             # first execution without --append option (new) ---
             result = runner.invoke(cmd, ["-o", db_path, "file"] + files)
@@ -386,11 +386,11 @@ class Test_sqlitebiter_file(object):
 
             con = SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.fetch_table_names()
+            actual_tables = con.fetch_table_names()
 
-            print_test_result(expected=expected_table_list, actual=actual_table_list)
+            print_test_result(expected=expected_tables, actual=actual_tables)
 
-            assert set(actual_table_list) == set(expected_table_list)
+            assert set(actual_tables) == set(expected_tables)
 
             actual_data = con.select("*", table_name=table_name).fetchall()
             expected_data = [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")]
@@ -406,11 +406,11 @@ class Test_sqlitebiter_file(object):
 
             con = SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.fetch_table_names()
+            actual_tables = con.fetch_table_names()
 
-            print_test_result(expected=expected_table_list, actual=actual_table_list)
+            print_test_result(expected=expected_tables, actual=actual_tables)
 
-            assert set(actual_table_list) == set(expected_table_list)
+            assert set(actual_tables) == set(expected_tables)
 
             actual_data = con.select("*", table_name=table_name).fetchall()
             expected_data = [
@@ -433,11 +433,11 @@ class Test_sqlitebiter_file(object):
 
             con = SimpleSQLite(db_path, "r")
 
-            actual_table_list = con.fetch_table_names()
+            actual_tables = con.fetch_table_names()
 
-            print_test_result(expected=expected_table_list, actual=actual_table_list)
+            print_test_result(expected=expected_tables, actual=actual_tables)
 
-            assert set(actual_table_list) == set(expected_table_list)
+            assert set(actual_tables) == set(expected_tables)
 
             actual_data = con.select("*", table_name=table_name).fetchall()
             expected_data = [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")]
@@ -458,12 +458,12 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(db_path, "r")
-            expected_table_list = ["multij2", SourceInfo.get_table_name()]
-            actual_table_list = con.fetch_table_names()
+            expected_tables = ["multij2", SourceInfo.get_table_name()]
+            actual_tables = con.fetch_table_names()
 
-            print_test_result(expected=expected_table_list, actual=actual_table_list)
+            print_test_result(expected=expected_tables, actual=actual_tables)
 
-            assert set(actual_table_list) == set(expected_table_list)
+            assert set(actual_tables) == set(expected_tables)
 
             expected_data_table = {
                 "multij2": [
@@ -504,12 +504,12 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(db_path, "r")
-            expected_table_list = ["multij2", "multij2_1", SourceInfo.get_table_name()]
-            actual_table_list = con.fetch_table_names()
+            expected_tables = ["multij2", "multij2_1", SourceInfo.get_table_name()]
+            actual_tables = con.fetch_table_names()
 
-            print_test_result(expected=expected_table_list, actual=actual_table_list)
+            print_test_result(expected=expected_tables, actual=actual_tables)
 
-            assert set(actual_table_list) == set(expected_table_list)
+            assert set(actual_tables) == set(expected_tables)
 
             expected_data_table = {
                 "multij2": [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")],
