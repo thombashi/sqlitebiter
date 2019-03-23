@@ -10,6 +10,7 @@ from textwrap import dedent
 
 import simplejson as json
 import simplesqlite
+from typepy import String
 
 
 class TableCreator(object):
@@ -23,12 +24,11 @@ class TableCreator(object):
     def create(self, table_data, index_list, source_info):
         con_mem = simplesqlite.connect_memdb()
 
-        if self.__add_pri_key_name:
-            con_mem.create_table_from_tabledata(
-                table_data, primary_key=self.__add_pri_key_name, add_primary_key_column=True
-            )
-        else:
-            con_mem.create_table_from_tabledata(table_data)
+        con_mem.create_table_from_tabledata(
+            table_data,
+            primary_key=self.__add_pri_key_name,
+            add_primary_key_column=String(self.__add_pri_key_name).is_type(),
+        )
 
         src_table_name = con_mem.fetch_table_names()[0]
         dst_table_name = src_table_name
