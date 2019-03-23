@@ -126,14 +126,18 @@ Command help
       --version                       Show the version and exit.
       -o, --output-path PATH          Output path of the SQLite database file.
                                       Defaults to 'out.sqlite'.
-      -a, --append                    append table(s) to existing database.
+      -a, --append                    Append table(s) to existing database.
       --add-primary-key PRIMARY_KEY_NAME
-                                      add PRIMARY KEY AUTOINCREMENT column with
+                                      Add 'PRIMARY KEY AUTOINCREMENT' column with
                                       the specified name.
-      --convert-config TEXT           [experimental] configurations for table
-                                      conversion.
-      -i, --index INDEX_ATTR          comma separated attribute names to create
+      --convert-config TEXT           [experimental]
+                                      Configurations for data
+                                      conversion. The option can be used only for
+                                      url subcommand.
+      -i, --index INDEX_ATTR          Comma separated attribute names to create
                                       indices.
+      --no-type-inference             All of the columns assume as TEXT data type
+                                      in creating tables.
       --type-hint-header              Use headers suffix as type hints.
                                       If there
                                       are type hints, converting columns by
@@ -147,8 +151,8 @@ Command help
                                       "real": REAL datatype.
       --replace-symbol TEXT           Replace symbols in attributes.
       -v, --verbose
-      --debug                         for debug print.
-      -q, --quiet                     suppress execution log messages.
+      --debug                         For debug print.
+      -q, --quiet                     Suppress execution log messages.
       -h, --help                      Show this message and exit.
 
     Commands:
