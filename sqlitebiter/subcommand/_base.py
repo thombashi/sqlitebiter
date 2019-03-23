@@ -45,6 +45,7 @@ class TableConverter(object):
         add_pri_key_name,
         convert_configs,
         index_list,
+        is_type_inference,
         is_type_hint_header,
         verbosity_level,
         format_name=None,
@@ -55,6 +56,7 @@ class TableConverter(object):
         self._symbol_replace_value = symbol_replace_value
         self._convert_configs = convert_configs
         self._index_list = index_list
+        self._is_type_inference = is_type_inference
         self._is_type_hint_header = is_type_hint_header
         self._verbosity_level = verbosity_level
         self._format_name = format_name
@@ -117,7 +119,7 @@ class TableConverter(object):
             dup_col_handler = DEFAULT_DUP_COL_HANDLER
 
         normalized_table_data = SQLiteTableDataSanitizer(
-            table_data, dup_col_handler=dup_col_handler
+            table_data, dup_col_handler=dup_col_handler, is_type_inference=self._is_type_inference
         ).normalize()
 
         if self._symbol_replace_value is None:

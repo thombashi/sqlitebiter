@@ -289,7 +289,7 @@ class Test_sqlitebiter_file(object):
             expected = (
                 "table_name=ssv, "
                 "headers=[USER, PID, %CPU, %MEM, VSZ, RSS, TTY, STAT, START, TIME, COMMAND], "
-                "rows=5"
+                "cols=11, rows=5"
             )
 
             assert str(data) == expected
@@ -628,3 +628,31 @@ class Test_sqlitebiter_file(object):
             tbldata = con.select_as_tabledata(basename)
             assert tbldata.headers == ["id", "a", "b"]
             assert tbldata.rows == [(1, 11, "xyz"), (2, 22, "abc")]
+
+    def test_normal_no_type_inference(self):
+        runner = CliRunner()
+        basename = "no_type_inference"
+        file_path = "{}.csv".format(basename)
+        db_path = "{}.sqlite".format(basename)
+
+        with runner.isolated_filesystem():
+            with open(file_path, "w") as f:
+                f.write(
+                    dedent(
+                        """\
+                        "a","b"
+                        11,"xyz"
+                        22,"abc"
+                        """
+                    )
+                )
+                f.flush()
+
+            result = runner.invoke(cmd, ["--no-type-inference", "-o", db_path, "file", file_path])
+            print_traceback(result)
+            assert result.exit_code == ExitCode.SUCCESS
+
+            con = SimpleSQLite(db_path, "r")
+            tbldata = con.select_as_tabledata(basename)
+            assert tbldata.headers == ["a", "b"]
+            assert tbldata.rows == [("11", "xyz"), ("22", "abc")]

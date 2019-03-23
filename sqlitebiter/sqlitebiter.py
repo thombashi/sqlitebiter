@@ -154,6 +154,11 @@ def load_convert_config(logger, config_filepath, subcommand):
     help="Comma separated attribute names to create indices.",
 )
 @click.option(
+    "--no-type-inference",
+    is_flag=True,
+    help="All of the columns assume as TEXT data type in creating tables.",
+)
+@click.option(
     "--type-hint-header",
     "is_type_hint_header",
     is_flag=True,
@@ -186,6 +191,7 @@ def cmd(
     add_pri_key_name,
     convert_config,
     index_list,
+    no_type_inference,
     is_type_hint_header,
     symbol_replace_value,
     verbosity_level,
@@ -197,6 +203,7 @@ def cmd(
     ctx.obj[Context.ADD_PRIMARY_KEY_NAME] = add_pri_key_name
     ctx.obj[Context.INDEX_LIST] = index_list.split(",")
     ctx.obj[Context.CONVERT_CONFIG] = convert_config
+    ctx.obj[Context.TYPE_INFERENCE] = not no_type_inference
     ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
@@ -251,6 +258,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
         convert_configs=convert_configs,
         index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
@@ -337,6 +345,7 @@ def url(ctx, url, format_name, encoding, proxy):
         add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
         convert_configs=convert_configs,
         index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         format_name=format_name,
@@ -375,6 +384,7 @@ def gs(ctx, credentials, title):
         add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
         convert_configs=convert_configs,
         index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
     )
