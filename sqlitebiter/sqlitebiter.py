@@ -128,22 +128,30 @@ def load_convert_config(logger, config_filepath, subcommand):
     help="Output path of the SQLite database file. Defaults to '{:s}'.".format(Default.OUTPUT_FILE),
 )
 @click.option(
-    "-a", "--append", "is_append_table", is_flag=True, help="append table(s) to existing database."
+    "-a", "--append", "is_append_table", is_flag=True, help="Append table(s) to existing database."
 )
 @click.option(
     "--add-primary-key",
     "add_pri_key_name",
     metavar="PRIMARY_KEY_NAME",
-    help="add PRIMARY KEY AUTOINCREMENT column with the specified name.",
+    help="Add 'PRIMARY KEY AUTOINCREMENT' column with the specified name.",
 )
-@click.option("--convert-config", help="[experimental] configurations for table conversion.")
+@click.option(
+    "--convert-config",
+    help=dedent(
+        """\
+        [experimental]
+        Configurations for data conversion. The option can be used only for url subcommand.
+        """
+    ),
+)
 @click.option(
     "-i",
     "--index",
     "index_list",
     metavar="INDEX_ATTR",
     default="",
-    help="comma separated attribute names to create indices.",
+    help="Comma separated attribute names to create indices.",
 )
 @click.option(
     "--type-hint-header",
@@ -162,13 +170,13 @@ def load_convert_config(logger, config_filepath, subcommand):
 )
 @click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
-@click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="for debug print.")
+@click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="For debug print.")
 @click.option(
     "-q",
     "--quiet",
     "log_level",
     flag_value=QUIET_LOG_LEVEL,
-    help="suppress execution log messages.",
+    help="Suppress execution log messages.",
 )
 @click.pass_context
 def cmd(
