@@ -26,6 +26,8 @@ echo $PKG_NAME $PKG_VERSION
 # build an executable binary file
 pyinstaller cli.py --clean --onefile --distpath $DIST_DIR_PATH --name $PKG_NAME
 
+${DIST_DIR_PATH}/sqlitebiter --version
+
 # build a deb package
 cat << _CONTROL_ > "${DIST_DIR_NAME}/DEBIAN/control"
 Package: $PKG_NAME
