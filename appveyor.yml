@@ -43,6 +43,7 @@ for:
 
     test_script:
         - "%PYTHON%/python.exe invoke_pytest.py"
+
   -
     matrix:
       only:
