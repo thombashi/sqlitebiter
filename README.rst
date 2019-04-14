@@ -248,6 +248,7 @@ Following mandatory Python packages are automatically installed during
 - `path.py <https://github.com/jaraco/path.py>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
+- `retryrequests <https://github.com/thombashi/retryrequests>`__
 - `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
 - `typepy <https://github.com/thombashi/typepy>`__
 
