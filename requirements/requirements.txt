@@ -5,11 +5,12 @@ enum34;python_version<"3.4"
 Logbook>=1.1.0,<2.0.0
 msgfy>=0.0.5,<0.1.0
 nbformat>=4.4.0,<5.0.0
-path.py
+path.py<12; python_version <= "3.4"
+path.py>=12.0.1,<13; python_version > "3.4"
 pathvalidate>=0.26.0,<1.0.0
-pytablereader[excel,sqlite,url]>=0.25.4,<1.0.0
+pytablereader[excel,sqlite,url]>=0.25.5,<1.0.0
 requests>=2.21.0,<3.0.0
 retryrequests>=0.0.1,<0.1.0
 simplejson>=3.16.0,<4.0.0
-SimpleSQLite>=0.44.0,<1.0.0
+SimpleSQLite>=0.44.1,<1.0.0
 typepy>=0.4.0,<1.0.0
