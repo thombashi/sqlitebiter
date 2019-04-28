@@ -6,9 +6,10 @@
 
 from __future__ import absolute_import
 
-from enum import Enum
+from enum import Enum, unique
 
 
+@unique
 class Context(Enum):
     DUP_DATABASE = 1
     CONVERT_CONFIG = 5
@@ -30,6 +31,7 @@ class ExitCode(object):
     NO_INPUT = 10
 
 
+@unique
 class DupDatabase(Enum):
     OVERWRITE = 1
     APPEND = 2
