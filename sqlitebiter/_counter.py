@@ -6,7 +6,7 @@
 
 from __future__ import absolute_import, unicode_literals
 
-from ._enum import ExitCode
+from ._const import ExitCode
 
 
 class ResultCounter(object):

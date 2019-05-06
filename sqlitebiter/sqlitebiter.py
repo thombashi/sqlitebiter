@@ -23,8 +23,8 @@ import typepy
 from .__version__ import __version__
 from ._common import DEFAULT_DUP_COL_HANDLER
 from ._config import ConfigKey, app_config_mgr
-from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME
-from ._enum import Context, DupDatabase, ExitCode
+from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME, ExitCode
+from ._enum import Context, DupDatabase
 from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
 
 

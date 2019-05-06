@@ -12,7 +12,7 @@ import pytest
 import responses
 from click.testing import CliRunner
 from simplesqlite import SimpleSQLite
-from sqlitebiter._enum import ExitCode
+from sqlitebiter._const import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqlitebiter.subcommand._base import SourceInfo
 

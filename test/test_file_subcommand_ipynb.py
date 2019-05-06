@@ -11,7 +11,7 @@ import platform
 
 import pytest
 from click.testing import CliRunner
-from sqlitebiter._enum import ExitCode
+from sqlitebiter._const import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 
 from .common import print_traceback

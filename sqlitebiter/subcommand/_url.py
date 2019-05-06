@@ -18,8 +18,7 @@ import simplesqlite as sqlite
 import six
 from six.moves.urllib.parse import urlparse
 
-from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
-from .._enum import ExitCode
+from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
 from .._ipynb_converter import is_ipynb_url, load_ipynb_url
 from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES, normalize_type_hint

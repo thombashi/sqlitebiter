@@ -14,7 +14,7 @@ import pytest
 from click.testing import CliRunner
 from pytablereader.interface import TableLoader
 from simplesqlite import SimpleSQLite
-from sqlitebiter._enum import ExitCode
+from sqlitebiter._const import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqlitebiter.subcommand._base import SourceInfo
 from sqliteschema import SQLiteSchemaExtractor

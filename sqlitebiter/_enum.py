@@ -23,14 +23,6 @@ class Context(Enum):
     SYMBOL_REPLACE_VALUE = 60
 
 
-class ExitCode(object):
-    SUCCESS = 0
-    FAILED_LOADER_NOT_FOUND = 1
-    FAILED_CONVERT = 2
-    FAILED_HTTP = 3
-    NO_INPUT = 10
-
-
 @unique
 class DupDatabase(Enum):
     OVERWRITE = 1

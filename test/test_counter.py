@@ -5,8 +5,8 @@
 """
 
 import pytest
+from sqlitebiter._const import ExitCode
 from sqlitebiter._counter import ResultCounter
-from sqlitebiter._enum import ExitCode
 
 
 class Test_ResultCounter(object):
