@@ -181,8 +181,20 @@ Install via pip (recommended)
         pip install sqlitebiter
 
 
-Installation for Debian/Ubuntu from a deb package
+Installation for Debian/Ubuntu
 ----------------------------------------------------------
+
+Install from PPA (for Ubuntu)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
+
+    sudo add-apt-repository ppa:thombashi/ppa
+    sudo apt update
+    sudo apt install sqlitebiter
+
+Install from a deb package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 #. ``wget https://github.com/thombashi/sqlitebiter/releases/download/<version>/sqlitebiter_<version>_amd64.deb``
 #. ``dpkg -iv sqlitebiter_<version>_amd64.deb``
 
