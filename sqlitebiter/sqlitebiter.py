@@ -64,7 +64,10 @@ def make_logger(channel_name, log_level):
     logger = logbook.Logger(channel_name)
 
     if log_level == QUIET_LOG_LEVEL:
-        logger.disable()
+        try:
+            logger.disable()
+        except AttributeError:
+            logger.disabled = True  # to support Logbook<1.0.0
 
     logger.level = log_level
     ptr.set_log_level(log_level)
