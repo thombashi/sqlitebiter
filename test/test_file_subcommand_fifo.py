@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import os
+import platform  # noqa
 from concurrent.futures import ProcessPoolExecutor
 
 import pytest
