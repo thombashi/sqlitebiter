@@ -9,7 +9,7 @@ DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 .PHONY: build
 build:
 	@make clean
-	@python setup.py build
+	@python setup.py sdist bdist_wheel
 	@twine check dist/*
 	@python setup.py clean --all
 	ls -lh dist/*
@@ -21,7 +21,7 @@ releasebuild:
 	@cd $(BUILD_WORK_DIR); \
 		git clone https://github.com/$(AUTHOR)/$(PACKAGE).git; \
 		cd $(PACKAGE); \
-		python setup.py build
+		python setup.py sdist bdist_wheel
 	@twine check $(DIST_DIR)/*
 	ls -lh $(DIST_DIR)/*
 
