@@ -6,32 +6,27 @@ matrix:
     include:
         - os: linux
           python: 2.7
-          sudo: required
           env:
               - TOXENV=py27
 
         - os: linux
           python: 3.5
-          sudo: required
           env:
               - TOXENV=py35
 
         - os: linux
           python: 3.6
-          sudo: required
           env:
               - TOXENV=py36
 
         - os: linux
           dist: xenial
           python: 3.7
-          sudo: required
           env: TOXENV=py37
 
         - os: linux
           dist: xenial
           python: 3.6
-          sudo: required
           env:
               - TOXENV=build
               - DEPLOY_FILE='dist/sqlitebiter_*.deb'
