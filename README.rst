@@ -266,13 +266,13 @@ Following mandatory Python packages are automatically installed during
 
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Extra Python packages are required to install to use Google Sheets feature:
+Extra Python packages are required to install to use Google Sheets feature (`gs` subcommand):
 
 - `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
 - `pyOpenSSL <https://pyopenssl.readthedocs.io/en/stable/>`_
 
-The above packages can be installed with the following pip command;
+The extra packages can be installed with the following `pip` command;
 
 .. code:: console
 
