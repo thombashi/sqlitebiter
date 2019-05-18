@@ -11,7 +11,7 @@ build:
 	@make clean
 	@python setup.py sdist bdist_wheel
 	@twine check dist/*
-	@python setup.py clean --all
+	@python setup.py clean
 	ls -lh dist/*
 
 .PHONY: releasebuild
@@ -25,6 +25,11 @@ releasebuild:
 	@twine check $(DIST_DIR)/*
 	ls -lh $(DIST_DIR)/*
 
+.PHONY: check
+check:
+	python setup.py check
+	pylama
+
 .PHONY: clean
 clean:
 	@rm -rf $(PACKAGE)-*.*.*/ \
@@ -35,9 +40,10 @@ clean:
 		.eggs/ \
 		.pytest_cache/ \
 		.tox/ \
-		**/__pycache__/ \
-		**/*/__pycache__/ \
 		*.egg-info/
+	@python setup.py clean
+	@find . -name "__pycache__" -type d -exec rm -rf "{}" \;
+	@find . -name "*.pyc" -delete
 	@find . -not -path '*/\.*' -type f | grep -E .+\.py\.[a-z0-9]{32,}\.py$ | xargs -r rm
 
 .PHONY: docs
