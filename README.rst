@@ -194,15 +194,13 @@ Install from PPA (for Ubuntu)
 
 Install from a deb package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
-#. ``wget https://github.com/thombashi/sqlitebiter/releases/download/<version>/sqlitebiter_<version>_amd64.deb``
-#. ``dpkg -iv sqlitebiter_<version>_amd64.deb``
-
-:Example:
-    .. code:: console
-
-        $ wget https://github.com/thombashi/sqlitebiter/releases/download/v0.20.0/sqlitebiter_0.20.0_amd64.deb
-        $ sudo dpkg -i sqlitebiter_0.20.0_amd64.deb
+    ARCHIVE_URL=$(curl -sL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep deb) &&
+    TEMP_DEB="$(mktemp)" &&
+    wget -O "${TEMP_DEB}" "${ARCHIVE_URL}" &&
+    sudo dpkg -i "${TEMP_DEB}"
+    rm -f "${TEMP_DEB}"
 
 
 Installing executable files in Windows
