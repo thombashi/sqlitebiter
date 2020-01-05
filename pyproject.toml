@@ -1,15 +1,17 @@
 [tool.black]
 line-length = 100
-exclude = """
-.eggs/
-| .git/
-| .tox/
-| .venv/
-| _build/
-| build/
-| dist/
-| _sandbox/
+exclude = '''
+/(
+      \.eggs
+    | \.git
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
 | docs/conf.py
-| setup.py
 | test/dataset.py
-"""
+'''
