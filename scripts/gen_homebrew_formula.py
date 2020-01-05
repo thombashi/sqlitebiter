@@ -12,8 +12,9 @@ import os
 import sys
 from textwrap import indent
 
-import sqlitebiter
 from subprocrunner import SubprocessRunner
+
+import sqlitebiter
 
 
 def main():

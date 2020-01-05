@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sphinx_rtd_theme
+
 from sqlitebiter import __author__, __copyright__, __name__, __version__
 
 

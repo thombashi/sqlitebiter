@@ -9,6 +9,7 @@ from concurrent.futures import ProcessPoolExecutor
 import pytest
 from click.testing import CliRunner
 from simplesqlite import SimpleSQLite
+
 from sqlitebiter._const import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 

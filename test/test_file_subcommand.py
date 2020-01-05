@@ -14,10 +14,11 @@ import pytest
 from click.testing import CliRunner
 from pytablereader.interface import TableLoader
 from simplesqlite import SimpleSQLite
+from sqliteschema import SQLiteSchemaExtractor
+
 from sqlitebiter._const import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 from sqlitebiter.subcommand._base import SourceInfo
-from sqliteschema import SQLiteSchemaExtractor
 
 from .common import print_test_result, print_traceback
 from .dataset import *

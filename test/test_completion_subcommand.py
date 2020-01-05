@@ -6,6 +6,7 @@ import re
 
 import pytest
 from click.testing import CliRunner
+
 from sqlitebiter._const import ExitCode
 from sqlitebiter.sqlitebiter import cmd
 
