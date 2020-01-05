@@ -88,10 +88,12 @@ setuptools.setup(
         "build": build_requires,
         "buildexe": build_exe_requires,
         "buildwhl": build_wheel_requires,
-        "docs": docs_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "mediawiki": ["pypandoc"],
-        "release": ["releasecmd>=0.0.18,<0.1.0"],
+        "dev": ["releasecmd>=0.2.0,<1"]
+        + ["autoflake", "black", "codespell", "isort", "pylama"]
+        + docs_requires
+        + tests_requires,
         "test": tests_requires,
     },
 
