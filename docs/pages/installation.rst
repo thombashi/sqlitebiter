@@ -81,12 +81,12 @@ Following mandatory Python packages are automatically installed during
 ``sqlitebiter`` installation process:
 
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
-- `click <http://click.pocoo.org/>`__
+- `click <https://palletsprojects.com/p/click/>`__
 - `colorama <https://github.com/tartley/colorama>`__
 - `logbook <https://logbook.readthedocs.io/en/stable/>`__
 - `msgfy <https://github.com/thombashi/msgfy>`__
 - `nbformat <https://jupyter.org/>`__
-- `path.py <https://github.com/jaraco/path.py>`__
+- `path <https://github.com/jaraco/path>`__
 - `pathvalidate <https://github.com/thombashi/pathvalidate>`__
 - `pytablereader <https://github.com/thombashi/pytablereader>`__
 - `retryrequests <https://github.com/thombashi/retryrequests>`__
