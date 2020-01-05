@@ -1,24 +1,25 @@
 build: false
 environment:
-    matrix:
-        - PYTHON: "C:/Python27-x64"
-        - PYTHON: "C:/Python35-x64"
-        - PYTHON: "C:/Python36-x64"
-        - PYTHON: "C:/Python37-x64"
+  matrix:
+    - PYTHON: "C:/Python27-x64"
+    - PYTHON: "C:/Python35-x64"
+    - PYTHON: "C:/Python36-x64"
+    - PYTHON: "C:/Python37-x64"
+    - PYTHON: "C:/Python38-x64"
 
 configuration:
-    - Test
-    - Release
+  - Test
+  - Release
 
 init:
-    - "ECHO %PYTHON%"
-    - ps: "ls C:/Python*"
+  - "ECHO %PYTHON%"
+  - ps: "ls C:/Python*"
 
 notifications:
-    - provider: Slack
-      auth_token:
-          secure: JyTQAtBzpPYiWK3eRTz/U+rvmAKopqIWE19ti4vSL/IRygV3jUVUkwET1VyTlrqOeYfNx3Kfcp7eUmHCHxFCgw==
-      channel: notifications
+  - provider: Slack
+    auth_token:
+      secure: JyTQAtBzpPYiWK3eRTz/U+rvmAKopqIWE19ti4vSL/IRygV3jUVUkwET1VyTlrqOeYfNx3Kfcp7eUmHCHxFCgw==
+    channel: notifications
 
 matrix:
   exclude:
@@ -28,10 +29,11 @@ matrix:
       PYTHON: "C:/Python35-x64"
     - configuration: Release
       PYTHON: "C:/Python36-x64"
+    - configuration: Release
+      PYTHON: "C:/Python38-x64"
 
 for:
-  -
-    matrix:
+  - matrix:
       only:
         - configuration: Test
 
@@ -44,8 +46,7 @@ for:
     test_script:
       - "%PYTHON%/python.exe invoke_pytest.py"
 
-  -
-    matrix:
+  - matrix:
       only:
         - configuration: Release
           PYTHON: "C:/Python37-x64"
@@ -64,4 +65,4 @@ for:
         draft: false
         prerelease: true
         on:
-          appveyor_repo_tag: true  # deploy on tag push only
+          appveyor_repo_tag: true # deploy on tag push only
