@@ -61,25 +61,30 @@ setuptools.setup(
     name=MODULE_NAME,
     version=pkg_info["__version__"],
     url=REPOSITORY_URL,
-
     author=pkg_info["__author__"],
     author_email=pkg_info["__email__"],
     description=summary,
     include_package_data=True,
     keywords=[
-        "SQLite", "converter",
-        "CSV", "Excel", "Google Sheets", "HTML", "JSON", "LTSV", "TSV",
+        "SQLite",
+        "converter",
+        "CSV",
+        "Excel",
+        "Google Sheets",
+        "HTML",
+        "JSON",
+        "LTSV",
+        "TSV",
     ],
     license=pkg_info["__license__"],
     long_description=long_description,
-    packages=setuptools.find_packages(exclude=['test*']),
+    packages=setuptools.find_packages(exclude=["test*"]),
     project_urls={
         "Documentation": "https://{:s}.rtfd.io/".format(MODULE_NAME),
         "Download": "{:s}/releases".format(REPOSITORY_URL),
         "Source": REPOSITORY_URL,
         "Tracker": "{:s}/issues".format(REPOSITORY_URL),
     },
-
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
     install_requires=SETUPTOOLS_REQUIRES + install_requires,
     setup_requires=SETUPTOOLS_REQUIRES + PYTEST_RUNNER_REQUIRES,
@@ -96,7 +101,6 @@ setuptools.setup(
         + tests_requires,
         "test": tests_requires,
     },
-
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
@@ -117,9 +121,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Topic :: Database",
     ],
-    entry_points={
-        "console_scripts": [
-            "sqlitebiter=sqlitebiter.sqlitebiter:cmd",
-        ],
-    },
-    cmdclass=get_release_command_class())
+    entry_points={"console_scripts": ["sqlitebiter=sqlitebiter.sqlitebiter:cmd",],},
+    cmdclass=get_release_command_class(),
+)
