@@ -50,7 +50,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
     docs_requires = [line.strip() for line in f if line.strip()]
 
-build_exe_requires = ["pyinstaller>=3.4"]
+build_exe_requires = ["pyinstaller>=3.5"]
 build_wheel_requires = ["twine", "wheel"]
 build_requires = build_exe_requires + build_wheel_requires
 
