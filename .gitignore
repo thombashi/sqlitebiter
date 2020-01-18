@@ -122,3 +122,4 @@ _win_build_env/
 Untitled.ipynb
 
 .pytype/
+*.snap
