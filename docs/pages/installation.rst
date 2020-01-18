@@ -6,10 +6,9 @@ Install via pip (recommended)
 ``sqlitebiter`` can be installed via
 `pip <https://pip.pypa.io/en/stable/installing/>`__ (Python package manager).
 
-:Example:
-    .. code:: console
+::
 
-        pip install sqlitebiter
+    pip install sqlitebiter
 
 
 Installation for Debian/Ubuntu
@@ -27,11 +26,7 @@ Install from a deb package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
-    ARCHIVE_URL=$(curl -sL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep deb) &&
-    TEMP_DEB="$(mktemp)" &&
-    wget -O "${TEMP_DEB}" "${ARCHIVE_URL}" &&
-    sudo dpkg -i "${TEMP_DEB}"
-    rm -f "${TEMP_DEB}"
+    curl -sL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash
 
 
 Installing executable files in Windows
@@ -59,11 +54,11 @@ Command Completion
 ----------------------------------------------------------
 .. code:: console
 
-    To setup for bash:
+    setup command completion for bash:
 
         sqlitebiter completion bash >> ~/.bashrc
 
-    To setup for zsh:
+    setup command completion for zsh:
 
         sqlitebiter completion zsh >> ~/.zshrc
 
