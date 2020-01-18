@@ -92,10 +92,7 @@ setuptools.setup(
         "buildexe": build_exe_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "mediawiki": ["pypandoc"],
-        "dev": ["releasecmd>=0.2.0,<1"]
-        + ["autoflake", "black", "codespell", "isort", "pylama"]
-        + docs_requires
-        + tests_requires,
+        "dev": ["releasecmd>=0.2.0,<1"] + ["codespell", "pylama"] + docs_requires + tests_requires,
         "test": tests_requires,
     },
     classifiers=[
