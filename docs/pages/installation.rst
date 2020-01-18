@@ -1,35 +1,47 @@
 Installation
 ============
 
-Install via pip (recommended)
-------------------------------
-``sqlitebiter`` can be installed via
-`pip <https://pip.pypa.io/en/stable/installing/>`__ (Python package manager).
-
+Installation: `pip <https://pip.pypa.io/en/stable/installing/>`__ (Python package manager)
+----------------------------------------------------------
 ::
 
     pip install sqlitebiter
 
 
-Installation for Debian/Ubuntu
-----------------------------------------------------------
+Installation: apt
+----------------------------------------------------------------------------
+You can install the package by ``apt`` via Personal Package Archive (`PPA <https://launchpad.net/~thombashi/+archive/ubuntu/ppa>`__):
 
-Install from PPA (for Ubuntu)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
     sudo add-apt-repository ppa:thombashi/ppa
     sudo apt update
     sudo apt install sqlitebiter
 
-Install from a deb package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installation: snap for Linux
+----------------------------------------------------------------------------
+::
+
+    sudo snap install sqlitebiter
+
+.. image:: https://snapcraft.io/static/images/badges/en/snap-store-black.svg
+    :target: https://snapcraft.io/sqlitebiter
+    :alt: Get it from the Snap Store
+
+- note: not available for WSL
+
+
+Installation: dpkg (``.deb`` package)
+----------------------------------------------------------------------------
+The following commands will execute download the latest ``.deb`` package from the `release page <https://github.com/thombashi/sqlitebiter/releases>`__, and install it.
+
 ::
 
     curl -sL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash
 
 
-Installing executable files in Windows
+Installation: Windows
 ----------------------------------------------------------
 ``sqlitebiter`` can be used in Windows environments without Python installation as follows:
 
@@ -39,9 +51,8 @@ Installing executable files in Windows
 #. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
 
-Installation for macOS via Homebrew
+Installation: brew for macOS
 ----------------------------------------------------------
-
 .. code:: console
 
     $ brew tap thombashi/sqlitebiter
