@@ -1,7 +1,7 @@
 Installation
 ============
 
-Installation: `pip <https://pip.pypa.io/en/stable/installing/>`__ (Python package manager)
+Installation: pip (Python package manager)
 ----------------------------------------------------------
 ::
 
