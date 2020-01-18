@@ -11,8 +11,8 @@ PKG_NAME="sqlitebiter"
 rm -rf $DIST_DIR_NAME
 mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 
-pip install --upgrade pip>=19.0.2 jsonschema==2.6.0
-pip install --upgrade .[excel,gs,mediawiki,sqlite,buildexe]
+pip install --upgrade "pip>=19.0.2"
+pip install --upgrade .[gs,mediawiki,buildexe]
 
 # temporal workaround for setuptools#1963
 pip install --upgrade "setuptools<45"

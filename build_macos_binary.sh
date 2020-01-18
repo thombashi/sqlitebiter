@@ -21,8 +21,8 @@ fi
 # initialize
 rm -rf $DIST_DIR_NAME
 
-$PIP install --upgrade pip>=19.0.2 jsonschema==2.6.0
-$PIP install --upgrade .[excel,gs,mediawiki,sqlite,buildexe]
+$PIP install --upgrade "pip>=19.0.2"
+$PIP install --upgrade .[gs,mediawiki,buildexe]
 
 # temporal workaround for setuptools#1963
 $PIP install --upgrade "setuptools<45"
