@@ -52,7 +52,7 @@ for:
           PYTHON: "C:/Python37-x64"
 
     before_deploy:
-      - "%PYTHON%/Scripts/pip.exe install .[excel,gs,mediawiki,sqlite,buildexe] jsonschema==2.6.0"
+      - "%PYTHON%/Scripts/pip.exe install .[gs,mediawiki,buildexe]"
       - "build_win_package.bat"
       - ps: appveyor PushArtifact dist/sqlitebiter_win_x64.zip
 
