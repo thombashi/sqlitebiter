@@ -19,19 +19,6 @@ You can install the package by ``apt`` via Personal Package Archive (`PPA <https
     sudo apt install sqlitebiter
 
 
-Installation: snap for Linux
-----------------------------------------------------------------------------
-::
-
-    sudo snap install sqlitebiter
-
-.. image:: https://snapcraft.io/static/images/badges/en/snap-store-black.svg
-    :target: https://snapcraft.io/sqlitebiter
-    :alt: Get it from the Snap Store
-
-- note: not available for WSL
-
-
 Installation: dpkg (``.deb`` package)
 ----------------------------------------------------------------------------
 The following commands will execute download the latest ``.deb`` package from the `release page <https://github.com/thombashi/sqlitebiter/releases>`__, and install it.
