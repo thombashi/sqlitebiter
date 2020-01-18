@@ -5,8 +5,8 @@ summary: sqlitebiter is a CLI tool to convert various files to a SQLite database
 description: |
   sqlitebiter is a CLI tool to convert CSV / Excel / HTML / JSON / Jupyter Notebook / LDJSON / LTSV / Markdown / SQLite / SSV / TSV / Google-Sheets to a SQLite database file.
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # devel/stable
+confinement: strict # devmode/strict
 
 architectures:
   - build-on: amd64
