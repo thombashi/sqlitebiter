@@ -14,6 +14,9 @@ mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 pip install --upgrade pip>=19.0.2 jsonschema==2.6.0
 pip install --upgrade .[excel,gs,mediawiki,sqlite,buildexe]
 
+# temporal workaround for setuptools#1963
+pip install --upgrade "setuptools<45"
+
 PKG_VERSION=$(python -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
 
 if [ "$PKG_VERSION" = "" ]; then
