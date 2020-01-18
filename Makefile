@@ -9,9 +9,7 @@ DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 .PHONY: build
 build:
 	@make clean
-	@python setup.py sdist bdist_wheel
-	@twine check dist/*
-	@python setup.py clean
+	@tox -e build
 	ls -lh dist/*
 
 .PHONY: releasebuild

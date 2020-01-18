@@ -51,8 +51,6 @@ with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
     docs_requires = [line.strip() for line in f if line.strip()]
 
 build_exe_requires = ["pyinstaller>=3.5"]
-build_wheel_requires = ["twine", "wheel"]
-build_requires = build_exe_requires + build_wheel_requires
 
 SETUPTOOLS_REQUIRES = ["setuptools>=38.3.0"]
 PYTEST_RUNNER_REQUIRES = ["pytest-runner"] if need_pytest() else []
@@ -91,9 +89,7 @@ setuptools.setup(
     setup_requires=SETUPTOOLS_REQUIRES + PYTEST_RUNNER_REQUIRES,
     tests_require=tests_requires,
     extras_require={
-        "build": build_requires,
         "buildexe": build_exe_requires,
-        "buildwhl": build_wheel_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "mediawiki": ["pypandoc"],
         "dev": ["releasecmd>=0.2.0,<1"]
