@@ -24,8 +24,6 @@ notifications:
 matrix:
   exclude:
     - configuration: Release
-      PYTHON: "C:/Python27-x64"
-    - configuration: Release
       PYTHON: "C:/Python35-x64"
     - configuration: Release
       PYTHON: "C:/Python36-x64"
