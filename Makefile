@@ -6,14 +6,8 @@ DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 DIST_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)/dist
 
 
-.PHONY: build
-build:
-	@make clean
-	@tox -e build
-	ls -lh dist/*
-
-.PHONY: releasebuild
-releasebuild:
+.PHONY: build-remote
+build-remote:
 	@rm -rf $(BUILD_WORK_DIR)/
 	@mkdir -p $(BUILD_WORK_DIR)/
 	@cd $(BUILD_WORK_DIR); \
@@ -22,6 +16,12 @@ releasebuild:
 		python setup.py sdist bdist_wheel
 	@twine check $(DIST_DIR)/*
 	ls -lh $(DIST_DIR)/*
+
+.PHONY: build
+build:
+	@make clean
+	@tox -e build
+	ls -lh dist/*
 
 .PHONY: check
 check:
