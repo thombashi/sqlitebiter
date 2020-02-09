@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
 
 from textwrap import dedent
 
@@ -21,7 +18,7 @@ from .common import print_traceback
 from .dataset import complex_json
 
 
-class Test_url_subcommand(object):
+class Test_url_subcommand:
 
     db_path = "test.sqlite"
 
@@ -44,20 +41,18 @@ class Test_url_subcommand(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(self.db_path, "r")
-            expected = set(
-                [
-                    "ratings",
-                    "screenshots_4",
-                    "screenshots_3",
-                    "screenshots_5",
-                    "screenshots_1",
-                    "screenshots_2",
-                    "tags",
-                    "versions",
-                    "root",
-                    SourceInfo.get_table_name(),
-                ]
-            )
+            expected = {
+                "ratings",
+                "screenshots_4",
+                "screenshots_3",
+                "screenshots_5",
+                "screenshots_1",
+                "screenshots_2",
+                "tags",
+                "versions",
+                "root",
+                SourceInfo.get_table_name(),
+            }
 
             assert set(con.fetch_table_names()) == expected
 
@@ -86,7 +81,7 @@ class Test_url_subcommand(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(self.db_path, "r")
-            table_names = list(set(con.fetch_table_names()) - set([SourceInfo.get_table_name()]))
+            table_names = list(set(con.fetch_table_names()) - {SourceInfo.get_table_name()})
 
             # table name may change test execution order
             tbldata = con.select_as_tabledata(table_names[0])

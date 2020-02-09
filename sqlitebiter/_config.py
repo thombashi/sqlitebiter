@@ -1,17 +1,14 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 from appconfigpy import ConfigItem, ConfigManager
 
 from ._const import PROGRAM_NAME
 
 
-class ConfigKey(object):
+class ConfigKey:
     DEFAULT_ENCODING = "default_encoding"
     PROXY_SERVER = "proxy_server"
     GS_CREDENTIALS_FILE_PATH = "gs_credentials_file_path"

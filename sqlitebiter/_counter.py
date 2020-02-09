@@ -1,15 +1,12 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 from ._const import ExitCode
 
 
-class ResultCounter(object):
+class ResultCounter:
     @property
     def success_count(self):
         return self.__success_count

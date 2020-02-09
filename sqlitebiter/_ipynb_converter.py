@@ -1,20 +1,15 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 import abc
-import io
 import os.path
 import re
 
 import msgfy
 import nbformat
 import retryrequests
-import six
 from six.moves.urllib.parse import urlparse
 
 
@@ -38,7 +33,7 @@ def is_ipynb_url(url):
 
 
 def _schema_not_found_error_handler(e):
-    if re.search("No such file or directory: .+schema.json", six.text_type(e)):
+    if re.search("No such file or directory: .+schema.json", str(e)):
         raise RuntimeError(
             "ipynb file format conversion not supported for the binary version. "
             "please try to install sqlitebiter via pip."
@@ -46,12 +41,12 @@ def _schema_not_found_error_handler(e):
 
 
 def load_ipynb_file(file_path, encoding):
-    with io.open(file_path, encoding=encoding) as f:
+    with open(file_path, encoding=encoding) as f:
         try:
             return nbformat.read(f, as_version=4)
         except AttributeError as e:
             raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
-        except IOError as e:
+        except OSError as e:
             _schema_not_found_error_handler(e)
             raise
 
@@ -62,12 +57,12 @@ def load_ipynb_url(url, proxies):
 
     try:
         return (nbformat.reads(response.text, as_version=4), len(response.content))
-    except IOError as e:
+    except OSError as e:
         _schema_not_found_error_handler(e)
         raise
 
 
-class NbAttr(object):
+class NbAttr:
     CELL_ID = "cell_id"
     KEY = "key"
     LINE_NUMBER = "line_no"
@@ -75,7 +70,7 @@ class NbAttr(object):
     VALUE = "value"
 
 
-class NbAttrDesc(object):
+class NbAttrDesc:
     CELL_ID = "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID)
     KEY = "{:s} TEXT NOT NULL".format(NbAttr.KEY)
     LINE_NUMBER = "{:s} INTEGER NOT NULL".format(NbAttr.LINE_NUMBER)
@@ -83,8 +78,7 @@ class NbAttrDesc(object):
     VALUE = "{:s} TEXT".format(NbAttr.VALUE)
 
 
-@six.add_metaclass(abc.ABCMeta)
-class JupyterNotebookConverterInterface(object):
+class JupyterNotebookConverterInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def convert(self):  # pragma: no cover
         pass
@@ -104,7 +98,7 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
         self._source_info = source_info
         self._con = con
         self._result_logger = result_logger
-        self._changed_table_name_set = set([])
+        self._changed_table_name_set = set()
 
     def _get_log_header(self, info_name):
         return "{:s}: {:s}({:s})".format(
@@ -128,7 +122,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         return "metadata"
 
     def __init__(self, logger, source_info, con, result_logger, metadata):
-        super(MetaDataConverter, self).__init__(logger, source_info, con, result_logger)
+        super().__init__(logger, source_info, con, result_logger)
 
         self.__metadata = metadata
 
@@ -230,7 +224,7 @@ class CellConverter(JupyterNotebookConverterBase):
         return "cells"
 
     def __init__(self, logger, source_info, con, result_logger, cells):
-        super(CellConverter, self).__init__(logger, source_info, con, result_logger)
+        super().__init__(logger, source_info, con, result_logger)
 
         self.__cells = cells
         self._cell_id = None
@@ -281,7 +275,7 @@ class CellConverter(JupyterNotebookConverterBase):
                 if not value:
                     record = (self.source_id, self._cell_id, key, None)
                 else:
-                    record = (self.source_id, self._cell_id, key, six.text_type(dict(value)))
+                    record = (self.source_id, self._cell_id, key, str(dict(value)))
 
                 record_list.append(record)
                 continue
@@ -424,7 +418,7 @@ class CellConverter(JupyterNotebookConverterBase):
 
 
 def convert_nb(logger, source_info, con, result_logger, nb):
-    changed_table_name_set = set([])
+    changed_table_name_set = set()
     changed_table_name_set |= CellConverter(
         logger, source_info, con, result_logger, nb.cells
     ).convert()

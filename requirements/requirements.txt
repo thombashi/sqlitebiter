@@ -1,14 +1,11 @@
 appconfigpy>=0.4.0,<2
 click>=6.2,<8.0
 colorama>=0.3.7,<1
-enum34;python_version<"3.4"
 loguru>=0.4.1,<1
 msgfy>=0.0.6,<1
 nbformat>=4.4.0,<5
-path.py<12; python_version <= "3.4"
-path.py>=12.0.1,<13; python_version > "3.4"
-pathvalidate<1; python_version < "3.5"
-pathvalidate<3; python_version >="3.5"
+path.py<13
+pathvalidate>=2.1.0,<3
 pytablereader[excel,md,sqlite,url]>=0.27.0,<2
 retryrequests>=0.0.2,<1
 simplejson>=3.8.1,<4

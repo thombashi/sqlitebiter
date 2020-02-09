@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
@@ -9,7 +7,7 @@ import pytest
 from sqlitebiter._ipynb_converter import is_ipynb_file_path, is_ipynb_url
 
 
-class Test_is_ipynb_file_path(object):
+class Test_is_ipynb_file_path:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [
@@ -29,7 +27,7 @@ class Test_is_ipynb_file_path(object):
         assert is_ipynb_file_path(value) == expected
 
 
-class Test_is_ipynb_url(object):
+class Test_is_ipynb_url:
     @pytest.mark.parametrize(
         ["value", "expected"],
         [

@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-from __future__ import print_function
-
 import re
 
 import pytest
@@ -13,7 +9,7 @@ from sqlitebiter.sqlitebiter import cmd
 from .common import print_test_result, print_traceback
 
 
-class Test_sqlitebiter_completion(object):
+class Test_sqlitebiter_completion:
     @pytest.mark.parametrize(
         ["shell", "expected"], [["bash", ExitCode.SUCCESS], ["zsh", ExitCode.SUCCESS]]
     )

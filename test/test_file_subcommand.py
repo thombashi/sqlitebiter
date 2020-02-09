@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
 
 import os
 from textwrap import dedent
@@ -24,7 +21,7 @@ from .common import print_test_result, print_traceback
 from .dataset import *
 
 
-class Test_sqlitebiter_file(object):
+class Test_sqlitebiter_file:
     def setup_method(self, method):
         TableLoader.clear_table_count()
 
@@ -250,9 +247,9 @@ class Test_sqlitebiter_file(object):
                 "excel_sheet_d": [(1, 1.1, "a"), (2, "", "bb"), (3, 3.3, "")],
                 "testtitle_tablename": [(1, 123.1, "a"), (2, 2.2, "bb"), (3, 3.3, "ccc")],
                 "valid_ltsv_a": [
-                    (1, 123.1, u'"ltsv0"', 1.0, u'"1"'),
-                    (2, 2.2, u'"ltsv1"', 2.2, u'"2.2"'),
-                    (3, 3.3, u'"ltsv2"', 3.0, u'"cccc"'),
+                    (1, 123.1, '"ltsv0"', 1.0, '"1"'),
+                    (2, 2.2, '"ltsv1"', 2.2, '"2.2"'),
+                    (3, 3.3, '"ltsv2"', 3.0, '"cccc"'),
                 ],
                 "testtitle_html2": [(1, 123.1), (2, 2.2), (3, 3.3)],
                 "tsv_a": [(1, 4.0, "tsv0"), (2, 2.1, "tsv1"), (3, 120.9, "tsv2")],
@@ -515,7 +512,7 @@ class Test_sqlitebiter_file(object):
 
             expected_data_table = {
                 "multij2": [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")],
-                "multij2_1": [(u"abc", u"a", 4.0), (u"abc", u"bb", 2.1), (u"abc", u"ccc", 120.9)],
+                "multij2_1": [("abc", "a", 4.0), ("abc", "bb", 2.1), ("abc", "ccc", 120.9)],
             }
 
             for table in con.fetch_table_names():
@@ -546,20 +543,18 @@ class Test_sqlitebiter_file(object):
             assert result.exit_code == ExitCode.SUCCESS
 
             con = SimpleSQLite(db_path, "r")
-            expected = set(
-                [
-                    "ratings",
-                    "screenshots_4",
-                    "screenshots_3",
-                    "screenshots_5",
-                    "screenshots_1",
-                    "screenshots_2",
-                    "tags",
-                    "versions",
-                    "root",
-                    SourceInfo.get_table_name(),
-                ]
-            )
+            expected = {
+                "ratings",
+                "screenshots_4",
+                "screenshots_3",
+                "screenshots_5",
+                "screenshots_1",
+                "screenshots_2",
+                "tags",
+                "versions",
+                "root",
+                SourceInfo.get_table_name(),
+            }
 
             assert set(con.fetch_table_names()) == expected
 

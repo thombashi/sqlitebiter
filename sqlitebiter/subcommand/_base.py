@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 import os.path
 
@@ -36,7 +33,7 @@ class SourceInfo(Model):
         return os.path.join(self.dir_name, self.base_name)
 
 
-class TableConverter(object):
+class TableConverter:
     def __init__(
         self,
         logger,

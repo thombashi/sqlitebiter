@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 import os
 import stat
@@ -14,7 +11,6 @@ from errno import EBADF, ENAMETOOLONG, ENOENT, ENOTDIR
 import msgfy
 import path
 import pytablereader as ptr
-import six
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
@@ -45,7 +41,7 @@ class FileConverter(TableConverter):
         exclude_pattern,
         follow_symlinks,
     ):
-        super(FileConverter, self).__init__(
+        super().__init__(
             logger,
             con,
             symbol_replace_value=symbol_replace_value,
@@ -135,7 +131,7 @@ class FileConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded tabledata: {}".format(six.text_type(table_data)))
+                logger.debug("loaded tabledata: {}".format(str(table_data)))
 
                 sqlite_tabledata = self.normalize_table(table_data)
 
@@ -143,7 +139,7 @@ class FileConverter(TableConverter):
                     self._table_creator.create(
                         sqlite_tabledata, self._index_list, source_info=source_info_record_base
                     )
-                except (ValueError, IOError) as e:
+                except (ValueError, OSError) as e:
                     logger.debug(
                         "exception={:s}, path={}, message={}".format(type(e).__name__, file_path, e)
                     )

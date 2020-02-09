@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 import errno
 import os
@@ -15,7 +12,6 @@ from copy import deepcopy
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
-import six
 from six.moves.urllib.parse import urlparse
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
@@ -67,7 +63,7 @@ class UrlConverter(TableConverter):
         encoding,
         proxy,
     ):
-        super(UrlConverter, self).__init__(
+        super().__init__(
             logger,
             con,
             symbol_replace_value=symbol_replace_value,
@@ -114,7 +110,7 @@ class UrlConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
+                logger.debug("loaded table_data: {}".format(str(table_data)))
 
                 sqlite_tabledata = self.normalize_table(table_data)
 
@@ -195,7 +191,7 @@ class UrlConverter(TableConverter):
             if config.get("target_url") not in url:
                 continue
 
-            for pattern, params in six.iteritems(config.get("rules")):
+            for pattern, params in config.get("rules").items():
                 if not params.get("type hint"):
                     continue
 

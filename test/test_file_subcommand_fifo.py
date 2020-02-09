@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-from __future__ import print_function
-
 import os
 import platform  # noqa
 from concurrent.futures import ProcessPoolExecutor
@@ -32,7 +28,7 @@ def fifo_writer(fifo_name):
         p.flush()
 
 
-class Test_sqlitebiter_file(object):
+class Test_sqlitebiter_file:
     @pytest.mark.skipif("platform.system() == 'Windows'")
     def test_smoke_one_file(self):
         db_path = "test.sqlite"

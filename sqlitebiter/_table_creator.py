@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 from textwrap import dedent
 
@@ -13,7 +10,7 @@ import simplesqlite
 from typepy import String
 
 
-class TableCreator(object):
+class TableCreator:
     def __init__(self, logger, dst_con, add_pri_key_name, result_logger, verbosity_level):
         self.__logger = logger
         self.__dst_con = dst_con

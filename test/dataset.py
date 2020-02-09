@@ -1,12 +1,8 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
 
-import io
 from textwrap import dedent
 
 import path
@@ -502,7 +498,7 @@ def valid_utf8_csv_file():
     encoding = "utf8"
     file_path = "valid_{:s}.csv".format(encoding)
 
-    with io.open(file_path, "w", encoding=encoding) as f:
+    with open(file_path, "w", encoding=encoding) as f:
         f.write(dedent("""\
             "姓","名","生年月日","郵便番号","住所","電話番号"
             "山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
@@ -516,7 +512,7 @@ def valid_utf16_csv_file():
     encoding = "utf16"
     file_path = "valid_{:s}.csv".format(encoding)
 
-    with io.open(file_path, "w", encoding=encoding) as f:
+    with open(file_path, "w", encoding=encoding) as f:
         f.write(dedent("""\
             "姓","名","生年月日","郵便番号","住所","電話番号"
             "山田","太郎","2001/1/1","100-0002","東京都千代田区皇居外苑","03-1234-5678"
@@ -647,7 +643,7 @@ complex_json = dedent("""\
 def valid_complex_json_file():
     file_path = "valid_complex_json.json"
 
-    with io.open(file_path, "w", encoding="utf8") as f:
+    with open(file_path, "w", encoding="utf8") as f:
         f.write(complex_json)
 
     return file_path

@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-# encoding: utf-8
 
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import
 
 import os
 import sys
@@ -37,7 +35,7 @@ COMMAND_EPILOG = dedent(
 )
 
 
-class Default(object):
+class Default:
     OUTPUT_FILE = "out.sqlite"
     ENCODING = "utf-8"
 
@@ -94,7 +92,6 @@ def finalize(con, converter, is_create_db):
 
 def load_convert_config(logger, config_filepath, subcommand):
     import simplejson as json
-    import io
 
     if not config_filepath:
         return {}
@@ -103,7 +100,7 @@ def load_convert_config(logger, config_filepath, subcommand):
         logger.debug("{} not found".format(config_filepath))
         return {}
 
-    with io.open(config_filepath, encoding="utf-8") as f:
+    with open(config_filepath, encoding="utf-8") as f:
         configs = json.load(f)
 
     return configs.get(subcommand)

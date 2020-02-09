@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 from ._clrm import bright, cyan, green
 
@@ -12,7 +9,7 @@ from ._clrm import bright, cyan, green
 DEFAULT_DUP_COL_HANDLER = "rename"
 
 
-class ResultLogger(object):
+class ResultLogger:
     @property
     def verbosity_level(self):
         return self.__verbosity_level

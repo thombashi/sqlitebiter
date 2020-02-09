@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
 
 import pytest
 from click.testing import CliRunner
@@ -47,7 +44,7 @@ def con_b0():
     return con
 
 
-class Test_sqlitebiter_file_sqlite_merge(object):
+class Test_sqlitebiter_file_sqlite_merge:
     def test_normal_same_table(self, con_a0, con_a1):
         out_db_path = "test.sqlite"
         runner = CliRunner()

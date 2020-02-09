@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import print_function
 
 import os
 import platform
@@ -21,7 +18,7 @@ from .common import print_traceback
 db_path = "test.sqlite"
 
 
-class Test_file_subcommand_ipynb(object):
+class Test_file_subcommand_ipynb:
     IPYNB_FILE_LIST = [
         "test/data/pytablewriter_examples.ipynb",
         "test/data/jupyter_notebook_example.ipynb",

@@ -1,14 +1,10 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from __future__ import absolute_import, unicode_literals
 
 import msgfy
 import pytablereader as ptr
-import six
 
 from ._base import SourceInfo, TableConverter
 
@@ -29,7 +25,7 @@ class GoogleSheetsConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded table_data: {}".format(six.text_type(table_data)))
+                logger.debug("loaded table_data: {}".format(str(table_data)))
 
                 sqlite_tabledata = self.normalize_table(table_data)
                 source_info = SourceInfo(

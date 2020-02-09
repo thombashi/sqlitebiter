@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
@@ -10,7 +8,7 @@ from sqlitebiter._const import ExitCode
 from sqlitebiter._counter import ResultCounter
 
 
-class Test_ResultCounter(object):
+class Test_ResultCounter:
     @pytest.mark.parametrize(
         ["success", "fail", "expected"],
         [

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 """
 Unit tests at Windows environments required to invoke from py module,
 because of multiprocessing:
