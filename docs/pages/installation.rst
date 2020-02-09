@@ -76,7 +76,7 @@ Following mandatory Python packages are automatically installed during
 - `appconfigpy <https://github.com/thombashi/appconfigpy>`__
 - `click <https://palletsprojects.com/p/click/>`__
 - `colorama <https://github.com/tartley/colorama>`__
-- `logbook <https://logbook.readthedocs.io/en/stable/>`__
+- `loguru <https://github.com/Delgan/loguru>`__
 - `msgfy <https://github.com/thombashi/msgfy>`__
 - `nbformat <https://jupyter.org/>`__
 - `path <https://github.com/jaraco/path>`__
@@ -100,10 +100,11 @@ The extra packages can be installed with the following `pip` command;
 
     $ pip install sqlitebiter[gs]
 
+note: binary packages include these dependencies
+
 Test dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `pytest <https://docs.pytest.org/en/latest/>`__
-- `pytest-runner <https://github.com/pytest-dev/pytest-runner>`__
 - `responses <https://github.com/getsentry/responses>`__
 - `sqliteschema <https://github.com/thombashi/sqliteschema>`__
 - `tox <https://testrun.org/tox/latest/>`__
