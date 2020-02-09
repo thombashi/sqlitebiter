@@ -207,7 +207,7 @@ class TableConverter(object):
         )
 
         if self._result_counter.success_count == success_count:
-            self._logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(source_info.base_name))
+            self._logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(source_info.base_name))
             return
 
         return created_table_set

@@ -158,7 +158,7 @@ class UrlConverter(TableConverter):
             result_counter.inc_fail()
 
         if result_counter.success_count == success_count:
-            logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
+            logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
 
     def __get_proxies(self):
         return {"http": self.__proxy, "https": self.__proxy}

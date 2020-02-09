@@ -12,13 +12,12 @@ import sys
 from textwrap import dedent
 
 import click
-import logbook
-import logbook.more
 import msgfy
 import path
 import pytablereader as ptr
 import simplesqlite as sqlite
 import typepy
+from loguru import logger
 
 from .__version__ import __version__
 from ._common import DEFAULT_DUP_COL_HANDLER
@@ -29,7 +28,7 @@ from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})
-QUIET_LOG_LEVEL = logbook.NOTSET
+QUIET_LOG_LEVEL = "QUIET"
 COMMAND_EPILOG = dedent(
     """\
     Documentation: https://sqlitebiter.rtfd.io/
@@ -58,39 +57,28 @@ def create_database(database_path, dup_table):
     return (sqlite.SimpleSQLite(db_path, "w"), is_create_db)
 
 
-def make_logger(channel_name, log_level):
-    import appconfigpy
-
-    logger = logbook.Logger(channel_name)
+def initialize_logger(name, log_level):
+    logger.remove()
 
     if log_level == QUIET_LOG_LEVEL:
-        try:
-            logger.disable()
-        except AttributeError:
-            logger.disabled = True  # to support Logbook<1.0.0
+        logger.disable(name)
+        return
 
-    logger.level = log_level
-    ptr.set_log_level(log_level)
-    sqlite.set_log_level(log_level)
-    appconfigpy.set_log_level(log_level)
-
-    return logger
-
-
-def initialize_log_handler(log_level):
-    from logbook.more import ColorizedStderrHandler
-
-    debug_format_str = (
-        "[{record.level_name}] {record.channel} {record.func_name} "
-        "({record.lineno}): {record.message}"
-    )
-    if log_level == logbook.DEBUG:
-        info_format_str = debug_format_str
+    if log_level == "DEBUG":
+        log_format = (
+            "<level>{level: <8}</level> | "
+            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+        )
     else:
-        info_format_str = "[{record.level_name}] {record.channel}: {record.message}"
+        log_format = "<level>[{level}]</level> {message}"
 
-    ColorizedStderrHandler(level=logbook.DEBUG, format_string=debug_format_str).push_application()
-    ColorizedStderrHandler(level=logbook.INFO, format_string=info_format_str).push_application()
+    logger.add(
+        sys.stdout, colorize=True, format=log_format, level=log_level,
+    )
+    logger.enable(name)
+    ptr.set_logger(True)
+    sqlite.set_logger(True)
+    # appconfigpy.set_logger(True)
 
 
 def finalize(con, converter, is_create_db):
@@ -178,7 +166,7 @@ def load_convert_config(logger, config_filepath, subcommand):
 )
 @click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
-@click.option("--debug", "log_level", flag_value=logbook.DEBUG, help="For debug print.")
+@click.option("--debug", "log_level", flag_value="DEBUG", help="For debug print.")
 @click.option(
     "-q",
     "--quiet",
@@ -209,7 +197,7 @@ def cmd(
     ctx.obj[Context.TYPE_INFERENCE] = not no_type_inference
     ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
-    ctx.obj[Context.LOG_LEVEL] = logbook.INFO if log_level is None else log_level
+    ctx.obj[Context.LOG_LEVEL] = "INFO" if log_level is None else log_level
 
     sqlite.SimpleSQLite.dup_col_handler = DEFAULT_DUP_COL_HANDLER
 
@@ -242,8 +230,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     file(s) or named pipes to a SQLite database file.
     """
 
-    initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
-    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(files):
         logger.error("require at least one file specification.\n\n{}".format(ctx.get_help()))
@@ -322,8 +309,7 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
-    logger = make_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     try:
         app_configs = app_config_mgr.load()
@@ -373,8 +359,7 @@ def gs(ctx, credentials, title):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    initialize_log_handler(ctx.obj[Context.LOG_LEVEL])
-    logger = make_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
     con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
     convert_configs = load_convert_config(
         logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="file"
@@ -410,7 +395,7 @@ def configure(ctx):
     You can remove these settings by deleting '~/.sqlitebiter'.
     """
 
-    logger = make_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     logger.debug("{} configuration file existence: {}".format(PROGRAM_NAME, app_config_mgr.exists))
 

@@ -107,7 +107,7 @@ class FileConverter(TableConverter):
             return
 
         if result_counter.success_count == success_count:
-            logger.warn(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+            logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
     def __convert(self, file_path, source_info_record_base):
         logger = self._logger
@@ -125,7 +125,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
         except ptr.LoaderNotFoundError:
-            logger.warn(
+            logger.warning(
                 "not supported file format: ext={}, path={}".format(file_path.ext, file_path)
             )
             result_counter.inc_fail()
@@ -213,12 +213,14 @@ class FileConverter(TableConverter):
             return False
 
         if not file_path.isfile() and not self.__is_fifo(file_path):
-            self._logger.warn(self.SKIP_MSG_FORMAT.format(source=file_path, message="not a file"))
+            self._logger.warning(
+                self.SKIP_MSG_FORMAT.format(source=file_path, message="not a file")
+            )
             self._result_counter.inc_skip()
             return False
 
         if file_path.realpath() == self._con.database_path:
-            self._logger.warn(
+            self._logger.warning(
                 self.SKIP_MSG_FORMAT.format(
                     source=file_path, message="same path as the output file"
                 )

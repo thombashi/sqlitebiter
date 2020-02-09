@@ -2,7 +2,7 @@ appconfigpy>=0.4.0,<2
 click>=6.2,<8.0
 colorama>=0.3.7,<1
 enum34;python_version<"3.4"
-Logbook>=0.12.3,<2
+loguru>=0.4.1,<1
 msgfy>=0.0.6,<1
 nbformat>=4.4.0,<5
 path.py<12; python_version <= "3.4"

@@ -20,6 +20,7 @@ exclude = '''
 [tool.isort]
 dont_skip = "*/**/__init__.py"
 known_third_party = [
+    'loguru',
     'pytest',
     'readmemaker',
     'responses',
