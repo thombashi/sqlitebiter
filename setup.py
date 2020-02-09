@@ -85,7 +85,7 @@ setuptools.setup(
         "buildexe": build_exe_requires,
         "gs": ["gspread", "oauth2client", "pyOpenSSL"],
         "mediawiki": ["pypandoc"],
-        "dev": ["releasecmd>=0.2.0,<1"] + docs_requires + tests_requires,
+        "dev": docs_requires + tests_requires,
         "test": tests_requires,
     },
     classifiers=[
