@@ -34,7 +34,7 @@ clean:
 
 .PHONY: docs
 docs:
-	@python setup.py build_sphinx --source-dir=$(DOCS_DIR)/ --build-dir=$(DOCS_BUILD_DIR) --all-files
+	@tox -e docs
 
 .PHONY: fmt
 fmt:
