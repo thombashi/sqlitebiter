@@ -1,10 +1,8 @@
 # encoding: utf-8
 
-from datetime import datetime
-
 
 __author__ = "Tsuyoshi Hombashi"
-__copyright__ = "Copyright 2016-{}, {}".format(datetime.now().year, __author__)
+__copyright__ = "Copyright 2016, {}".format(__author__)
 __license__ = "MIT License"
 __version__ = "0.28.3"
 __maintainer__ = __author__
