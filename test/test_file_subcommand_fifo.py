@@ -1,5 +1,5 @@
 import os
-import platform  # noqa
+import platform
 from concurrent.futures import ProcessPoolExecutor
 
 import pytest
@@ -29,7 +29,7 @@ def fifo_writer(fifo_name):
 
 
 class Test_sqlitebiter_file:
-    @pytest.mark.skipif("platform.system() == 'Windows'")
+    @pytest.mark.skipif(platform.system() == "Windows", reason="platform dependent tests")
     def test_smoke_one_file(self):
         db_path = "test.sqlite"
         runner = CliRunner()
