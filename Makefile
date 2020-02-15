@@ -3,7 +3,7 @@ PACKAGE := sqlitebiter
 BUILD_WORK_DIR := _work
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
-BUILD_PKG_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)
+PKG_BUILD_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)
 
 
 .PHONY: build-remote
@@ -14,7 +14,7 @@ build-remote:
 		git clone https://github.com/$(AUTHOR)/$(PACKAGE).git && \
 		cd $(PACKAGE) && \
 		tox -e build
-	ls -lh $(BUILD_PKG_DIR)/dist/*
+	ls -lh $(PKG_BUILD_DIR)/dist/*
 
 .PHONY: build
 build:
@@ -46,7 +46,7 @@ readme:
 
 .PHONY: release
 release:
-	@cd $(BUILD_PKG_DIR) && tox -e release
+	@cd $(PKG_BUILD_DIR) && tox -e release
 	@make clean
 
 .PHONY: setup
