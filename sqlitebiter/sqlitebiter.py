@@ -13,6 +13,7 @@ import click
 import msgfy
 import path
 import pytablereader as ptr
+import simplejson as json
 import simplesqlite as sqlite
 import typepy
 from loguru import logger
@@ -91,8 +92,6 @@ def finalize(con, converter, is_create_db):
 
 
 def load_convert_config(logger, config_filepath, subcommand):
-    import simplejson as json
-
     if not config_filepath:
         return {}
 

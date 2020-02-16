@@ -11,12 +11,7 @@ from urllib.parse import urlparse
 import msgfy
 import nbformat
 import retryrequests
-
-
-try:
-    import simplejson as json
-except ImportError:
-    import json
+import simplejson as json
 
 
 KEY_VALUE_TABLE = "kv"
