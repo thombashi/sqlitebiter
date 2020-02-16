@@ -183,7 +183,7 @@ Installation: pip (Python package manager)
 
 Installation: apt
 ----------------------------------------------------------------------------
-You can install the package by ``apt`` via Personal Package Archive (`PPA <https://launchpad.net/~thombashi/+archive/ubuntu/ppa>`__):
+You can install the package by ``apt`` via a Personal Package Archive (`PPA <https://launchpad.net/~thombashi/+archive/ubuntu/ppa>`__):
 
 ::
 
@@ -236,7 +236,7 @@ Command Completion
 
 Dependencies
 ============
-Python 2.7+ or 3.5+
+Python 3.5+
 
 Python package dependencies
 ------------------------------------------------------------
