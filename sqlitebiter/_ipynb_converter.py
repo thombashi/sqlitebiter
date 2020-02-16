@@ -6,11 +6,11 @@
 import abc
 import os.path
 import re
+from urllib.parse import urlparse
 
 import msgfy
 import nbformat
 import retryrequests
-from six.moves.urllib.parse import urlparse
 
 
 try:

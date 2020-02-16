@@ -8,11 +8,11 @@ import os
 import re
 import sys
 from copy import deepcopy
+from urllib.parse import urlparse
 
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
-from six.moves.urllib.parse import urlparse
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
 from .._ipynb_converter import is_ipynb_url, load_ipynb_url
