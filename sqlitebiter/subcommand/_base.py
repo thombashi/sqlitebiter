@@ -4,6 +4,7 @@
 
 
 import os.path
+from textwrap import indent
 
 from path import Path
 from simplesqlite.model import Integer, Model, Text
@@ -172,13 +173,6 @@ class TableConverter:
         if self.get_success_count() > 0:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
-
-            try:
-                from textwrap import indent
-            except ImportError:
-                # for Python 2 compatibility
-                def indent(value, _):
-                    return value
 
             logger.debug(
                 "----- database schema -----\n{}".format(
