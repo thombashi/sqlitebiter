@@ -53,3 +53,9 @@ class GoogleSheetsConverter(TableConverter):
         except ptr.APIError as e:
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()
+        except ImportError as e:
+            logger.error(
+                "{}: try to install dependencies with 'pip install sqlitebiter[gs]'".format(
+                    msgfy.to_error_message(e)
+                )
+            )
