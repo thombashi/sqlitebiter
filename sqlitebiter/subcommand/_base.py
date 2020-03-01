@@ -174,16 +174,20 @@ class TableConverter:
             output_format, verbosity_level = self.__get_dump_param()
             logger.info(database_path_msg)
 
-            logger.debug(
-                "----- database schema -----\n{}".format(
-                    indent(
-                        self._con.schema_extractor.dumps(
-                            output_format=output_format, verbosity_level=verbosity_level
-                        ),
-                        "    ",
+            try:
+                logger.debug(
+                    "----- database schema -----\n{}".format(
+                        indent(
+                            self._con.schema_extractor.dumps(
+                                output_format=output_format, verbosity_level=verbosity_level
+                            ),
+                            "    ",
+                        )
                     )
                 )
-            )
+            except:
+                # avoid crashes caused by logging
+                pass
         else:
             logger.debug(database_path_msg)
 
