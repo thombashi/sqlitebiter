@@ -7,32 +7,30 @@ assignees: ''
 
 ---
 
-What are the steps to reproduce this issue?
--------------------------------------------
+# What happens?
+…
+
+
+# What were you expecting to happen?
+…
+
+
+# What are the steps to reproduce this issue?
 1. …
 2. …
 3. …
 
-What happens?
--------------
-…
 
-What were you expecting to happen?
-----------------------------------
-…
-
-Any logs, error output, etc?
-----------------------------
-(If it’s long, please paste to https://ghostbin.com/ and insert the link here.)
+# Any logs, error output, etc?
+(If it’s long, please paste to https://ghostbin.co/ and insert the link here.)
 
 
-Any other comments?
--------------------
-…
-
-What versions of software are you using?
-----------------------------------------
+# Environments
 - **Operating System:** …
-- **Python Version:** …
+- **Python Version:** Python 3.X
 - **sqlitebiter Version:** …
-- **Installation Method:** pip/binary/apt(PPA)
+- **Installation Method:** `pip` or `binary` or `apt(PPA)`
+
+
+# Any other comments?
+…
