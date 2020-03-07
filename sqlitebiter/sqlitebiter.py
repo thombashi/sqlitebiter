@@ -71,7 +71,7 @@ def initialize_logger(name, log_level):
     else:
         log_format = "<level>[{level}]</level> {message}"
 
-    logger.add(sys.stdout, colorize=True, format=log_format, level=log_level, enqueue=True)
+    logger.add(sys.stdout, colorize=True, format=log_format, level=log_level)
     logger.enable(name)
     ptr.set_logger(True)
     sqlite.set_logger(True)
