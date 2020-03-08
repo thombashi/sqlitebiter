@@ -29,7 +29,7 @@ assignees: ''
 - **Operating System:** …
 - **Python Version:** Python 3.X
 - **sqlitebiter Version:** …
-- **Installation Method:** `pip` or `binary` or `apt(PPA)`
+- **Installation Method:** `pip` / `binary` / `apt(PPA)` / `brew`
 
 
 # Any other comments?
