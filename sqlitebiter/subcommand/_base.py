@@ -185,7 +185,7 @@ class TableConverter:
                         )
                     )
                 )
-            except:
+            except:  # noqa
                 # avoid crashes caused by logging
                 pass
         else:
