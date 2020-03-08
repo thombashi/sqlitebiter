@@ -25,7 +25,7 @@ The following commands will execute download the latest ``.deb`` package from th
 
 ::
 
-    curl -sL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash
+    curl -sSL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash
 
 
 Installation: Windows
