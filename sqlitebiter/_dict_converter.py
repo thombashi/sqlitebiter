@@ -34,7 +34,7 @@ class DictConverter:
         self.__source_info = source_info
         self.__converted_table_name_set = set()  # type: Set[str]
 
-    def to_sqlite_table(self, data: OrderedDict, key_list: List[str]) -> None:
+    def to_sqlite_table(self, data: OrderedDict, keys: List[str]) -> None:
         if not data:
             return
 
@@ -50,15 +50,15 @@ class DictConverter:
             try:
                 for table_data in loader.load():
                     if re.search("json[0-9]+", table_data.table_name):
-                        table_data.table_name = self.__make_table_name(key_list + [key])
+                        table_data.table_name = self.__make_table_name(keys + [key])
                     else:
                         table_data.table_name = self.__make_table_name(
-                            key_list + [key, table_data.table_name]
+                            keys + [key, table_data.table_name]
                         )
 
                     self.__convert(table_data)
             except ptr.DataError:
-                self.to_sqlite_table(v, key_list + [key])
+                self.to_sqlite_table(v, keys + [key])
             except ptr.ValidationError as e:
                 self.__logger.debug(msgfy.to_debug_message(e))
 
@@ -67,15 +67,15 @@ class DictConverter:
 
         loader = ptr.JsonTableDictLoader(root_maps)
         for table_data in loader.load():
-            if key_list:
-                table_data.table_name = self.__make_table_name(key_list)
+            if keys:
+                table_data.table_name = self.__make_table_name(keys)
             else:
                 table_data.table_name = "root"
 
             self.__convert(table_data)
 
-    def __make_table_name(self, key_list: Sequence[str]) -> str:
-        return "_".join(key_list)
+    def __make_table_name(self, keys: Sequence[str]) -> str:
+        return "_".join(keys)
 
     def __convert(self, table_data: TableData) -> None:
         self.__logger.debug("loaded tabledata: {}".format(str(table_data)))
