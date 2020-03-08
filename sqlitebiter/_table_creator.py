@@ -4,21 +4,39 @@
 
 
 from textwrap import dedent
+from typing import TYPE_CHECKING, Optional, Sequence
 
 import simplejson as json
 import simplesqlite
+from simplesqlite import SimpleSQLite
+from tabledata import TableData
 from typepy import String
+
+from ._common import ResultLogger
+
+
+if TYPE_CHECKING:
+    from .subcommand._base import SourceInfo  # noqa
 
 
 class TableCreator:
-    def __init__(self, logger, dst_con, add_pri_key_name, result_logger, verbosity_level):
+    def __init__(
+        self,
+        logger,
+        dst_con: SimpleSQLite,
+        add_pri_key_name: Optional[str],
+        result_logger: ResultLogger,
+        verbosity_level: int,
+    ) -> None:
         self.__logger = logger
         self.__dst_con = dst_con
         self.__add_pri_key_name = add_pri_key_name
         self.__result_logger = result_logger
         self.__verbosity_level = verbosity_level
 
-    def create(self, table_data, index_list, source_info):
+    def create(
+        self, table_data: TableData, index_list: Sequence[str], source_info: "SourceInfo"
+    ) -> None:
         con_mem = simplesqlite.connect_memdb()
 
         con_mem.create_table_from_tabledata(
@@ -56,7 +74,7 @@ class TableCreator:
             source_info.get_name(self.__verbosity_level), dst_table_name, is_create_table
         )
 
-    def __require_rename_table(self, src_con, src_table_name):
+    def __require_rename_table(self, src_con: SimpleSQLite, src_table_name: str) -> bool:
         if not self.__dst_con.has_table(src_table_name):
             return False
 
@@ -82,7 +100,7 @@ class TableCreator:
 
         return False
 
-    def __make_unique_table_name(self, table_name_base):
+    def __make_unique_table_name(self, table_name_base: str) -> str:
         exist_table_names = self.__dst_con.fetch_table_names()
 
         if table_name_base not in exist_table_names:

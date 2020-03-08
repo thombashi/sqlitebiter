@@ -8,6 +8,7 @@
 import os
 import sys
 from textwrap import dedent
+from typing import Dict, Tuple
 
 import click
 import msgfy
@@ -41,7 +42,7 @@ class Default:
     ENCODING = "utf-8"
 
 
-def create_database(database_path, dup_table):
+def create_database(database_path: str, dup_table: DupDatabase) -> Tuple[sqlite.SimpleSQLite, bool]:
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
 
@@ -56,7 +57,7 @@ def create_database(database_path, dup_table):
     return (sqlite.SimpleSQLite(db_path, "w"), is_create_db)
 
 
-def initialize_logger(name, log_level):
+def initialize_logger(name: str, log_level: int) -> None:
     logger.remove()
 
     if log_level == QUIET_LOG_LEVEL:
@@ -78,7 +79,7 @@ def initialize_logger(name, log_level):
     # appconfigpy.set_logger(True)
 
 
-def finalize(con, converter, is_create_db):
+def finalize(con, converter, is_create_db: bool) -> int:
     converter.write_completion_message()
     database_path = con.database_path
     con.close()
@@ -89,7 +90,7 @@ def finalize(con, converter, is_create_db):
     return converter.get_return_code()
 
 
-def load_convert_config(logger, config_filepath, subcommand):
+def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
     if not config_filepath:
         return {}
 

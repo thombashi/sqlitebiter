@@ -5,10 +5,13 @@
 
 import os.path
 from textwrap import indent
+from typing import Set, Tuple
 
 from path import Path
+from pytablereader.interface import AbstractTableReader
 from simplesqlite.model import Integer, Model, Text
 from simplesqlite.query import And, Attr, Where
+from tabledata import TableData
 
 from .._clrm import bright, green, red, yellow
 from .._common import DEFAULT_DUP_COL_HANDLER, ResultLogger
@@ -92,7 +95,7 @@ class TableConverter:
             select=Attr("source_id"), table_name=SourceInfo.get_table_name(), where=And(where_list)
         )
 
-    def _fetch_next_source_id(self):
+    def _fetch_next_source_id(self) -> int:
         source_id = self._con.fetch_value(
             select="MAX({})".format("source_id"), table_name=SourceInfo.get_table_name()
         )
@@ -102,14 +105,13 @@ class TableConverter:
 
         return source_id + 1
 
-    def get_return_code(self):
+    def get_return_code(self) -> int:
         return self._result_counter.get_return_code()
 
-    def get_success_count(self):
+    def get_success_count(self) -> int:
         return self._result_counter.success_count
 
-    def normalize_table(self, table_data, dup_col_handler=None):
-        from tabledata import TableData
+    def normalize_table(self, table_data: TableData, dup_col_handler=None) -> TableData:
         from pathvalidate import replace_symbol, replace_unprintable_char
         from simplesqlite import SQLiteTableDataSanitizer
 
@@ -139,7 +141,7 @@ class TableConverter:
             type_hints=table_data.dp_extractor.column_type_hints,
         )
 
-    def write_completion_message(self):
+    def write_completion_message(self) -> None:
         logger = self._logger
 
         logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
@@ -155,14 +157,14 @@ class TableConverter:
             )
         ]
         if self.get_success_count() > 0:
-            log_list.append(green("success={}".format(bright(self.get_success_count()))))
+            log_list.append(green("success={}".format(bright(str(self.get_success_count())))))
         if self._result_counter.fail_count > 0:
-            log_list.append(red("fail={}".format(bright(self._result_counter.fail_count))))
+            log_list.append(red("fail={}".format(bright(str(self._result_counter.fail_count)))))
         if self._result_counter.skip_count > 0:
-            log_list.append(yellow("skip={}".format(bright(self._result_counter.skip_count))))
+            log_list.append(yellow("skip={}".format(bright(str(self._result_counter.skip_count)))))
         if self._result_counter.created_table_count > 0:
             log_list.append(
-                "created-table={}".format(bright(self._result_counter.created_table_count))
+                "created-table={}".format(bright(str(self._result_counter.created_table_count)))
             )
 
         logger.info("converted results: {}".format(", ".join(log_list)))
@@ -207,7 +209,7 @@ class TableConverter:
 
         return created_table_set
 
-    def _convert_complex_json(self, json_loader, source_info):
+    def _convert_complex_json(self, json_loader: AbstractTableReader, source_info) -> Set[str]:
         from .._dict_converter import DictConverter
 
         dict_converter = DictConverter(
@@ -221,7 +223,7 @@ class TableConverter:
 
         return dict_converter.converted_table_name_set
 
-    def __get_dump_param(self):
+    def __get_dump_param(self) -> Tuple[str, int]:
         found_ptw = True
         try:
             import pytablewriter  # noqa: W0611

@@ -8,11 +8,14 @@ import os
 import re
 import sys
 from copy import deepcopy
+from typing import Dict, Optional, Pattern
 from urllib.parse import urlparse
 
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
+from pytablereader.interface import AbstractTableReader
+from typepy.type import AbstractType
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
 from .._ipynb_converter import is_ipynb_url, load_ipynb_url
@@ -20,17 +23,27 @@ from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES, normalize_type_hint
 
 
-def parse_source_info_url(url):
+TypeHintRules = Dict[Pattern, AbstractType]
+
+
+def parse_source_info_url(url: str) -> SourceInfo:
     result = urlparse(url)
 
     source_info = SourceInfo()
-    source_info.dir_name = result.netloc + os.path.dirname(result.path)
+    source_info.dir_name = result.netloc + os.path.dirname(result.path)  # type: ignore
     source_info.base_name = os.path.basename(result.path)
 
     return source_info
 
 
-def create_url_loader(logger, source_url, format_name, encoding, type_hint_rules, proxies):
+def create_url_loader(
+    logger,
+    source_url: str,
+    format_name: str,
+    encoding: str,
+    type_hint_rules: Optional[TypeHintRules],
+    proxies: Optional[Dict],
+) -> AbstractTableReader:
     try:
         return ptr.TableUrlLoader(
             source_url,
@@ -79,7 +92,7 @@ class UrlConverter(TableConverter):
 
         self.__proxy = proxy
 
-    def convert(self, url):
+    def convert(self, url: str) -> None:
         logger = self._logger
         result_counter = self._result_counter
 
@@ -156,10 +169,10 @@ class UrlConverter(TableConverter):
         if result_counter.success_count == success_count:
             logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
 
-    def __get_proxies(self):
+    def __get_proxies(self) -> Dict:
         return {"http": self.__proxy, "https": self.__proxy}
 
-    def __create_loader(self, url):
+    def __create_loader(self, url: str) -> AbstractTableReader:
         logger = self._logger
         type_hint_rules = self.__extract_type_hint_rules(url)
         proxies = self.__get_proxies()
@@ -177,7 +190,7 @@ class UrlConverter(TableConverter):
             logger.error(msgfy.to_error_message(e))
             sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
 
-    def __extract_type_hint_rules(self, url):
+    def __extract_type_hint_rules(self, url: str) -> TypeHintRules:
         if self._is_type_hint_header:
             return TYPE_HINT_FROM_HEADER_RULES
 
@@ -188,10 +201,10 @@ class UrlConverter(TableConverter):
                 self._logger.debug("unexpected config value: {}".format(config))
                 continue
 
-            if config.get("target_url") not in url:
+            if config.get("target_url") not in url:  # type: ignore
                 continue
 
-            for pattern, params in config.get("rules").items():
+            for pattern, params in config["rules"].items():
                 if not params.get("type hint"):
                     continue
 

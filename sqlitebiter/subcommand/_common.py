@@ -6,6 +6,7 @@
 import re
 
 from typepy import Integer, RealNumber, String
+from typepy.type import AbstractType
 
 
 TYPE_HINT_FROM_HEADER_RULES = {
@@ -24,5 +25,5 @@ _to_type_hint = {
 }
 
 
-def normalize_type_hint(type_hint_str):
+def normalize_type_hint(type_hint_str: str) -> AbstractType:
     return _to_type_hint[type_hint_str.strip().lower()]

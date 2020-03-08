@@ -4,25 +4,37 @@
 
 
 import re
+from collections import OrderedDict
+from typing import List, Sequence, Set
 
 import msgfy
 import pytablereader as ptr
 from simplesqlite import SQLiteTableDataSanitizer
+from tabledata import TableData
+
+from ._table_creator import TableCreator
+from .subcommand._base import SourceInfo
 
 
 class DictConverter:
     @property
-    def converted_table_name_set(self):
+    def converted_table_name_set(self) -> Set[str]:
         return self.__converted_table_name_set
 
-    def __init__(self, logger, table_creator, source_info, index_list):
+    def __init__(
+        self,
+        logger,
+        table_creator: TableCreator,
+        source_info: SourceInfo,
+        index_list: Sequence[str],
+    ) -> None:
         self.__logger = logger
         self.__table_creator = table_creator
         self.__index_list = index_list
         self.__source_info = source_info
-        self.__converted_table_name_set = set()
+        self.__converted_table_name_set = set()  # type: Set[str]
 
-    def to_sqlite_table(self, data, key_list):
+    def to_sqlite_table(self, data: OrderedDict, key_list: List[str]) -> None:
         if not data:
             return
 
@@ -62,10 +74,10 @@ class DictConverter:
 
             self.__convert(table_data)
 
-    def __make_table_name(self, key_list):
+    def __make_table_name(self, key_list: Sequence[str]) -> str:
         return "_".join(key_list)
 
-    def __convert(self, table_data):
+    def __convert(self, table_data: TableData) -> None:
         self.__logger.debug("loaded tabledata: {}".format(str(table_data)))
 
         sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()

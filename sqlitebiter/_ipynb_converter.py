@@ -6,28 +6,36 @@
 import abc
 import os.path
 import re
+from typing import TYPE_CHECKING, Dict, List, Optional, Sequence, Set, Tuple
 from urllib.parse import urlparse
 
 import msgfy
 import nbformat
 import retryrequests
 import simplejson as json
+from simplesqlite import SimpleSQLite
+
+from ._common import ResultLogger
+
+
+if TYPE_CHECKING:
+    from .subcommand._base import SourceInfo  # noqa
 
 
 KEY_VALUE_TABLE = "kv"
 
 
-def is_ipynb_file_path(file_path):
+def is_ipynb_file_path(file_path: str) -> bool:
     return urlparse(file_path).scheme == "" and os.path.splitext(file_path)[1] == ".ipynb"
 
 
-def is_ipynb_url(url):
+def is_ipynb_url(url: str) -> bool:
     result = urlparse(url)
 
     return result.scheme != "" and is_ipynb_file_path(result.path)
 
 
-def _schema_not_found_error_handler(e):
+def _schema_not_found_error_handler(e: Exception) -> None:
     if re.search("No such file or directory: .+schema.json", str(e)):
         raise RuntimeError(
             "ipynb file format conversion not supported for the binary version. "
@@ -35,7 +43,7 @@ def _schema_not_found_error_handler(e):
         )
 
 
-def load_ipynb_file(file_path, encoding):
+def load_ipynb_file(file_path: str, encoding: str):
     with open(file_path, encoding=encoding) as f:
         try:
             return nbformat.read(f, as_version=4)
@@ -46,7 +54,7 @@ def load_ipynb_file(file_path, encoding):
             raise
 
 
-def load_ipynb_url(url, proxies):
+def load_ipynb_url(url: str, proxies: Optional[Dict]) -> Tuple:
     response = retryrequests.get(url, proxies=proxies)
     response.raise_for_status()
 
@@ -81,31 +89,33 @@ class JupyterNotebookConverterInterface(metaclass=abc.ABCMeta):
 
 class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
     @abc.abstractproperty
-    def _base_table_name(self):  # pragma: no cover
+    def _base_table_name(self) -> str:  # pragma: no cover
         pass
 
     @property
     def source_id(self):
         return self._source_info.source_id
 
-    def __init__(self, logger, source_info, con, result_logger):
+    def __init__(
+        self, logger, source_info: "SourceInfo", con: SimpleSQLite, result_logger: ResultLogger
+    ):
         self._logger = logger
         self._source_info = source_info
         self._con = con
         self._result_logger = result_logger
-        self._changed_table_name_set = set()
+        self._changed_table_name_set = set()  # type: Set[str]
 
-    def _get_log_header(self, info_name):
+    def _get_log_header(self, info_name: str) -> str:
         return "{:s}: {:s}({:s})".format(
             self._source_info.get_name(self._result_logger.verbosity_level),
             self._base_table_name,
             info_name,
         )
 
-    def _need_create_table(self, table_name):
+    def _need_create_table(self, table_name: str) -> bool:
         return not self._con.has_table(table_name)
 
-    def _make_table_name(self, names):
+    def _make_table_name(self, names: List[str]) -> Tuple[str, bool]:
         table_name = "_".join([self._base_table_name] + names)
 
         return (table_name, self._need_create_table(table_name))
@@ -116,15 +126,22 @@ class MetaDataConverter(JupyterNotebookConverterBase):
     def _base_table_name(self):
         return "metadata"
 
-    def __init__(self, logger, source_info, con, result_logger, metadata):
+    def __init__(
+        self,
+        logger,
+        source_info: "SourceInfo",
+        con: SimpleSQLite,
+        result_logger: ResultLogger,
+        metadata,
+    ):
         super().__init__(logger, source_info, con, result_logger)
 
         self.__metadata = metadata
 
-    def convert(self):
+    def convert(self) -> Set[str]:
         if not self.__metadata:
             self._logger.debug("metadata not found")
-            return
+            return set()
 
         self.__convert_kernelspec()
         self.__convert_language_info()
@@ -135,7 +152,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
 
         return self._changed_table_name_set
 
-    def __convert_kernelspec(self):
+    def __convert_kernelspec(self) -> None:
         target = "kernelspec"
         table_name, need_create_table = self._make_table_name([target])
         records = [
@@ -156,7 +173,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
 
         del self.__metadata[target]
 
-    def __convert_language_info(self):
+    def __convert_language_info(self) -> None:
         target = "language_info"
         language_info = self.__metadata.get(target)
         record_list = []
@@ -185,7 +202,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
 
         del self.__metadata[target]
 
-    def __convert_kv(self):
+    def __convert_kv(self) -> None:
         target = "anaconda-cloud"
 
         if target in self.__metadata:
@@ -215,33 +232,40 @@ class MetaDataConverter(JupyterNotebookConverterBase):
 
 class CellConverter(JupyterNotebookConverterBase):
     @property
-    def _base_table_name(self):
+    def _base_table_name(self) -> str:
         return "cells"
 
-    def __init__(self, logger, source_info, con, result_logger, cells):
+    def __init__(
+        self,
+        logger,
+        source_info: "SourceInfo",
+        con: SimpleSQLite,
+        result_logger: ResultLogger,
+        cells: Sequence,
+    ):
         super().__init__(logger, source_info, con, result_logger)
 
         self.__cells = cells
-        self._cell_id = None
+        self._cell_id = None  # type: Optional[int]
 
-    def convert(self):
+    def convert(self) -> Set[str]:
         for cell_id, cell_data in enumerate(self.__cells):
             self._cell_id = cell_id
             self.__convert_cell(cell_data)
 
         return self._changed_table_name_set
 
-    def _get_log_header(self, info_name):
-        return "{:s}: {:s}#{:d}({:s})".format(
+    def _get_log_header(self, info_name: str) -> str:
+        return "{:s}: {:s}#{}({:s})".format(
             self._source_info.base_name, self._base_table_name, self._cell_id, info_name
         )
 
-    def __convert_source(self, cell_data):
+    def __convert_source(self, cell_data: Dict[str, str]) -> None:
         target = "source"
         table_name, need_create_table = self._make_table_name([target])
         records = [
             [self.source_id, self._cell_id, line_no, source_line.rstrip()]
-            for line_no, source_line in enumerate(cell_data.get(target).splitlines())
+            for line_no, source_line in enumerate(cell_data[target].splitlines())
         ]
 
         del cell_data[target]
@@ -263,14 +287,14 @@ class CellConverter(JupyterNotebookConverterBase):
             )
             self._changed_table_name_set.add(table_name)
 
-    def __to_kv_records(self, data_map):
-        record_list = []
+    def __to_kv_records(self, data_map: Dict) -> List[Tuple]:
+        record_list = []  # type: List[Tuple]
         for key, value in data_map.items():
             if key == "metadata":
                 if not value:
                     record = (self.source_id, self._cell_id, key, None)
                 else:
-                    record = (self.source_id, self._cell_id, key, str(dict(value)))
+                    record = (self.source_id, self._cell_id, key, str(dict(value)))  # type: ignore
 
                 record_list.append(record)
                 continue
@@ -279,7 +303,7 @@ class CellConverter(JupyterNotebookConverterBase):
 
         return record_list
 
-    def __convert_cell(self, cell_data):
+    def __convert_cell(self, cell_data) -> None:
         self.__convert_source(cell_data)
 
         category = "outputs"
@@ -340,7 +364,7 @@ class CellConverter(JupyterNotebookConverterBase):
         )
         self._changed_table_name_set.add(kv_table_name)
 
-    def __convert_output_text(self, output_data, need_create_table):
+    def __convert_output_text(self, output_data, need_create_table: bool) -> bool:
         data_type = "text"
         if data_type not in output_data:
             return False
@@ -367,7 +391,7 @@ class CellConverter(JupyterNotebookConverterBase):
 
         return True
 
-    def __convert_output_data(self, output_data, need_create_table):
+    def __convert_output_data(self, output_data: Dict[str, Dict], need_create_table: bool) -> bool:
         output_key = "data"
         if output_key not in output_data:
             return False
@@ -376,7 +400,7 @@ class CellConverter(JupyterNotebookConverterBase):
         image_regexp = re.compile("^image/.+")
         num_record = 0
 
-        for data_type, data in output_data.get(output_key).items():
+        for data_type, data in output_data[output_key].items():
             self._logger.debug(
                 "table={} id={} data_type={} {}".format(
                     table_name, self._cell_id, data_type, type(data)
@@ -412,8 +436,10 @@ class CellConverter(JupyterNotebookConverterBase):
         return True
 
 
-def convert_nb(logger, source_info, con, result_logger, nb):
-    changed_table_name_set = set()
+def convert_nb(
+    logger, source_info: "SourceInfo", con: SimpleSQLite, result_logger: ResultLogger, nb
+) -> Set[str]:
+    changed_table_name_set = set()  # type: Set[str]
     changed_table_name_set |= CellConverter(
         logger, source_info, con, result_logger, nb.cells
     ).convert()

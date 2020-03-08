@@ -10,7 +10,7 @@ from ._base import SourceInfo, TableConverter
 
 
 class GoogleSheetsConverter(TableConverter):
-    def convert(self, credentials, title):
+    def convert(self, credentials, title: str) -> None:
         logger = self._logger
         result_counter = self._result_counter
         source_id = self._fetch_next_source_id()

@@ -2,15 +2,14 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-
 import os
 import stat
 from copy import deepcopy
 from errno import EBADF, ENAMETOOLONG, ENOENT, ENOTDIR
 
 import msgfy
-import path
 import pytablereader as ptr
+from path import Path
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
@@ -18,7 +17,7 @@ from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES
 
 
-def _get_format_type_from_path(file_path):
+def _get_format_type_from_path(file_path) -> str:
     return file_path.ext.lstrip(".")
 
 
@@ -58,8 +57,8 @@ class FileConverter(TableConverter):
         self.__exclude_pattern = exclude_pattern
         self.__follow_symlinks = follow_symlinks
 
-    def convert(self, file_path):
-        file_path = path.Path(file_path)
+    def convert(self, file_path) -> None:
+        file_path = Path(file_path)
         logger = self._logger
         result_counter = self._result_counter
 
@@ -105,7 +104,7 @@ class FileConverter(TableConverter):
         if result_counter.success_count == success_count:
             logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
 
-    def __convert(self, file_path, source_info_record_base):
+    def __convert(self, file_path: Path, source_info_record_base: SourceInfo) -> None:
         logger = self._logger
         result_counter = self._result_counter
 
@@ -182,7 +181,7 @@ class FileConverter(TableConverter):
             )
             result_counter.inc_fail()
 
-    def __is_fifo(self, file_path):
+    def __is_fifo(self, file_path: Path) -> bool:
         try:
             return stat.S_ISFIFO(os.stat(file_path).st_mode)
         except OSError as e:
@@ -193,7 +192,7 @@ class FileConverter(TableConverter):
         except ValueError:
             return False
 
-    def __is_file(self, file_path):
+    def __is_file(self, file_path: Path) -> bool:
         if not file_path.exists():
             self._logger.debug(
                 self.SKIP_MSG_FORMAT.format(source=file_path, message="no such file or directory")
@@ -227,7 +226,7 @@ class FileConverter(TableConverter):
         return True
 
     @staticmethod
-    def __get_source_info_base(source):
+    def __get_source_info_base(source: Path) -> SourceInfo:
         return SourceInfo(
             dir_name=source.dirname(),
             base_name=source.basename(),
