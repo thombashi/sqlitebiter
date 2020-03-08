@@ -9,7 +9,7 @@ from textwrap import dedent
 import path
 import pytest
 from click.testing import CliRunner
-from pytablereader.interface import TableLoader
+from pytablereader.interface import AbstractTableReader
 from simplesqlite import SimpleSQLite
 from sqliteschema import SQLiteSchemaExtractor
 
@@ -23,7 +23,7 @@ from .dataset import *
 
 class Test_sqlitebiter_file:
     def setup_method(self, method):
-        TableLoader.clear_table_count()
+        AbstractTableReader.clear_table_count()
 
     @pytest.mark.parametrize(
         ["options", "expected"],
