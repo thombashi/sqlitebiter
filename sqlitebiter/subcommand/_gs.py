@@ -59,3 +59,6 @@ class GoogleSheetsConverter(TableConverter):
                     msgfy.to_error_message(e)
                 )
             )
+        except OverflowError as e:
+            logger.error("{}: {}".format(title, e))
+            result_counter.inc_fail()

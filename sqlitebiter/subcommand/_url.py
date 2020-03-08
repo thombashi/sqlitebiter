@@ -165,6 +165,9 @@ class UrlConverter(TableConverter):
                 "{:s}: invalid data: url={}, message={}".format(e.__class__.__name__, url, str(e))
             )
             result_counter.inc_fail()
+        except OverflowError as e:
+            logger.error("{}: {}".format(url, e))
+            result_counter.inc_fail()
 
         if result_counter.success_count == success_count:
             logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(url))

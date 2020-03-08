@@ -180,6 +180,9 @@ class FileConverter(TableConverter):
                 )
             )
             result_counter.inc_fail()
+        except OverflowError as e:
+            logger.error("{}: {}".format(file_path, e))
+            result_counter.inc_fail()
 
     def __is_fifo(self, file_path: Path) -> bool:
         try:
