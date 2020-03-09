@@ -22,8 +22,8 @@ def valid_json_single_file():
     return file_path
 
 
-def invalid_json_single_file():
-    file_path = "invalid_json_a.json"
+def valid_json_single_b_file():
+    file_path = "singlejson_b.json"
 
     with open(file_path, "w") as f:
         f.write(dedent("""\

@@ -55,7 +55,7 @@ class Test_sqlitebiter_file:
             [valid_utf8_csv_file, ExitCode.SUCCESS],
             [valid_json_symbols, ExitCode.SUCCESS],
             [invalid_csv_file, ExitCode.FAILED_CONVERT],
-            [invalid_json_single_file, ExitCode.NO_INPUT],
+            [valid_json_single_b_file, ExitCode.SUCCESS],
             [invalid_excel_file_1, ExitCode.NO_INPUT],
             [invalid_excel_file_2, ExitCode.FAILED_CONVERT],
             [invalid_html_file, ExitCode.NO_INPUT],
@@ -101,6 +101,7 @@ class Test_sqlitebiter_file:
         with runner.isolated_filesystem():
             files = [
                 valid_json_single_file(),
+                valid_json_single_b_file(),
                 valid_json_multi_file_1(),
                 valid_jsonlines_file(),
                 valid_csv_file_1_1(),
@@ -153,7 +154,6 @@ class Test_sqlitebiter_file:
         with runner.isolated_filesystem():
             files = [
                 invalid_csv_file(),
-                invalid_json_single_file(),
                 invalid_excel_file_1(),
                 invalid_excel_file_2(),
                 invalid_html_file(),
@@ -185,7 +185,7 @@ class Test_sqlitebiter_file:
         with runner.isolated_filesystem():
             files = [
                 valid_json_single_file(),
-                invalid_json_single_file(),
+                valid_json_single_b_file(),
                 valid_json_multi_file_1(),
                 valid_json_kv_file(),
                 valid_csv_file_1_1(),
@@ -223,6 +223,7 @@ class Test_sqlitebiter_file:
                 "testtitle_html2",
                 "tsv_a",
                 "valid_mdtable_markdown1",
+                "root",
                 SourceInfo.get_table_name(),
             ]
             actual_tables = con.fetch_table_names()
@@ -256,7 +257,7 @@ class Test_sqlitebiter_file:
                 "valid_mdtable_markdown1": [(1, 123.1, "a"), (2, 2.2, "bb"), (3, 3.3, "ccc")],
             }
             for table in con.fetch_table_names():
-                if table == SourceInfo.get_table_name():
+                if table in (SourceInfo.get_table_name(), "root"):
                     continue
 
                 result = con.select("*", table_name=table)

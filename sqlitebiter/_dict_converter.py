@@ -38,6 +38,13 @@ class DictConverter:
         if not data:
             return
 
+        self.__logger.debug("to_sqlite_table: {}, keys={}".format(type(data), keys))
+
+        if isinstance(data, (list, tuple)):
+            for s in data:
+                self.to_sqlite_table(s, keys)
+            return
+
         root_maps = {}
 
         for key, v in data.items():
