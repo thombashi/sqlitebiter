@@ -2,7 +2,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-
 PROGRAM_NAME = "sqlitebiter"
 MAX_VERBOSITY_LEVEL = 2
 

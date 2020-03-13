@@ -2,7 +2,6 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-
 from appconfigpy import ConfigItem, ConfigManager
 
 from ._const import PROGRAM_NAME
