@@ -12,8 +12,8 @@ import pytablereader as ptr
 from simplesqlite import SQLiteTableDataSanitizer
 from tabledata import TableData
 
+from ._base import SourceInfo
 from ._table_creator import TableCreator
-from .converter._base import SourceInfo
 
 
 class DictConverter:

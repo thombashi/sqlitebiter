@@ -12,9 +12,9 @@ import pytablereader as ptr
 from path import Path
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
-from .._ipynb_converter import is_ipynb_file_path, load_ipynb_file
 from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES
+from ._ipynb_converter import is_ipynb_file_path, load_ipynb_file
 
 
 def _get_format_type_from_path(file_path) -> str:

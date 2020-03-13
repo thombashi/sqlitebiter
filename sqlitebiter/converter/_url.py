@@ -18,9 +18,9 @@ from pytablereader.interface import AbstractTableReader
 from typepy.type import AbstractType
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
-from .._ipynb_converter import is_ipynb_url, load_ipynb_url
 from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES, normalize_type_hint
+from ._ipynb_converter import is_ipynb_url, load_ipynb_url
 
 
 TypeHintRules = Dict[Pattern, AbstractType]

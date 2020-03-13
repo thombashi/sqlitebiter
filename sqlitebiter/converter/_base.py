@@ -17,8 +17,8 @@ from .._clrm import bright, green, red, yellow
 from .._common import DEFAULT_DUP_COL_HANDLER, ResultLogger
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, TABLE_NOT_FOUND_MSG_FORMAT
 from .._counter import ResultCounter
-from .._ipynb_converter import convert_nb
-from .._table_creator import TableCreator
+from ._ipynb_converter import convert_nb
+from ._table_creator import TableCreator
 
 
 class SourceInfo(Model):
@@ -210,7 +210,7 @@ class TableConverter:
         return created_table_set
 
     def _convert_complex_json(self, json_loader: AbstractTableReader, source_info) -> Set[str]:
-        from .._dict_converter import DictConverter
+        from ._dict_converter import DictConverter
 
         dict_converter = DictConverter(
             self._logger, self._table_creator, source_info=source_info, index_list=self._index_list

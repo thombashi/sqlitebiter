@@ -15,11 +15,11 @@ import retryrequests
 import simplejson as json
 from simplesqlite import SimpleSQLite
 
-from ._common import ResultLogger
+from .._common import ResultLogger
 
 
 if TYPE_CHECKING:
-    from .converter._base import SourceInfo  # noqa
+    from ._base import SourceInfo  # noqa
 
 
 KEY_VALUE_TABLE = "kv"

@@ -4,7 +4,7 @@
 
 import pytest
 
-from sqlitebiter._ipynb_converter import is_ipynb_file_path, is_ipynb_url
+from sqlitebiter.converter._ipynb_converter import is_ipynb_file_path, is_ipynb_url
 
 
 class Test_is_ipynb_file_path:
