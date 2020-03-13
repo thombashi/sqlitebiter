@@ -13,7 +13,7 @@ from simplesqlite import SQLiteTableDataSanitizer
 from tabledata import TableData
 
 from ._table_creator import TableCreator
-from .subcommand._base import SourceInfo
+from .converter._base import SourceInfo
 
 
 class DictConverter:

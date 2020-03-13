@@ -10,8 +10,8 @@ from simplesqlite import SimpleSQLite
 from tabledata import TableData
 
 from sqlitebiter._const import ExitCode
+from sqlitebiter.converter._base import SourceInfo
 from sqlitebiter.sqlitebiter import cmd
-from sqlitebiter.subcommand._base import SourceInfo
 
 from .common import print_traceback
 

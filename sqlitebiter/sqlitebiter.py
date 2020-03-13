@@ -24,7 +24,7 @@ from ._common import DEFAULT_DUP_COL_HANDLER
 from ._config import ConfigKey, app_config_mgr
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME, ExitCode
 from ._enum import Context, DupDatabase
-from .subcommand import FileConverter, GoogleSheetsConverter, UrlConverter
+from .converter import FileConverter, GoogleSheetsConverter, UrlConverter
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})

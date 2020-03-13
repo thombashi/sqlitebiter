@@ -16,7 +16,7 @@ from ._common import ResultLogger
 
 
 if TYPE_CHECKING:
-    from .subcommand._base import SourceInfo  # noqa
+    from .converter._base import SourceInfo  # noqa
 
 
 class TableCreator:
