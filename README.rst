@@ -194,7 +194,7 @@ You can install the package by ``apt`` via a Personal Package Archive (`PPA <htt
 
 Installation: dpkg (``.deb`` package)
 ----------------------------------------------------------------------------
-The following commands will execute download the latest ``.deb`` package from the `release page <https://github.com/thombashi/sqlitebiter/releases>`__, and install it.
+The following commands will download the latest ``.deb`` package from the `release page <https://github.com/thombashi/sqlitebiter/releases>`__, and install it.
 
 ::
 
@@ -211,6 +211,16 @@ Installation: Windows
 #. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
 
+Installation: Windows (PowerShell)
+----------------------------------------------------------
+The following commands will download the latest execution binary from the `release page <https://github.com/thombashi/sqlitebiter/releases>`__ to the current directory.
+
+::
+
+    wget https://github.com/thombashi/sqlitebiter/raw/master/scripts/get-sqlitebiter.ps1 -OutFile get-sqlitebiter.ps1
+    Set-ExecutionPolicy Unrestricted -Scope Process -Force; .\get-sqlitebiter.ps1
+
+
 Installation: brew for macOS
 ----------------------------------------------------------
 .. code:: console
@@ -221,7 +231,7 @@ Installation: brew for macOS
 - `Homebrew Formula <https://github.com/thombashi/homebrew-sqlitebiter>`__
 
 
-Command Completion
+Command Completion (bash/zsh)
 ----------------------------------------------------------
 .. code:: console
 
