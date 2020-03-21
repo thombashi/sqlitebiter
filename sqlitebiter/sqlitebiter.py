@@ -9,6 +9,7 @@ import sys
 from textwrap import dedent
 from typing import Dict, Tuple
 
+import appconfigpy
 import click
 import msgfy
 import path
@@ -75,7 +76,7 @@ def initialize_logger(name: str, log_level: int) -> None:
     logger.enable(name)
     ptr.set_logger(True)
     sqlite.set_logger(True)
-    # appconfigpy.set_logger(True)
+    appconfigpy.set_logger(True)
 
 
 def finalize(con, converter, is_create_db: bool) -> int:

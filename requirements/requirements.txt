@@ -1,4 +1,4 @@
-appconfigpy>=0.4.0,<2
+appconfigpy>=1.0.1,<2
 click>=6.2,<8
 colorama>=0.3.7,<1
 loguru>=0.4.1,<1
