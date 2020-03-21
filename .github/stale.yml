@@ -10,6 +10,8 @@ exemptLabels:
   - security
   - bug
   - enhancement
+  - needs-info
+  - needs-triage
   - refactoring
 
 # Label to use when marking an issue as stale
