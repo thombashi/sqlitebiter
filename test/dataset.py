@@ -50,6 +50,13 @@ def valid_json_multi_file_1():
                     {"a": 1, "b": 4},
                     {"a": 2 },
                     {"a": 3, "b": 120.9}
+                ],
+                "2018Asset": [
+                    {
+                        "RANK": "1",
+                        "id": "item_entertainment_18_212",
+                        "count": "1billion"
+                    }
                 ]
             }"""))
 

@@ -208,6 +208,7 @@ class Test_sqlitebiter_file:
 
             con = SimpleSQLite(db_path, "r")
             expected_tables = [
+                "2018Asset",
                 "singlejson",
                 "multij1",
                 "multij2",
@@ -232,6 +233,7 @@ class Test_sqlitebiter_file:
             assert set(actual_tables) == set(expected_tables)
 
             expected_data_table = {
+                "2018Asset": [(1, "1billion", "item_entertainment_18_212")],
                 "singlejson": [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")],
                 "multij1": [(1, 4.0, "a"), (2, 2.1, "bb"), (3, 120.9, "ccc")],
                 "multij2": [(1, 4.0), (2, None), (3, 120.9)],
