@@ -147,7 +147,11 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         self.__convert_kv()
 
         if self.__metadata:
-            self._logger.debug("cannot convert: {}".format(json.dumps(self.__metadata, indent=4)))
+            self._logger.debug(
+                "cannot convert: {}".format(
+                    json.dumps(self.__metadata, indent=4, ensure_ascii=False)
+                )
+            )
 
         return self._changed_table_name_set
 
@@ -412,7 +416,7 @@ class CellConverter(JupyterNotebookConverterBase):
                 continue
 
             if isinstance(data, dict):
-                data = json.dumps(data, indent=4)
+                data = json.dumps(data, indent=4, ensure_ascii=False)
 
             num_record += self._con.insert_many(
                 table_name,

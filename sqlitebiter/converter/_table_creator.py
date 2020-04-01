@@ -91,8 +91,8 @@ class TableCreator:
                     """
                 ).format(
                     table=src_table_name,
-                    src_schema=json.dumps(lhs, indent=4),
-                    dst_schema=json.dumps(rhs, indent=4),
+                    src_schema=json.dumps(lhs, indent=4, ensure_ascii=False),
+                    dst_schema=json.dumps(rhs, indent=4, ensure_ascii=False),
                 )
             )
             return True
