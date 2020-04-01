@@ -26,6 +26,7 @@ build:
 check:
 	travis lint
 	@tox -e lint
+	pip check
 
 .PHONY: clean
 clean:
@@ -52,3 +53,4 @@ release:
 .PHONY: setup
 setup:
 	@pip install --upgrade -e .[test] tox
+	pip check
