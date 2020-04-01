@@ -87,7 +87,7 @@ class FileConverter(TableConverter):
                     source_info=source_info_record_base,
                 )
             except (nbformat.reader.NotJSONError, RuntimeError) as e:
-                logger.error(e)
+                logger.error("failed to load {}: {}".format(file_path, e))
                 return
 
             for table_name in changed_table_name_set:
