@@ -1,4 +1,4 @@
 pytest
 responses
-sqliteschema[dumps]>=0.15.1
+sqliteschema[dumps]>=1
 XlsxWriter
