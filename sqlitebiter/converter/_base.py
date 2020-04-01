@@ -9,7 +9,6 @@ from typing import Set, Tuple
 from path import Path
 from pytablereader.interface import AbstractTableReader
 from simplesqlite.model import Integer, Model, Text
-from simplesqlite.query import And, Attr, Where
 from tabledata import TableData
 
 from .._clrm import bright, green, red, yellow
@@ -76,23 +75,6 @@ class TableConverter:
 
         SourceInfo.attach(con, is_hidden=True)
         SourceInfo.create()
-
-    def _fetch_source_id(self, source_info):
-        where_list = [
-            Where("base_name", source_info.base_name),
-            Where("format_name", source_info.format_name),
-        ]
-
-        if source_info.dir_name:
-            where_list.append(Where("dir_name", source_info.dir_name))
-        if source_info.size is not None:
-            where_list.append(Where("size", source_info.size))
-        if source_info.mtime is not None:
-            where_list.append(Where("mtime", source_info.mtime))
-
-        return self._con.fetch_value(
-            select=Attr("source_id"), table_name=SourceInfo.get_table_name(), where=And(where_list)
-        )
 
     def _fetch_next_source_id(self) -> int:
         source_id = self._con.fetch_value(
