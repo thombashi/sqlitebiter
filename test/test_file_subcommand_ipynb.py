@@ -58,6 +58,7 @@ class Test_file_subcommand_ipynb:
                 # avoid a test execution error on AppVeyor
                 os.remove(db_path)
 
+    @pytest.mark.xfail(run=False)
     @pytest.mark.parametrize(
         ["content", "expected"], [["", ExitCode.NO_INPUT], ["{}", ExitCode.NO_INPUT]]
     )
