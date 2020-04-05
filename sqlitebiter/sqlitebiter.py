@@ -24,7 +24,7 @@ from ._common import DEFAULT_DUP_COL_HANDLER
 from ._config import ConfigKey, app_config_mgr
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME, ExitCode
 from ._enum import Context, DupDatabase
-from .converter import FileConverter, GoogleSheetsConverter, UrlConverter
+from .converter import FileConverter, GoogleSheetsConverter, TextConverter, UrlConverter
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})
@@ -268,6 +268,44 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
                 converter.convert(file_path_obj)
         else:
             converter.convert(file_path)
+
+    sys.exit(finalize(con, converter, is_create_db))
+
+
+@cmd.command(epilog=COMMAND_EPILOG)
+@click.argument(
+    "format_name",
+    type=click.Choice(ptr.TableTextLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST),
+)
+@click.pass_context
+def stdin(ctx, format_name):
+    """
+    Convert tabular data within
+    CSV/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SSV/TSV
+    text to a SQLite database file.
+    """
+
+    initialize_logger("{:s} stdin".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+
+    convert_configs = load_convert_config(
+        logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="stdin"
+    )
+
+    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
+    converter = TextConverter(
+        logger=logger,
+        con=con,
+        symbol_replace_value=ctx.obj[Context.SYMBOL_REPLACE_VALUE],
+        add_pri_key_name=ctx.obj[Context.ADD_PRIMARY_KEY_NAME],
+        convert_configs=convert_configs,
+        index_list=ctx.obj.get(Context.INDEX_LIST),
+        is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
+        is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
+        verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
+        format_name=format_name,
+    )
+
+    converter.convert(sys.stdin.read())
 
     sys.exit(finalize(con, converter, is_create_db))
 

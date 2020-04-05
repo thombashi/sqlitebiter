@@ -53,6 +53,16 @@ def load_ipynb_file(file_path: str, encoding: str):
             raise
 
 
+def load_ipynb_text(text: str):
+    try:
+        return nbformat.reads(text, as_version=4)
+    except AttributeError as e:
+        raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
+    except OSError as e:
+        _schema_not_found_error_handler(e)
+        raise
+
+
 def load_ipynb_url(url: str, proxies: Optional[Dict]) -> Tuple:
     response = retryrequests.get(url, proxies=proxies)
     response.raise_for_status()
