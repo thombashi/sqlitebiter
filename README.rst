@@ -22,10 +22,6 @@ Summary
    :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
    :alt: Windows CI status
 
-.. image:: https://build.snapcraft.io/badge/thombashi/sqlitebiter.svg
-    :target: https://build.snapcraft.io/user/thombashi/sqlitebiter
-    :alt: Snap Status
-
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
     :target: https://github.com/thombashi/sqlitebiter
     :alt: GitHub stars
@@ -120,6 +116,20 @@ In the following example shows replace symbols to underscores.
         CREATE TABLE IF NOT EXISTS 'Comparison_of_firewalls_Wikipedia_html10' (A TEXT, B TEXT);
         CREATE TABLE IF NOT EXISTS 'Comparison_of_firewalls_Wikipedia_html11' (A TEXT, B TEXT);
 
+Create SQLite database from stdin
+-----------------------------------
+Examples
+~~~~~~~~
+A data format is a mandatory argument for sqlitebiter ``stdin subcommand``:
+
+:Example:
+    .. code-block:: console
+
+        echo '[{"hoge": 4, "foo": "abc"}, {"hoge": 12, "foo": "xyz"}]' | sqlitebiter stdin json
+        [INFO] convert 'stdin' to 'json1' table
+        [INFO] converted results: source=1, success=1, created-table=1
+        [INFO] database path: out.sqlite
+
 Command help
 --------------
 ::
@@ -130,29 +140,30 @@ Command help
       --version                       Show the version and exit.
       -o, --output-path PATH          Output path of the SQLite database file.
                                       Defaults to 'out.sqlite'.
+
       -a, --append                    Append table(s) to existing database.
       --add-primary-key PRIMARY_KEY_NAME
                                       Add 'PRIMARY KEY AUTOINCREMENT' column with
                                       the specified name.
-      --convert-config TEXT           [experimental]
-                                      Configurations for data
+
+      --convert-config TEXT           [experimental] Configurations for data
                                       conversion. The option can be used only for
                                       url subcommand.
+
       -i, --index INDEX_ATTR          Comma separated attribute names to create
                                       indices.
+
       --no-type-inference             All of the columns assume as TEXT data type
                                       in creating tables.
-      --type-hint-header              Use headers suffix as type hints.
-                                      If there
+
+      --type-hint-header              Use headers suffix as type hints. If there
                                       are type hints, converting columns by
-                                      datatype corresponding with type hints.
-                                      The
+                                      datatype corresponding with type hints. The
                                       following suffixes can be recognized as type
-                                      hints (case insensitive):
-                                      "text": TEXT
-                                      datatype.
-                                      "integer": INTEGER datatype.
+                                      hints (case insensitive): "text": TEXT
+                                      datatype. "integer": INTEGER datatype.
                                       "real": REAL datatype.
+
       --replace-symbol TEXT           Replace symbols in attributes.
       -v, --verbose
       --debug                         For debug print.
@@ -164,6 +175,7 @@ Command help
       configure   Configure the following application settings: (1) Default...
       file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
       gs          Convert a spreadsheet in Google Sheets to a SQLite database...
+      stdin       Convert tabular data within CSV/HTML/JSON/Jupyter...
       url         Scrape tabular data from a URL and convert data to a SQLite...
 
 For more information

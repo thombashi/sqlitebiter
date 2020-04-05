@@ -32,6 +32,9 @@ def write_examples(maker):
     maker.write_chapter("Create SQLite database from URL")
     maker.write_file(usage_root.joinpath("url", "usage.txt"))
 
+    maker.write_chapter("Create SQLite database from stdin")
+    maker.write_file(usage_root.joinpath("stdin", "usage.txt"))
+
     maker.write_chapter("Command help")
     maker.write_file(usage_root.joinpath("help.txt"))
 
