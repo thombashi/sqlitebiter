@@ -43,6 +43,7 @@ fmt:
 
 .PHONY: readme
 readme:
+	cd $(DOCS_DIR) && ./update_command_help.py
 	@tox -e readme
 
 .PHONY: release
