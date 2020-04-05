@@ -14,10 +14,6 @@
    :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
    :alt: Windows CI status
 
-.. image:: https://build.snapcraft.io/badge/thombashi/sqlitebiter.svg
-    :target: https://build.snapcraft.io/user/thombashi/sqlitebiter
-    :alt: Snap Status
-
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
     :target: https://github.com/thombashi/sqlitebiter
     :alt: GitHub stars
