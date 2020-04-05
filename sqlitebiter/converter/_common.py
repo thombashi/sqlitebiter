@@ -3,6 +3,7 @@
 """
 
 import re
+from typing import Type
 
 from typepy import Integer, RealNumber, String
 from typepy.type import AbstractType
@@ -24,5 +25,5 @@ _to_type_hint = {
 }
 
 
-def normalize_type_hint(type_hint_str: str) -> AbstractType:
+def normalize_type_hint(type_hint_str: str) -> Type[AbstractType]:
     return _to_type_hint[type_hint_str.strip().lower()]

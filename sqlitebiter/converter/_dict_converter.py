@@ -4,7 +4,7 @@
 
 import re
 from collections import OrderedDict
-from typing import List, Sequence, Set
+from typing import List, Sequence, Set, cast
 
 import msgfy
 import pytablereader as ptr
@@ -90,4 +90,4 @@ class DictConverter:
         self.__table_creator.create(
             sqlite_tabledata, self.__index_list, source_info=self.__source_info
         )
-        self.__converted_table_name_set.add(sqlite_tabledata.table_name)
+        self.__converted_table_name_set.add(cast(str, sqlite_tabledata.table_name))

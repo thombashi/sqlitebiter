@@ -57,7 +57,7 @@ def create_database(database_path: str, dup_table: DupDatabase) -> Tuple[sqlite.
     return (sqlite.SimpleSQLite(db_path, "w"), is_create_db)
 
 
-def initialize_logger(name: str, log_level: int) -> None:
+def initialize_logger(name: str, log_level: str) -> None:
     logger.remove()
 
     if log_level == QUIET_LOG_LEVEL:

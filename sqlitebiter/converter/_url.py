@@ -7,7 +7,7 @@ import os
 import re
 import sys
 from copy import deepcopy
-from typing import Dict, Optional, Pattern
+from typing import Dict, Optional, Pattern, Type
 from urllib.parse import urlparse
 
 import msgfy
@@ -22,7 +22,7 @@ from ._common import TYPE_HINT_FROM_HEADER_RULES, normalize_type_hint
 from ._ipynb_converter import is_ipynb_url, load_ipynb_url
 
 
-TypeHintRules = Dict[Pattern, AbstractType]
+TypeHintRules = Dict[Pattern, Type[AbstractType]]
 
 
 def parse_source_info_url(url: str) -> SourceInfo:
@@ -30,7 +30,7 @@ def parse_source_info_url(url: str) -> SourceInfo:
 
     source_info = SourceInfo()
     source_info.dir_name = result.netloc + os.path.dirname(result.path)  # type: ignore
-    source_info.base_name = os.path.basename(result.path)
+    source_info.base_name = os.path.basename(str(result.path))
 
     return source_info
 
