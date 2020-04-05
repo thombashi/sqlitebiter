@@ -25,16 +25,6 @@ from ._ipynb_converter import is_ipynb_url, load_ipynb_url
 TypeHintRules = Dict[Pattern, Type[AbstractType]]
 
 
-def parse_source_info_url(url: str) -> SourceInfo:
-    result = urlparse(url)
-
-    source_info = SourceInfo()
-    source_info.dir_name = result.netloc + os.path.dirname(result.path)  # type: ignore
-    source_info.base_name = os.path.basename(str(result.path))
-
-    return source_info
-
-
 def create_url_loader(
     logger,
     source_url: str,
@@ -95,8 +85,7 @@ class UrlConverter(TableConverter):
         logger = self._logger
         result_counter = self._result_counter
 
-        source_info_record_base = parse_source_info_url(url)
-        source_info_record_base.source_id = self._fetch_next_source_id()
+        source_info_record_base = self.__parse_source_info_url(url)
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_url(url):
             try:
@@ -215,3 +204,14 @@ class UrlConverter(TableConverter):
                 )
 
         return type_hint_rules
+
+    def __parse_source_info_url(self, url: str) -> SourceInfo:
+        result = urlparse(url)
+
+        source_info = SourceInfo(
+            dir_name=result.netloc + os.path.dirname(result.path),
+            base_name=os.path.basename(str(result.path)),
+            source_id=self._fetch_next_source_id(),
+        )
+
+        return source_info

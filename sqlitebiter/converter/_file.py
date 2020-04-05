@@ -76,7 +76,6 @@ class FileConverter(TableConverter):
         success_count = result_counter.success_count
         fail_count = result_counter.fail_count
         source_info_record_base = self.__get_source_info_base(file_path.realpath())
-        source_info_record_base.source_id = self._fetch_next_source_id()
 
         if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
             import nbformat
@@ -228,11 +227,11 @@ class FileConverter(TableConverter):
 
         return True
 
-    @staticmethod
-    def __get_source_info_base(source: Path) -> SourceInfo:
+    def __get_source_info_base(self, source: Path) -> SourceInfo:
         return SourceInfo(
             dir_name=source.dirname(),
             base_name=source.basename(),
             size=source.getsize(),
             mtime=int(source.getmtime()),
+            source_id=self._fetch_next_source_id(),
         )
