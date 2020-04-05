@@ -99,6 +99,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Topic :: Database",
     ],
-    entry_points={"console_scripts": ["sqlitebiter=sqlitebiter.sqlitebiter:cmd"]},
+    entry_points={"console_scripts": ["sqlitebiter=sqlitebiter.__main__:cmd"]},
     cmdclass=get_release_command_class(),
 )

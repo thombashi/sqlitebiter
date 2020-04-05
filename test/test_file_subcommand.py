@@ -12,9 +12,9 @@ from pytablereader.interface import AbstractTableReader
 from simplesqlite import SimpleSQLite
 from sqliteschema import SQLiteSchemaExtractor
 
+from sqlitebiter.__main__ import cmd
 from sqlitebiter._const import ExitCode
 from sqlitebiter.converter._base import SourceInfo
-from sqlitebiter.sqlitebiter import cmd
 
 from .common import print_test_result, print_traceback
 from .dataset import *

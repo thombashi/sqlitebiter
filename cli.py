@@ -6,7 +6,7 @@
 
 import multiprocessing
 
-from sqlitebiter.sqlitebiter import cmd
+from sqlitebiter.__main__ import cmd
 
 
 if __name__ == "__main__":

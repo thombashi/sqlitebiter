@@ -3,8 +3,8 @@ import re
 import pytest
 from click.testing import CliRunner
 
+from sqlitebiter.__main__ import cmd
 from sqlitebiter._const import ExitCode
-from sqlitebiter.sqlitebiter import cmd
 
 from .common import print_test_result, print_traceback
 
