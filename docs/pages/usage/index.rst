@@ -7,4 +7,5 @@ Usage
    common
    file/index
    url/index
+   stdin/index
    gs/index

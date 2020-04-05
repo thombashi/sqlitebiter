@@ -1,0 +1,11 @@
+Examples
+~~~~~~~~
+A data format is a mandatory argument for sqlitebiter ``stdin subcommand``:
+
+:Example:
+    .. code-block:: console
+
+        echo '[{"hoge": 4, "foo": "abc"}, {"hoge": 12, "foo": "xyz"}]' | sqlitebiter stdin json
+        [INFO] convert 'stdin' to 'json1' table
+        [INFO] converted results: source=1, success=1, created-table=1
+        [INFO] database path: out.sqlite

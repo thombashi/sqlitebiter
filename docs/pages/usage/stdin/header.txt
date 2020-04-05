@@ -1,0 +1,3 @@
+Create a SQLite database from stdin
+------------------------------------------------------------------
+``sqlitebiter stdin`` is a subcommand to convert tabular data text from stdin to a SQLite database file.

@@ -1,0 +1,17 @@
+``sqlitebiter stdin`` subcommand help
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    Usage: sqlitebiter stdin [OPTIONS] [csv|html|json|json_lines|jsonl|ldjson|ltsv
+                             |markdown|mediawiki|ndjson|ssv|tsv|ipynb]
+
+      Convert tabular data within CSV/HTML/JSON/Jupyter
+      Notebook/LDJSON/LTSV/Markdown/Mediawiki/SSV/TSV text to a SQLite database
+      file.
+
+    Options:
+      -h, --help  Show this message and exit.
+
+      Documentation: https://sqlitebiter.rtfd.io/ Issue tracker:
+      https://github.com/thombashi/sqlitebiter/issues
