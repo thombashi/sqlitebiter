@@ -2,4 +2,5 @@ nbformat>=5.0.6
 pytest
 responses
 sqliteschema[dumps]>=1
+ujson
 XlsxWriter

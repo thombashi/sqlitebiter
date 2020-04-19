@@ -17,7 +17,7 @@ from .._common import ResultLogger
 
 
 try:
-    import simplejson as json
+    import ujson as json
 except ImportError:
     import json  # type: ignore
 

@@ -27,7 +27,7 @@ from .converter import FileConverter, GoogleSheetsConverter, TextConverter, UrlC
 
 
 try:
-    import simplejson as json
+    import ujson as json
 except ImportError:
     import json  # type: ignore
 
