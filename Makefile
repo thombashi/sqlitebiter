@@ -48,10 +48,10 @@ readme:
 
 .PHONY: release
 release:
-	@cd $(PKG_BUILD_DIR) && tox -e release
+	@cd $(PKG_BUILD_DIR) && python setup.py release --sign
 	@make clean
 
 .PHONY: setup
 setup:
-	@pip install --upgrade -e .[test] tox
+	@pip install --upgrade -e .[test] releasecmd tox
 	pip check
