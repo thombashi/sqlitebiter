@@ -52,7 +52,7 @@ class TableCreator:
         src_table_name = con_mem.fetch_table_names()[0]
         dst_table_name = src_table_name
 
-        if self.__require_rename_table(con_mem, table_data.table_name):
+        if self.__require_rename_table(con_mem, src_table_name):
             dst_table_name = self.__make_unique_table_name(src_table_name)
 
             self.__logger.debug(
