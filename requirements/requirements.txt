@@ -2,11 +2,11 @@ appconfigpy>=1.0.1,<2
 click>=6.2,<8
 colorama>=0.3.7,<1
 loguru>=0.4.1,<1
-msgfy>=0.0.6,<1
+msgfy>=0.1.0,<1
 nbformat>=4.4.0,<6
 path.py<13
 pathvalidate>=2.1.0,<3
-pytablereader[excel,md,sqlite,url]>=0.29.0,<2
+pytablereader[excel,md,sqlite,url]>=0.30.0,<2
 retryrequests>=0.0.2,<1
 SimpleSQLite>=1.1.1,<2
-typepy>=1.0.0,<2
+typepy>=1.1.0,<2
