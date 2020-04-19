@@ -22,7 +22,7 @@ fi
 rm -rf $DIST_DIR_NAME
 
 $PIP install --upgrade "pip>=19.0.2"
-$PIP install --upgrade .[gs,mediawiki,buildexe]
+$PIP install --upgrade .[all,buildexe]
 
 # temporal workaround for setuptools#1963
 $PIP install --upgrade "setuptools<45"

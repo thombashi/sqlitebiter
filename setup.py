@@ -40,6 +40,9 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
     tests_requires = [line.strip() for line in f if line.strip()]
 
 build_exe_requires = ["pyinstaller>=3.5"]
+gs_requires = ["gspread", "oauth2client", "pyOpenSSL"]
+mediawiki_requires = ["pypandoc"]
+optional_requires = ["ujson>=1.33,<3"]
 
 SETUPTOOLS_REQUIRES = ["setuptools>=38.3.0"]
 
@@ -76,10 +79,11 @@ setuptools.setup(
     install_requires=SETUPTOOLS_REQUIRES + install_requires,
     setup_requires=SETUPTOOLS_REQUIRES,
     extras_require={
+        "all": gs_requires + mediawiki_requires + optional_requires,
         "buildexe": build_exe_requires,
-        "gs": ["gspread", "oauth2client", "pyOpenSSL"],
-        "mediawiki": ["pypandoc"],
-        "test": tests_requires,
+        "gs": gs_requires,
+        "mediawiki": mediawiki_requires,
+        "test": set(tests_requires + optional_requires),
     },
     classifiers=[
         "Development Status :: 4 - Beta",

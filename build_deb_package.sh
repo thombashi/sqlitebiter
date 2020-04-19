@@ -12,7 +12,7 @@ rm -rf $DIST_DIR_NAME
 mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 
 pip install --upgrade "pip>=19.0.2"
-pip install --upgrade .[gs,mediawiki,buildexe]
+pip install --upgrade .[all,buildexe]
 
 # temporal workaround for setuptools#1963
 pip install --upgrade "setuptools<45"
