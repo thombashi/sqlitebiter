@@ -316,6 +316,11 @@ Dependencies other than Python packages (Optional)
 - ``libxml2`` (faster HTML/Markdown conversion)
 - `pandoc <https://pandoc.org/>`__ (required when converting MediaWiki files)
 
+Become a backer or sponsor
+====================================
+- `liberapay <https://liberapay.com/thombashi>`__
+- `OpenCollective  <https://opencollective.com/sqlitebiter>`__
+
 Documentation
 ===============
 https://sqlitebiter.rtfd.io/
