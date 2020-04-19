@@ -91,7 +91,7 @@ class FileConverter(TableConverter):
 
             for table_name in changed_table_name_set:
                 record = deepcopy(source_info_record_base)
-                record.format_name = "ipynb"
+                record.format_name = "ipynb"  # type: ignore
                 record.dst_table = table_name
                 SourceInfo.insert(record)
         else:
@@ -145,7 +145,7 @@ class FileConverter(TableConverter):
                     return
 
                 record = deepcopy(source_info_record_base)
-                record.dst_table = sqlite_tabledata.table_name
+                record.dst_table = sqlite_tabledata.table_name  # type: ignore
                 SourceInfo.insert(record)
         except ptr.OpenError as e:
             logger.error(
@@ -160,7 +160,7 @@ class FileConverter(TableConverter):
                     loader.loader, source_info_record_base
                 ):
                     record = deepcopy(source_info_record_base)
-                    record.dst_table = table_name
+                    record.dst_table = table_name  # type: ignore
                     SourceInfo.insert(record)
             else:
                 logger.error(
