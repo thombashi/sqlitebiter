@@ -5,13 +5,18 @@
 from textwrap import dedent
 from typing import TYPE_CHECKING, Optional, Sequence
 
-import simplejson as json
 import simplesqlite
 from simplesqlite import SimpleSQLite
 from tabledata import TableData
 from typepy import String
 
 from .._common import ResultLogger
+
+
+try:
+    import simplejson as json
+except ImportError:
+    import json  # type: ignore
 
 
 if TYPE_CHECKING:

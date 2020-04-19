@@ -14,7 +14,6 @@ import click
 import msgfy
 import path
 import pytablereader as ptr
-import simplejson as json
 import simplesqlite as sqlite
 import typepy
 from loguru import logger
@@ -25,6 +24,12 @@ from ._config import ConfigKey, app_config_mgr
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME, ExitCode
 from ._enum import Context, DupDatabase
 from .converter import FileConverter, GoogleSheetsConverter, TextConverter, UrlConverter
+
+
+try:
+    import simplejson as json
+except ImportError:
+    import json  # type: ignore
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})

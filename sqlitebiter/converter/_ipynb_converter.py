@@ -11,10 +11,15 @@ from urllib.parse import urlparse
 import msgfy
 import nbformat
 import retryrequests
-import simplejson as json
 from simplesqlite import SimpleSQLite
 
 from .._common import ResultLogger
+
+
+try:
+    import simplejson as json
+except ImportError:
+    import json  # type: ignore
 
 
 if TYPE_CHECKING:
