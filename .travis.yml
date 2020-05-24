@@ -2,7 +2,7 @@ language: python
 
 cache: pip
 
-matrix:
+jobs:
   include:
     - os: linux
       python: 3.5
