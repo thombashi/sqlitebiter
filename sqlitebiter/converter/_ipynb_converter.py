@@ -5,6 +5,7 @@
 import abc
 import os.path
 import re
+from typing import Mapping  # noqa
 from typing import TYPE_CHECKING, Dict, List, Optional, Sequence, Set, Tuple
 from urllib.parse import urlparse
 
@@ -305,7 +306,7 @@ class CellConverter(JupyterNotebookConverterBase):
             )
             self._changed_table_name_set.add(table_name)
 
-    def __to_kv_records(self, data_map: Dict) -> List[Tuple]:
+    def __to_kv_records(self, data_map: Mapping) -> List[Tuple]:
         record_list = []  # type: List[Tuple]
         for key, value in data_map.items():
             if key == "metadata":
@@ -409,7 +410,9 @@ class CellConverter(JupyterNotebookConverterBase):
 
         return True
 
-    def __convert_output_data(self, output_data: Dict[str, Dict], need_create_table: bool) -> bool:
+    def __convert_output_data(
+        self, output_data: Dict[str, Mapping], need_create_table: bool
+    ) -> bool:
         output_key = "data"
         if output_key not in output_data:
             return False
