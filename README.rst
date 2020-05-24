@@ -25,6 +25,10 @@ Summary
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
     :target: https://github.com/thombashi/sqlitebiter
     :alt: GitHub stars
+    
+.. image:: https://opencollective.com/sqlitebiter/all/badge.svg?label=financial+contributors
+    :alt: Financial Contributors on Open Collective
+    :target: https://opencollective.com/sqlitebiter
 
 Features
 --------
@@ -325,3 +329,34 @@ Documentation
 ===============
 https://sqlitebiter.rtfd.io/
 
+
+Contributors
+===================================
+
+Code Contributors
+------------------
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+
+.. image:: https://opencollective.com/sqlitebiter/contributors.svg?width=890&button=false 
+
+Financial Contributors
+------------------
+
+Become a financial contributor and help us sustain our community. Contribute_
+
+Individuals
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. image:: https://opencollective.com/sqlitebiter/individuals.svg?width=890
+    :target: https://opencollective.com/sqlitebiter
+
+Organizations
+~~~~~~~~~~~~~~~~~~~~~~
+
+Support this project with your organization. Your logo will show up here with a link to your website. Contribute_
+
+.. image:: https://opencollective.com/sqlitebiter/organization/0/avatar.svg
+    :target: https://opencollective.com/sqlitebiter/organization/0/website
+
+.. _Contribute: https://opencollective.com/sqlitebiter
