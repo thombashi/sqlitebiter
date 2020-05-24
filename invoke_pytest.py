@@ -4,10 +4,12 @@ because of multiprocessing:
 http://py.readthedocs.io/en/latest/faq.html?highlight=cmdline#issues-with-py-test-multiprocess-and-setuptools
 """
 
+import os
 import sys
 
 import py
 
 
 if __name__ == "__main__":
-    sys.exit(py.test.cmdline.main())
+    os.environ["PYTEST_MD_REPORT_COLOR"] = "text"
+    sys.exit(py.test.cmdline.main(["-vv"]))
