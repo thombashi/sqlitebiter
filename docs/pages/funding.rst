@@ -1,4 +1,4 @@
 Become a backer or sponsor 
 ====================================
-- `liberapay <https://liberapay.com/thombashi>`__
-- `OpenCollective  <https://opencollective.com/sqlitebiter>`__
+- `GitHub sponsors <https://github.com/sponsors/thombashi>`__
+- `OpenCollective <https://opencollective.com/sqlitebiter>`__
