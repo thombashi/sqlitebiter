@@ -67,7 +67,7 @@ def main():
     write_examples(maker)
 
     maker.write_file(maker.doc_page_root_dir_path.joinpath("installation.rst"))
-    maker.write_file(maker.doc_page_root_dir_path.joinpath("funding.rst"))
+    maker.write_file(maker.doc_page_root_dir_path.joinpath("sponsors.rst"))
 
     maker.set_indent_level(0)
     maker.write_chapter("Documentation")

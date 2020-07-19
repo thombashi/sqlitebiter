@@ -16,7 +16,7 @@ Welcome to sqlitebiter's documentation!
    pages/introduction/index
    pages/installation
    pages/usage/index
-   pages/funding
+   pages/sponsors
    pages/genindex
    pages/links
 
