@@ -316,10 +316,13 @@ Dependencies other than Python packages (Optional)
 - ``libxml2`` (faster HTML/Markdown conversion)
 - `pandoc <https://pandoc.org/>`__ (required when converting MediaWiki files)
 
-Become a backer or sponsor
+Sponsors
 ====================================
-- `GitHub sponsors <https://github.com/sponsors/thombashi>`__
-- `OpenCollective <https://opencollective.com/sqlitebiter>`__
+.. image:: https://avatars0.githubusercontent.com/u/44389260?s=48&u=6da7176e51ae2654bcfd22564772ef8a3bb22318&v=4
+   :target: https://github.com/chasbecker
+   :alt: chasbecker
+
+`Become a sponsor <https://github.com/sponsors/thombashi>`__
 
 Documentation
 ===============
