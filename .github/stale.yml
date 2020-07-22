@@ -10,7 +10,6 @@ exemptLabels:
   - security
   - bug
   - enhancement
-  - needs-info
   - needs-triage
   - refactoring
 
