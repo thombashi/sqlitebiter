@@ -26,10 +26,12 @@ assignees: ''
 
 
 # Environments
-- **Operating System:** …
-- **Python Version:** Python 3.X
-- **sqlitebiter Version:** …
-- **Installation Method:** `pip` / `binary` / `apt(PPA)` / `brew`
+Please complete the following information:
+
+- **Operating System**: …
+- **Python Version**: Python 3.X
+- **sqlitebiter Version**: …
+- **Installation Method:** `pip` / `deb package ` / `apt(PPA)` / `brew` (choose one of these)
 
 
 # Any other comments?
