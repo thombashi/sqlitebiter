@@ -14,10 +14,7 @@ Welcome to sqlitebiter's documentation!
    :numbered:
 
    pages/introduction/index
-   pages/installation
    pages/usage/index
-   pages/sponsors
-   pages/genindex
    pages/links
 
 
