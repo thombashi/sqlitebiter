@@ -258,28 +258,11 @@ Command Completion (bash/zsh)
 
 Dependencies
 ============
-Python 3.5+
+- Python 3.5+
 
 Python package dependencies
 ------------------------------------------------------------
-
-Mandatory dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Following mandatory Python packages are automatically installed during
-``sqlitebiter`` installation process:
-
-- `appconfigpy <https://github.com/thombashi/appconfigpy>`__
-- `click <https://palletsprojects.com/p/click/>`__
-- `colorama <https://github.com/tartley/colorama>`__
-- `loguru <https://github.com/Delgan/loguru>`__
-- `msgfy <https://github.com/thombashi/msgfy>`__
-- `nbformat <https://jupyter.org/>`__
-- `path <https://github.com/jaraco/path>`__
-- `pathvalidate <https://github.com/thombashi/pathvalidate>`__
-- `pytablereader <https://github.com/thombashi/pytablereader>`__
-- `retryrequests <https://github.com/thombashi/retryrequests>`__
-- `SimpleSQLite <https://github.com/thombashi/SimpleSQLite>`__
-- `typepy <https://github.com/thombashi/typepy>`__
+- `Mandatory dependencies (automatically installed) <https://github.com/thombashi/DateTimeRange/network/dependencies>`__
 
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -297,13 +280,6 @@ The extra packages can be installed with the following `pip` command;
 
 note: binary packages include these dependencies
 
-Test dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-- `pytest <https://docs.pytest.org/en/latest/>`__
-- `responses <https://github.com/getsentry/responses>`__
-- `sqliteschema <https://github.com/thombashi/sqliteschema>`__
-- `tox <https://testrun.org/tox/latest/>`__
-
 Misc dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - `lxml <https://lxml.de/installation.html>`__
@@ -316,15 +292,15 @@ Dependencies other than Python packages (Optional)
 - ``libxml2`` (faster HTML/Markdown conversion)
 - `pandoc <https://pandoc.org/>`__ (required when converting MediaWiki files)
 
+Documentation
+===============
+https://sqlitebiter.rtfd.io/
+
 Sponsors
 ====================================
 .. image:: https://avatars0.githubusercontent.com/u/44389260?s=48&u=6da7176e51ae2654bcfd22564772ef8a3bb22318&v=4
    :target: https://github.com/chasbecker
-   :alt: chasbecker
+   :alt: Charles Becker (chasbecker)
 
 `Become a sponsor <https://github.com/sponsors/thombashi>`__
-
-Documentation
-===============
-https://sqlitebiter.rtfd.io/
 
