@@ -79,4 +79,4 @@ class Test_stdin_subcommand:
                 cmd, ["--max-workers", "4", "-o", self.db_path, "stdin", "json"], input=complex_json
             )
 
-            assert result.exit_code == ExitCode.SUCCESS, file_path
+            assert result.exit_code == ExitCode.SUCCESS
