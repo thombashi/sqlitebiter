@@ -166,6 +166,9 @@ Command help
 
       --replace-symbol TEXT           Replace symbols in attributes.
       -v, --verbose
+      --max-workers WORKERS           Specify maximum number of workers that the
+                                      command may use. defaults to 1.
+
       --debug                         For debug print.
       -q, --quiet                     Suppress execution log messages.
       -h, --help                      Show this message and exit.
@@ -258,7 +261,7 @@ Command Completion (bash/zsh)
 
 Dependencies
 ============
-- Python 3.5+
+Python 3.5+
 
 Python package dependencies
 ------------------------------------------------------------
