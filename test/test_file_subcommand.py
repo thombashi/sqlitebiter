@@ -655,3 +655,13 @@ class Test_sqlitebiter_file:
             tbldata = con.select_as_tabledata(basename)
             assert tbldata.headers == ["a", "b"]
             assert tbldata.rows == [("11", "xyz"), ("22", "abc")]
+
+    def test_smoke_max_workers(self):
+        db_path = "test.sqlite"
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            file_path = valid_csv_file_1_1()
+            result = runner.invoke(cmd, ["--max-workers", "4", "-o", db_path, "file", file_path])
+
+            assert result.exit_code == ExitCode.SUCCESS, file_path

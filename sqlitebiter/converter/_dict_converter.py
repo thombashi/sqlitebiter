@@ -26,11 +26,13 @@ class DictConverter:
         table_creator: TableCreator,
         source_info: SourceInfo,
         index_list: Sequence[str],
+        max_workers: int,
     ) -> None:
         self.__logger = logger
         self.__table_creator = table_creator
         self.__index_list = index_list
         self.__source_info = source_info
+        self.__max_workers = max_workers
         self.__converted_table_name_set = set()  # type: Set[str]
 
     def to_sqlite_table(self, data: OrderedDict, keys: List[str]) -> None:
@@ -86,8 +88,10 @@ class DictConverter:
     def __convert(self, table_data: TableData) -> None:
         self.__logger.debug("loaded tabledata: {}".format(str(table_data)))
 
-        sqlite_tabledata = SQLiteTableDataSanitizer(table_data).normalize()
+        sqlite_tabledata = SQLiteTableDataSanitizer(
+            table_data, max_workers=self.__max_workers
+        ).normalize()
         self.__table_creator.create(
-            sqlite_tabledata, self.__index_list, source_info=self.__source_info
+            sqlite_tabledata, self.__index_list, source_info=self.__source_info,
         )
         self.__converted_table_name_set.add(cast(str, sqlite_tabledata.table_name))

@@ -47,6 +47,7 @@ class TableConverter:
         is_type_inference,
         is_type_hint_header,
         verbosity_level,
+        max_workers: int,
         format_name=None,
         encoding=None,
     ):
@@ -58,6 +59,7 @@ class TableConverter:
         self._is_type_inference = is_type_inference
         self._is_type_hint_header = is_type_hint_header
         self._verbosity_level = verbosity_level
+        self._max_workers = max_workers
         self._format_name = format_name
         self._encoding = encoding
 
@@ -71,6 +73,7 @@ class TableConverter:
             add_pri_key_name=add_pri_key_name,
             result_logger=self._result_logger,
             verbosity_level=verbosity_level,
+            max_workers=self._max_workers,
         )
 
         SourceInfo.attach(con, is_hidden=True)
@@ -100,7 +103,10 @@ class TableConverter:
             dup_col_handler = DEFAULT_DUP_COL_HANDLER
 
         normalized_table_data = SQLiteTableDataSanitizer(
-            table_data, dup_col_handler=dup_col_handler, is_type_inference=self._is_type_inference
+            table_data,
+            dup_col_handler=dup_col_handler,
+            is_type_inference=self._is_type_inference,
+            max_workers=self._max_workers,
         ).normalize()
 
         if self._symbol_replace_value is None:
@@ -194,7 +200,11 @@ class TableConverter:
         from ._dict_converter import DictConverter
 
         dict_converter = DictConverter(
-            self._logger, self._table_creator, source_info=source_info, index_list=self._index_list
+            self._logger,
+            self._table_creator,
+            source_info=source_info,
+            index_list=self._index_list,
+            max_workers=self._max_workers,
         )
 
         try:

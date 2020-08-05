@@ -138,3 +138,21 @@ class Test_url_subcommand:
             print_traceback(result)
 
             assert result.exit_code == expected
+
+    @responses.activate
+    def test_smoke_max_workers(self):
+        url = "https://example.com/complex_json.json"
+        responses.add(
+            responses.GET,
+            url,
+            body=complex_json,
+            content_type="text/plain; charset=utf-8",
+            status=200,
+        )
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(cmd, ["--max-workers", "4", "-o", self.db_path, "url", url])
+            print_traceback(result)
+
+            assert result.exit_code == ExitCode.SUCCESS

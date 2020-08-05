@@ -35,6 +35,7 @@ class FileConverter(TableConverter):
         is_type_inference,
         is_type_hint_header,
         verbosity_level,
+        max_workers: int,
         format_name,
         encoding,
         exclude_pattern,
@@ -42,7 +43,7 @@ class FileConverter(TableConverter):
     ):
         super().__init__(
             logger,
-            con,
+            con=con,
             symbol_replace_value=symbol_replace_value,
             add_pri_key_name=add_pri_key_name,
             convert_configs=convert_configs,
@@ -50,6 +51,7 @@ class FileConverter(TableConverter):
             is_type_inference=is_type_inference,
             is_type_hint_header=is_type_hint_header,
             verbosity_level=verbosity_level,
+            max_workers=max_workers,
             format_name=format_name,
             encoding=encoding,
         )

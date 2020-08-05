@@ -16,6 +16,7 @@ class Context(Enum):
     LOG_LEVEL = 30
     OUTPUT_PATH = 40
     VERBOSITY_LEVEL = 50
+    MAX_WORKERS = 55
     SYMBOL_REPLACE_VALUE = 60
 
 

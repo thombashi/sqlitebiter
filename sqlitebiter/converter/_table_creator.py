@@ -31,17 +31,19 @@ class TableCreator:
         add_pri_key_name: Optional[str],
         result_logger: ResultLogger,
         verbosity_level: int,
+        max_workers: int,
     ) -> None:
         self.__logger = logger
         self.__dst_con = dst_con
         self.__add_pri_key_name = add_pri_key_name
         self.__result_logger = result_logger
         self.__verbosity_level = verbosity_level
+        self.__max_workers = max_workers
 
     def create(
         self, table_data: TableData, index_list: Sequence[str], source_info: "SourceInfo"
     ) -> None:
-        con_mem = simplesqlite.connect_memdb()
+        con_mem = simplesqlite.connect_memdb(max_workers=self.__max_workers)
 
         con_mem.create_table_from_tabledata(
             table_data,

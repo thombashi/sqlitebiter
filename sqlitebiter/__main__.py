@@ -47,7 +47,9 @@ class Default:
     ENCODING = "utf-8"
 
 
-def create_database(database_path: str, dup_table: DupDatabase) -> Tuple[sqlite.SimpleSQLite, bool]:
+def create_database(
+    database_path: str, dup_table: DupDatabase, max_workers: int
+) -> Tuple[sqlite.SimpleSQLite, bool]:
     db_path = path.Path(database_path)
     dir_path = db_path.dirname()
 
@@ -57,9 +59,9 @@ def create_database(database_path: str, dup_table: DupDatabase) -> Tuple[sqlite.
     is_create_db = not db_path.isfile()
 
     if dup_table == DupDatabase.APPEND:
-        return (sqlite.SimpleSQLite(db_path, "a"), is_create_db)
+        return (sqlite.SimpleSQLite(db_path, "a", max_workers=max_workers), is_create_db)
 
-    return (sqlite.SimpleSQLite(db_path, "w"), is_create_db)
+    return (sqlite.SimpleSQLite(db_path, "w", max_workers=max_workers), is_create_db)
 
 
 def initialize_logger(name: str, log_level: str) -> None:
@@ -166,6 +168,18 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
 )
 @click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
+@click.option(
+    "--max-workers",
+    metavar="WORKERS",
+    type=int,
+    default=1,
+    help=dedent(
+        """\
+        Specify maximum number of workers that the command may use.
+        defaults to 1.
+        """
+    ),
+)
 @click.option("--debug", "log_level", flag_value="DEBUG", help="For debug print.")
 @click.option(
     "-q",
@@ -186,6 +200,7 @@ def cmd(
     is_type_hint_header,
     symbol_replace_value,
     verbosity_level,
+    max_workers,
     log_level,
 ):
     ctx.obj[Context.OUTPUT_PATH] = output_path
@@ -197,6 +212,7 @@ def cmd(
     ctx.obj[Context.TYPE_INFERENCE] = not no_type_inference
     ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
+    ctx.obj[Context.MAX_WORKERS] = max_workers
     ctx.obj[Context.LOG_LEVEL] = "INFO" if log_level is None else log_level
 
     sqlite.SimpleSQLite.dup_col_handler = DEFAULT_DUP_COL_HANDLER
@@ -240,7 +256,10 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="file"
     )
 
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
+    max_workers = ctx.obj.get(Context.MAX_WORKERS)
+    con, is_create_db = create_database(
+        ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE], max_workers=max_workers
+    )
     converter = FileConverter(
         logger=logger,
         con=con,
@@ -251,6 +270,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
+        max_workers=max_workers,
         format_name=format_name,
         encoding=encoding,
         exclude_pattern=exclude,
@@ -296,7 +316,10 @@ def stdin(ctx, format_name):
         logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="stdin"
     )
 
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
+    max_workers = ctx.obj.get(Context.MAX_WORKERS)
+    con, is_create_db = create_database(
+        ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE], max_workers=max_workers
+    )
     converter = TextConverter(
         logger=logger,
         con=con,
@@ -307,6 +330,7 @@ def stdin(ctx, format_name):
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
+        max_workers=max_workers,
         format_name=format_name,
     )
 
@@ -364,7 +388,10 @@ def url(ctx, url, format_name, encoding, proxy):
 
     convert_configs = load_convert_config(logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="url")
 
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
+    max_workers = ctx.obj.get(Context.MAX_WORKERS)
+    con, is_create_db = create_database(
+        ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE], max_workers=max_workers
+    )
     converter = UrlConverter(
         logger=logger,
         con=con,
@@ -375,6 +402,7 @@ def url(ctx, url, format_name, encoding, proxy):
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
+        max_workers=max_workers,
         format_name=format_name,
         encoding=encoding,
         proxy=proxy,
@@ -398,7 +426,11 @@ def gs(ctx, credentials, title):
     """
 
     initialize_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
-    con, is_create_db = create_database(ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE])
+
+    max_workers = ctx.obj.get(Context.MAX_WORKERS)
+    con, is_create_db = create_database(
+        ctx.obj[Context.OUTPUT_PATH], ctx.obj[Context.DUP_DATABASE], max_workers=max_workers
+    )
     convert_configs = load_convert_config(
         logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="file"
     )
@@ -413,6 +445,7 @@ def gs(ctx, credentials, title):
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
+        max_workers=max_workers,
     )
 
     converter.convert(credentials, title)

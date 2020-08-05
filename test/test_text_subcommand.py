@@ -70,3 +70,13 @@ class Test_stdin_subcommand:
 
             assert tbldata.headers == ["a text", "b integer", "c real"]
             assert tbldata.rows == [("1", 1, 1.1), ("2", 2, 1.2), ("3", 3, 1.3)]
+
+    def test_smoke_max_workers(self):
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            result = runner.invoke(
+                cmd, ["--max-workers", "4", "-o", self.db_path, "stdin", "json"], input=complex_json
+            )
+
+            assert result.exit_code == ExitCode.SUCCESS, file_path

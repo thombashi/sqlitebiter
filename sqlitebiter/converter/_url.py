@@ -61,6 +61,7 @@ class UrlConverter(TableConverter):
         is_type_inference,
         is_type_hint_header,
         verbosity_level,
+        max_workers: int,
         format_name,
         encoding,
         proxy,
@@ -75,6 +76,7 @@ class UrlConverter(TableConverter):
             is_type_inference=is_type_inference,
             is_type_hint_header=is_type_hint_header,
             verbosity_level=verbosity_level,
+            max_workers=max_workers,
             format_name=format_name,
             encoding=encoding,
         )
