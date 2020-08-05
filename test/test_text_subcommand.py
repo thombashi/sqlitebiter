@@ -15,7 +15,7 @@ from .common import print_traceback
 from .dataset import complex_json
 
 
-class Test_url_subcommand:
+class Test_stdin_subcommand:
 
     db_path = "test.sqlite"
 
