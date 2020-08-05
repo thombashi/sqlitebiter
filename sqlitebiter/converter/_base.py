@@ -10,8 +10,8 @@ from path import Path
 from pytablereader.interface import AbstractTableReader
 from simplesqlite.model import Integer, Model, Text
 from tabledata import TableData
+from tcolorpy import tcolor
 
-from .._clrm import bright, green, red, yellow
 from .._common import DEFAULT_DUP_COL_HANDLER, ResultLogger
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, TABLE_NOT_FOUND_MSG_FORMAT
 from .._counter import ResultCounter
@@ -135,28 +135,41 @@ class TableConverter:
 
         log_list = [
             "source={}".format(
-                bright(
-                    self._con.fetch_value(
-                        select="COUNT(DISTINCT({}))".format("source_id"),
-                        table_name=SourceInfo.get_table_name(),
-                    )
+                tcolor(
+                    str(
+                        self._con.fetch_value(
+                            select="COUNT(DISTINCT({}))".format("source_id"),
+                            table_name=SourceInfo.get_table_name(),
+                        )
+                    ),
+                    color="light_white",
                 )
             )
         ]
         if self.get_success_count() > 0:
-            log_list.append(green("success={}".format(bright(str(self.get_success_count())))))
+            log_list.append(
+                tcolor("success=", color="green")
+                + tcolor(str(self.get_success_count()), color="light_green"),
+            )
         if self._result_counter.fail_count > 0:
-            log_list.append(red("fail={}".format(bright(str(self._result_counter.fail_count)))))
+            log_list.append(
+                tcolor("fail=", color="red")
+                + tcolor(str(self._result_counter.fail_count), color="light_red"),
+            )
         if self._result_counter.skip_count > 0:
-            log_list.append(yellow("skip={}".format(bright(str(self._result_counter.skip_count)))))
+            log_list.append(
+                tcolor("skip=", color="yellow")
+                + tcolor(str(self._result_counter.skip_count), color="light_yellow"),
+            )
         if self._result_counter.created_table_count > 0:
             log_list.append(
-                "created-table={}".format(bright(str(self._result_counter.created_table_count)))
+                tcolor("created-table=", color="white")
+                + tcolor(str(self._result_counter.skip_count), color="light_white"),
             )
 
         logger.info("converted results: {}".format(", ".join(log_list)))
         database_path_msg = "database path: {:s}".format(
-            bright(Path(self._con.database_path).relpath())
+            tcolor(Path(self._con.database_path).relpath(), color="light_white"),
         )
 
         if self.get_success_count() > 0:

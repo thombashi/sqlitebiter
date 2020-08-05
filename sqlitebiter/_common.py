@@ -6,8 +6,8 @@ from typing import Union
 
 from path import Path
 from sqliteschema import SQLiteSchemaExtractor
+from tcolorpy import tcolor
 
-from ._clrm import bright, cyan, green
 from ._counter import ResultCounter
 
 
@@ -39,13 +39,12 @@ class ResultLogger:
         self.__result_counter.inc_success(is_create_table)
         self.__logger.info(
             "convert '{source:s}' to '{table_info:s}' table".format(
-                source=cyan(source),
-                table_info=bright(
-                    green(
-                        table_schema.dumps(
-                            output_format="text", verbosity_level=self.__verbosity_level
-                        )
-                    )
+                source=tcolor(source, color="cyan"),
+                table_info=tcolor(
+                    table_schema.dumps(
+                        output_format="text", verbosity_level=self.__verbosity_level
+                    ),
+                    color="light_green",
                 ),
             )
         )
