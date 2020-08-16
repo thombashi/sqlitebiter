@@ -219,6 +219,35 @@ def cmd(
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
+@click.pass_context
+def version(ctx):
+    """
+    Show version information
+    """
+
+    import platform
+
+    uname = platform.uname()
+
+    click.echo(
+        "\n".join(
+            [
+                "- Platform: {} {} {} {}".format(
+                    uname.system, uname.node, uname.release, uname.machine
+                ),
+                "- {} version: {}".format(
+                    platform.python_implementation(), platform.python_version()
+                ),
+                "- sqlitebiter version: {}".format(__version__),
+                "- Dependency package versions: ",
+                "    - SimpleSQLite version: {}".format(sqlite.__version__),
+                "    - pytabllereader version: {}".format(ptr.__version__),
+            ]
+        )
+    )
+
+
+@cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("files", type=str, nargs=-1)
 @click.option(
     "-r", "--recursive", is_flag=True, help="Read all files under each directory, recursively."
