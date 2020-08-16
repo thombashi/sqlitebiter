@@ -1,6 +1,6 @@
 nbformat>=5.0.6
-pytest
-pytest-md-report
+pytest>=6.0.1
+pytest-md-report>=0.1
 responses
 sqliteschema[dumps]>=1
 XlsxWriter
