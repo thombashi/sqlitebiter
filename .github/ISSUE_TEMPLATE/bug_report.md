@@ -28,9 +28,7 @@ assignees: ''
 # Environments
 Please complete the following information:
 
-- **Operating System**: …
-- **Python Version**: Python 3.X
-- **sqlitebiter Version**: …
+- <past the output of `sqlitebiter version` subcommand>
 - **Installation Method:** `pip` / `deb package ` / `apt(PPA)` / `brew` (choose one of these)
 
 
