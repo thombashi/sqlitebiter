@@ -44,3 +44,5 @@ testpaths = [
 md_report = true
 md_report_verbose = 0
 md_report_color = "auto"
+
+discord_verbose = 1
