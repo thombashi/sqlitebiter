@@ -225,26 +225,10 @@ def version(ctx):
     Show version information
     """
 
-    import platform
+    import pyenvinfo
 
-    uname = platform.uname()
+    click.echo(pyenvinfo.dumps(["sqlitebiter", "SimpleSQLite", "pytablereader"], "markdown"))
 
-    click.echo(
-        "\n".join(
-            [
-                "- Platform: {} {} {} {}".format(
-                    uname.system, uname.node, uname.release, uname.machine
-                ),
-                "- {} version: {}".format(
-                    platform.python_implementation(), platform.python_version()
-                ),
-                "- sqlitebiter version: {}".format(__version__),
-                "- Dependency package versions: ",
-                "    - SimpleSQLite version: {}".format(sqlite.__version__),
-                "    - pytabllereader version: {}".format(ptr.__version__),
-            ]
-        )
-    )
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
@@ -579,7 +563,3 @@ def completion(ctx, shell):
                 """
             )
         )
-
-
-if __name__ == "__main__":
-    cmd()
