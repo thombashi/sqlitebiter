@@ -230,7 +230,6 @@ def version(ctx):
     click.echo(pyenvinfo.dumps(["sqlitebiter", "SimpleSQLite", "pytablereader"], "markdown"))
 
 
-
 @cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("files", type=str, nargs=-1)
 @click.option(
