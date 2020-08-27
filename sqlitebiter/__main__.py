@@ -225,9 +225,9 @@ def version(ctx):
     Show version information
     """
 
-    import pyenvinfo
+    import envinfopy
 
-    click.echo(pyenvinfo.dumps(["sqlitebiter", "SimpleSQLite", "pytablereader"], "markdown"))
+    click.echo(envinfopy.dumps(["sqlitebiter", "SimpleSQLite", "pytablereader"], "markdown"))
 
 
 @cmd.command(epilog=COMMAND_EPILOG)

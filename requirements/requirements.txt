@@ -5,7 +5,7 @@ msgfy>=0.1.0,<1
 nbformat>=4.4.0,<6
 path.py<13
 pathvalidate>=2.3.0,<3
-pyenvinfo>=0.0.1,<1
+envinfopy>=0.0.2,<1
 pytablereader[excel,md,sqlite,url]>=0.30.0,<2
 retryrequests>=0.0.2,<1
 SimpleSQLite>=1.1.3,<2
