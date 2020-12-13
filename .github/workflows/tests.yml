@@ -39,6 +39,6 @@ jobs:
 
       - name: Run tests
         run: |
-          tox
+          tox -e py
         env:
           PYTEST_DISCORD_WEBHOOK: ${{ secrets.PYTEST_DISCORD_WEBHOOK }}
