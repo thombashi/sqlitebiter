@@ -466,7 +466,7 @@ def configure(ctx):
     You can remove these settings by deleting '~/.sqlitebiter'.
     """
 
-    initialize_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger("{:s} configure".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
 
     logger.debug("{} configuration file existence: {}".format(PROGRAM_NAME, app_config_mgr.exists))
 
