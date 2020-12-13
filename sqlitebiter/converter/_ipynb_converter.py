@@ -195,8 +195,11 @@ class MetaDataConverter(JupyterNotebookConverterBase):
     def __convert_language_info(self) -> None:
         target = "language_info"
         language_info = self.__metadata.get(target)
-        record_list = []
 
+        if not language_info:
+            return
+
+        record_list = []
         codemirror_mode = language_info.get("codemirror_mode")
         if isinstance(codemirror_mode, dict):
             for key, value in codemirror_mode.items():

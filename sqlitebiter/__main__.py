@@ -219,6 +219,18 @@ def cmd(
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
+@click.pass_context
+def version(ctx):
+    """
+    Show version information
+    """
+
+    import envinfopy
+
+    click.echo(envinfopy.dumps(["sqlitebiter", "SimpleSQLite", "pytablereader"], "markdown"))
+
+
+@cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("files", type=str, nargs=-1)
 @click.option(
     "-r", "--recursive", is_flag=True, help="Read all files under each directory, recursively."
@@ -550,7 +562,3 @@ def completion(ctx, shell):
                 """
             )
         )
-
-
-if __name__ == "__main__":
-    cmd()

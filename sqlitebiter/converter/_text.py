@@ -22,11 +22,18 @@ TypeHintRules = Dict[Pattern, Type[AbstractType]]
 
 
 def create_text_loader(
-    logger, text: str, format_name: str, encoding: str, type_hint_rules: Optional[TypeHintRules],
+    logger,
+    text: str,
+    format_name: str,
+    encoding: str,
+    type_hint_rules: Optional[TypeHintRules],
 ) -> AbstractTableReader:
     try:
         return ptr.TableTextLoader(
-            text, format_name, encoding=encoding, type_hint_rules=type_hint_rules,
+            text,
+            format_name,
+            encoding=encoding,
+            type_hint_rules=type_hint_rules,
         )
     except (ptr.LoaderNotFoundError) as e:
         logger.error(msgfy.to_error_message(e))
@@ -36,7 +43,9 @@ def create_text_loader(
 class TextConverter(TableConverter):
     def __get_source_info_base(self, text: str) -> SourceInfo:
         return SourceInfo(
-            base_name="stdin", size=len(text), source_id=self._fetch_next_source_id(),
+            base_name="stdin",
+            size=len(text),
+            source_id=self._fetch_next_source_id(),
         )
 
     def convert(self, text: str) -> None:

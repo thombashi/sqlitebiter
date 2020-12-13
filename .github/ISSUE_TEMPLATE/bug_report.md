@@ -7,32 +7,29 @@ assignees: ''
 
 ---
 
-# What happens?
-…
+# Describe the bug
+A clear and concise description of what the bug is.
 
 
-# What were you expecting to happen?
-…
+# Expected behavior
+A clear and concise description of what you expected to happen.
 
 
-# What are the steps to reproduce this issue?
+# To Reproduce
+Steps to reproduce the behavior:
+
 1. …
 2. …
 3. …
 
 
-# Any logs, error output, etc?
-(If it’s long, please paste to https://ghostbin.co/ and insert the link here.)
-
-
 # Environments
 Please complete the following information:
 
-- **Operating System**: …
-- **Python Version**: Python 3.X
-- **sqlitebiter Version**: …
+- <past the output of `sqlitebiter version` subcommand>
 - **Installation Method:** `pip` / `deb package ` / `apt(PPA)` / `brew` (choose one of these)
 
 
-# Any other comments?
-…
+# Additional context
+Add any other context (logs, error output, etc.) about the problem here.
+(If it’s long, please paste to https://ghostbin.co/ and insert the link here.)
