@@ -1,6 +1,6 @@
 nbformat>=5.0.6
 pytest>=6.0.1
-pytest-discord>=0.0.5
+pytest-discord>=0.0.5;python_version<="3.9"
 pytest-md-report>=0.1
 responses
 sqliteschema[dumps]>=1
