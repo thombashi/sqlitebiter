@@ -44,8 +44,6 @@ gs_requires = ["gspread", "oauth2client", "pyOpenSSL"]
 mediawiki_requires = ["pypandoc"]
 optional_requires = ["ujson>=1.33,<4"]
 
-SETUPTOOLS_REQUIRES = ["setuptools>=38.3.0"]
-
 setuptools.setup(
     name=MODULE_NAME,
     version=pkg_info["__version__"],
@@ -76,8 +74,7 @@ setuptools.setup(
         "Tracker": "{:s}/issues".format(REPOSITORY_URL),
     },
     python_requires=">=3.5",
-    install_requires=SETUPTOOLS_REQUIRES + install_requires,
-    setup_requires=SETUPTOOLS_REQUIRES,
+    install_requires=install_requires,
     extras_require={
         "all": gs_requires + mediawiki_requires + optional_requires,
         "buildexe": build_exe_requires,
