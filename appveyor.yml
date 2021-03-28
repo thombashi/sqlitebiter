@@ -1,9 +1,6 @@
 build: false
 environment:
   matrix:
-    - PYTHON: "C:/Python35-x64"
-    - PYTHON: "C:/Python36-x64"
-    - PYTHON: "C:/Python37-x64"
     - PYTHON: "C:/Python38-x64"
 
 configuration:
@@ -19,20 +16,11 @@ notifications:
       secure: JyTQAtBzpPYiWK3eRTz/U+rvmAKopqIWE19ti4vSL/IRygV3jUVUkwET1VyTlrqOeYfNx3Kfcp7eUmHCHxFCgw==
     channel: notifications
 
-matrix:
-  exclude:
-    - configuration: Release
-      PYTHON: "C:/Python35-x64"
-    - configuration: Release
-      PYTHON: "C:/Python36-x64"
-    - configuration: Release
-      PYTHON: "C:/Python38-x64"
-
 for:
   - matrix:
       only:
         - configuration: Release
-          PYTHON: "C:/Python37-x64"
+          PYTHON: "C:/Python38-x64"
 
     before_deploy:
       - "%PYTHON%/Scripts/pip.exe install .[all,buildexe]"
