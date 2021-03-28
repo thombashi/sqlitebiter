@@ -4,6 +4,7 @@ BUILD_WORK_DIR := _work
 DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 PKG_BUILD_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)
+SCRIPTS := $(shell \find . -not -path '*/\.*' -type f -regextype posix-extended -regex .+\.sh$)
 
 
 .PHONY: build-remote
@@ -39,6 +40,7 @@ docs:
 
 .PHONY: fmt
 fmt:
+	shfmt -i 4 -l -w -sr $(shell \find . -not -path '*/\.*' -type f -regextype posix-extended -regex .+\.sh$)
 	@tox -e fmt
 
 .PHONY: readme
