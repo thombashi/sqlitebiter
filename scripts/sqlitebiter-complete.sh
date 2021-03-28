@@ -1,9 +1,9 @@
 _sqlitebiter_completion() {
     local IFS=$'
 '
-    COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \
-                   COMP_CWORD=$COMP_CWORD \
-                   _SQLITEBITER_COMPLETE=complete $1 ) )
+    COMPREPLY=($(env COMP_WORDS="${COMP_WORDS[*]}" \
+        COMP_CWORD=$COMP_CWORD \
+        _SQLITEBITER_COMPLETE=complete $1))
     return 0
 }
 
