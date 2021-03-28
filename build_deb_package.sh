@@ -14,9 +14,6 @@ mkdir -p "${DIST_DIR_NAME}/DEBIAN"
 pip install --upgrade "pip>=19.0.2"
 pip install --upgrade .[all,buildexe]
 
-# temporal workaround for setuptools#1963
-pip install --upgrade "setuptools<45"
-
 PKG_VERSION=$(python -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
 
 if [ "$PKG_VERSION" = "" ]; then
