@@ -29,7 +29,7 @@ echo $PKG_NAME $PKG_VERSION
 # build an executable binary file
 pyinstaller cli.py --clean --onefile --distpath $DIST_DIR_PATH --name $PKG_NAME
 
-${DIST_DIR_PATH}/sqlitebiter --version
+${DIST_DIR_PATH}/${PKG_NAME} --version
 
 # build a deb package
 cat << _CONTROL_ > "${DIST_DIR_NAME}/DEBIAN/control"
@@ -38,7 +38,7 @@ Version: $PKG_VERSION
 Maintainer: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 Architecture: amd64
 Description: $(cat docs/pages/introduction/summary.txt)
-Homepage: https://github.com/thombashi/sqlitebiter
+Homepage: https://github.com/thombashi/$PKG_NAME
 Priority: extra
 _CONTROL_
 
