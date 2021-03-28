@@ -19,9 +19,6 @@ jobs:
 install:
   - travis_retry bash -x .travis/install.sh
 
-script:
-  - bash -x .travis/run_test.sh
-
 notifications:
   slack:
     secure: EHpNEhPxWbvByJouszVg5JIU9BBURFQnHlMEJDudWnK8i0hF37OYKkC8oSbvi2Hz+/bCW4eFStwuTu17RA9diUI6F4ZQ+H0OygI5NqlGSlty0sQpfpxOTSVlqGupKJtZRG5yeqzCVEdXYLZOQH8q54yUADxpjaPkdvCoOrcPB/xBe8vxpUc4uPtYQVeCJCOij0y+3nEwOOu/A8JBk0Uhx9690qKHzYwv3V93M4OjYeWntEcmcbJaLj+BCVV+DT3rPoUeweoZHwd/0euyKR/NmjR/y0uIsIkcjKpwDACaPIzzoQUD7VMf+91yebqI42t5ukg4fDArGE8jkQrRPsTKBdBP7n32n8PShWVypXR/CN/qYZvWwoVkuyYp2KudJIXm9SzWuW0sYjL4BaI9/sQs8iZfXOW2UJfErwNn5gybkxc/59hgtR955ceYWjKSm++KzG9AYb3c7MqY2HHWGdGxNHD6dv2tnTQJ1FUNC5wuOwmOsg0EjHD+o67zYuvOOsjA2EfgjFVqsWLBy7Uh9fQVBOUpb3NCFA0ZDK02xaBtuZSzhT2vCviUkRsvgIy51yzPt6ldeadKtogCUKrQU3U9M0R3ZkoJSZaN74ZHA33IFtCKfnIkZaoJ1w+DRGPLw8D31CI/dxIoeVUjsCYhDuPLxcF/L1x5GS/8tJHXcZEGK/c=
