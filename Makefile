@@ -5,6 +5,7 @@ DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 PKG_BUILD_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)
 SCRIPTS := $(shell \find . -not -path '*/\.*' -type f -regextype posix-extended -regex .+\.sh$)
+PYTHON := python3
 
 
 .PHONY: build-remote
@@ -27,7 +28,7 @@ build:
 check:
 	travis lint
 	@tox -e lint
-	python3 -m pip check
+	$(PYTHON) -m pip check
 
 .PHONY: clean
 clean:
@@ -55,5 +56,5 @@ release:
 
 .PHONY: setup
 setup:
-	@python3 -m pip install --upgrade -e .[test] releasecmd tox
-	python3 -m pip check
+	@$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade -e .[test] releasecmd tox
+	@$(PYTHON) -m pip check
