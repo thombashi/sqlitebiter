@@ -26,7 +26,7 @@ build:
 
 .PHONY: check
 check:
-	travis lint
+	-travis lint
 	@tox -e lint
 	$(PYTHON) -m pip check
 
