@@ -41,7 +41,7 @@ class DictConverter:
 
         self.__logger.debug("to_sqlite_table: {}, keys={}".format(type(data), keys))
 
-        if isinstance(data, (list, tuple)):
+        if isinstance(data, (list, tuple)):  # type: ignore
             for s in data:
                 self.to_sqlite_table(s, keys)
             return
