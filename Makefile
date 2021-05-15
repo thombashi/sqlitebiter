@@ -51,7 +51,7 @@ readme:
 
 .PHONY: release
 release:
-	@cd $(PKG_BUILD_DIR) && python setup.py release --sign
+	@cd $(PKG_BUILD_DIR) && $(PYTHON) setup.py release --sign
 	@make clean
 
 .PHONY: setup
