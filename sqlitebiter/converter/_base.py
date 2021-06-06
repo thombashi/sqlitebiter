@@ -131,7 +131,7 @@ class TableConverter:
     def write_completion_message(self) -> None:
         logger = self._logger
 
-        logger.debug("----- {:s} completed -----".format(PROGRAM_NAME))
+        logger.debug(f"----- {PROGRAM_NAME:s} completed -----")
 
         log_list = [
             "source={}".format(
@@ -243,4 +243,4 @@ class TableConverter:
         if self._verbosity_level == 0:
             return ("text", 1)
 
-        raise ValueError("invalid verbosity_level: {}".format(self._verbosity_level))
+        raise ValueError(f"invalid verbosity_level: {self._verbosity_level}")

@@ -83,7 +83,7 @@ class TextConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded table_data: {}".format(str(table_data)))
+                logger.debug(f"loaded table_data: {str(table_data)}")
 
                 sqlite_tabledata = self.normalize_table(table_data)
 
@@ -100,9 +100,7 @@ class TextConverter(TableConverter):
                     result_counter.inc_fail()
                     continue
                 except ValueError as e:
-                    logger.debug(
-                        "{:s}: text={}, message={}".format(e.__class__.__name__, text, str(e))
-                    )
+                    logger.debug(f"{e.__class__.__name__:s}: text={text}, message={str(e)}")
                     result_counter.inc_fail()
                     continue
 
@@ -118,15 +116,13 @@ class TextConverter(TableConverter):
                     record.dst_table = table_name
                     SourceInfo.insert(record)
             else:
-                logger.error("{:s}: text={}, message={}".format(e.__class__.__name__, text, str(e)))
+                logger.error(f"{e.__class__.__name__:s}: text={text}, message={str(e)}")
                 result_counter.inc_fail()
         except ptr.DataError as e:
-            logger.error(
-                "{:s}: invalid data: text={}, message={}".format(e.__class__.__name__, text, str(e))
-            )
+            logger.error(f"{e.__class__.__name__:s}: invalid data: text={text}, message={str(e)}")
             result_counter.inc_fail()
         except OverflowError as e:
-            logger.error("{}: {}".format(text, e))
+            logger.error(f"{text}: {e}")
             result_counter.inc_fail()
 
         if result_counter.success_count == success_count:

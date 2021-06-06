@@ -113,7 +113,7 @@ class UrlConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded table_data: {}".format(str(table_data)))
+                logger.debug(f"loaded table_data: {str(table_data)}")
 
                 sqlite_tabledata = self.normalize_table(table_data)
 
@@ -130,9 +130,7 @@ class UrlConverter(TableConverter):
                     result_counter.inc_fail()
                     continue
                 except ValueError as e:
-                    logger.debug(
-                        "{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e))
-                    )
+                    logger.debug(f"{e.__class__.__name__:s}: url={url}, message={str(e)}")
                     result_counter.inc_fail()
                     continue
 
@@ -148,15 +146,13 @@ class UrlConverter(TableConverter):
                     record.dst_table = table_name
                     SourceInfo.insert(record)
             else:
-                logger.error("{:s}: url={}, message={}".format(e.__class__.__name__, url, str(e)))
+                logger.error(f"{e.__class__.__name__:s}: url={url}, message={str(e)}")
                 result_counter.inc_fail()
         except ptr.DataError as e:
-            logger.error(
-                "{:s}: invalid data: url={}, message={}".format(e.__class__.__name__, url, str(e))
-            )
+            logger.error(f"{e.__class__.__name__:s}: invalid data: url={url}, message={str(e)}")
             result_counter.inc_fail()
         except OverflowError as e:
-            logger.error("{}: {}".format(url, e))
+            logger.error(f"{url}: {e}")
             result_counter.inc_fail()
 
         if result_counter.success_count == success_count:
@@ -191,7 +187,7 @@ class UrlConverter(TableConverter):
 
         for config in self._convert_configs:
             if not isinstance(config, dict):
-                self._logger.debug("unexpected config value: {}".format(config))
+                self._logger.debug(f"unexpected config value: {config}")
                 continue
 
             if config.get("target_url") not in url:  # type: ignore

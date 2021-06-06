@@ -83,8 +83,8 @@ class Test_sqlitebiter_file_sqlite_merge:
                 if tabledata.table_name == SourceInfo.get_table_name():
                     continue
 
-                print("[actual]\n{}".format(tabledata))
+                print(f"[actual]\n{tabledata}")
                 for record in tabledata.value_matrix:
-                    print("  {}".format(record))
+                    print(f"  {record}")
 
                 assert tabledata in expected_list

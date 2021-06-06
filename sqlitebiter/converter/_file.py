@@ -74,7 +74,7 @@ class FileConverter(TableConverter):
             self._result_counter.inc_skip()
             return
 
-        logger.debug("converting '{}'".format(file_path))
+        logger.debug(f"converting '{file_path}'")
         success_count = result_counter.success_count
         fail_count = result_counter.fail_count
         source_info_record_base = self.__get_source_info_base(file_path.realpath())
@@ -88,7 +88,7 @@ class FileConverter(TableConverter):
                     source_info=source_info_record_base,
                 )
             except (nbformat.reader.NotJSONError, RuntimeError) as e:
-                logger.error("failed to load {}: {}".format(file_path, e))
+                logger.error(f"failed to load {file_path}: {e}")
                 return
 
             for table_name in changed_table_name_set:
@@ -121,9 +121,7 @@ class FileConverter(TableConverter):
             result_counter.inc_fail()
             return
         except ptr.LoaderNotFoundError:
-            logger.warning(
-                "not supported file format: ext={}, path={}".format(file_path.ext, file_path)
-            )
+            logger.warning(f"not supported file format: ext={file_path.ext}, path={file_path}")
             result_counter.inc_fail()
             return
 
@@ -131,7 +129,7 @@ class FileConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded tabledata: {}".format(str(table_data)))
+                logger.debug(f"loaded tabledata: {str(table_data)}")
 
                 sqlite_tabledata = self.normalize_table(table_data)
 
@@ -140,9 +138,7 @@ class FileConverter(TableConverter):
                         sqlite_tabledata, self._index_list, source_info=source_info_record_base
                     )
                 except (ValueError, OSError) as e:
-                    logger.debug(
-                        "exception={:s}, path={}, message={}".format(type(e).__name__, file_path, e)
-                    )
+                    logger.debug(f"exception={type(e).__name__:s}, path={file_path}, message={e}")
                     result_counter.inc_fail()
                     return
 
@@ -182,7 +178,7 @@ class FileConverter(TableConverter):
             )
             result_counter.inc_fail()
         except OverflowError as e:
-            logger.error("{}: {}".format(file_path, e))
+            logger.error(f"{file_path}: {e}")
             result_counter.inc_fail()
 
     def __is_fifo(self, file_path: Path) -> bool:

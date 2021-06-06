@@ -33,13 +33,13 @@ class DictConverter:
         self.__index_list = index_list
         self.__source_info = source_info
         self.__max_workers = max_workers
-        self.__converted_table_name_set = set()  # type: Set[str]
+        self.__converted_table_name_set: Set[str] = set()
 
     def to_sqlite_table(self, data: OrderedDict, keys: List[str]) -> None:
         if not data:
             return
 
-        self.__logger.debug("to_sqlite_table: {}, keys={}".format(type(data), keys))
+        self.__logger.debug(f"to_sqlite_table: {type(data)}, keys={keys}")
 
         if isinstance(data, (list, tuple)):  # type: ignore
             for s in data:
@@ -86,7 +86,7 @@ class DictConverter:
         return "_".join(keys)
 
     def __convert(self, table_data: TableData) -> None:
-        self.__logger.debug("loaded tabledata: {}".format(str(table_data)))
+        self.__logger.debug(f"loaded tabledata: {str(table_data)}")
 
         sqlite_tabledata = SQLiteTableDataSanitizer(
             table_data, max_workers=self.__max_workers

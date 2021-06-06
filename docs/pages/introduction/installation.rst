@@ -73,7 +73,7 @@ Command Completion (bash/zsh)
 
 Dependencies
 ============
-Python 3.5+
+Python 3.6+
 
 Python package dependencies
 ------------------------------------------------------------

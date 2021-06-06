@@ -35,10 +35,10 @@ class ResultCounter:
     def __repr__(self) -> str:
         return "results: " + ", ".join(
             [
-                "success={:d}".format(self.__success_count),
-                "failed={:d}".format(self.__fail_count),
-                "skip={:s}".format(self.__skip_count),
-                "return_code={:d}".format(self.get_return_code()),
+                f"success={self.__success_count:d}",
+                f"failed={self.__fail_count:d}",
+                f"skip={self.__skip_count:s}",
+                f"return_code={self.get_return_code():d}",
             ]
         )
 

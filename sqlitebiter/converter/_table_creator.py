@@ -57,9 +57,7 @@ class TableCreator:
         if self.__require_rename_table(con_mem, src_table_name):
             dst_table_name = self.__make_unique_table_name(src_table_name)
 
-            self.__logger.debug(
-                "rename table from '{}' to '{}'".format(src_table_name, dst_table_name)
-            )
+            self.__logger.debug(f"rename table from '{src_table_name}' to '{dst_table_name}'")
 
             is_create_table = True
             simplesqlite.copy_table(
@@ -114,7 +112,7 @@ class TableCreator:
 
         suffix_id = 1
         while True:
-            table_name_candidate = "{:s}_{:d}".format(table_name_base, suffix_id)
+            table_name_candidate = f"{table_name_base:s}_{suffix_id:d}"
 
             if table_name_candidate not in exist_table_names:
                 return table_name_candidate

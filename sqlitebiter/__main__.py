@@ -102,7 +102,7 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
         return {}
 
     if not os.path.isfile(config_filepath):
-        logger.debug("{} not found".format(config_filepath))
+        logger.debug(f"{config_filepath} not found")
         return {}
 
     with open(config_filepath, encoding="utf-8") as f:
@@ -118,7 +118,10 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
     "--output-path",
     metavar="PATH",
     default=Default.OUTPUT_FILE,
-    help="Output path of the SQLite database file. Defaults to '{:s}'.".format(Default.OUTPUT_FILE),
+    help=f"""
+        Output path of the SQLite database file.
+        Defaults to '{Default.OUTPUT_FILE:s}'.
+    """,
 )
 @click.option(
     "-a", "--append", "is_append_table", is_flag=True, help="Append table(s) to existing database."
@@ -258,10 +261,10 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     file(s) or named pipes to a SQLite database file.
     """
 
-    initialize_logger("{:s} file".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger(f"{PROGRAM_NAME:s} file", ctx.obj[Context.LOG_LEVEL])
 
     if typepy.is_empty_sequence(files):
-        logger.error("require at least one file specification.\n\n{}".format(ctx.get_help()))
+        logger.error(f"require at least one file specification.\n\n{ctx.get_help()}")
         sys.exit(ExitCode.NO_INPUT)
 
     convert_configs = load_convert_config(
@@ -322,7 +325,7 @@ def stdin(ctx, format_name):
     text to a SQLite database file.
     """
 
-    initialize_logger("{:s} stdin".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger(f"{PROGRAM_NAME:s} stdin", ctx.obj[Context.LOG_LEVEL])
 
     convert_configs = load_convert_config(
         logger, ctx.obj[Context.CONVERT_CONFIG], subcommand="stdin"
@@ -365,7 +368,7 @@ def stdin(ctx, format_name):
     "--encoding",
     type=str,
     metavar="ENCODING",
-    help="HTML page read encoding. Defaults to {:s}.".format(Default.ENCODING),
+    help=f"HTML page read encoding. Defaults to {Default.ENCODING:s}.",
 )
 @click.option(
     "-p",
@@ -383,7 +386,7 @@ def url(ctx, url, format_name, encoding, proxy):
     if typepy.is_empty_sequence(url):
         sys.exit(ExitCode.NO_INPUT)
 
-    initialize_logger("{:s} url".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger(f"{PROGRAM_NAME:s} url", ctx.obj[Context.LOG_LEVEL])
 
     try:
         app_configs = app_config_mgr.load()
@@ -393,7 +396,7 @@ def url(ctx, url, format_name, encoding, proxy):
 
     if typepy.is_empty_sequence(encoding):
         encoding = app_configs.get(ConfigKey.DEFAULT_ENCODING)
-        logger.debug("use default encoding: {}".format(encoding))
+        logger.debug(f"use default encoding: {encoding}")
 
     if typepy.is_null_string(proxy):
         proxy = app_configs.get(ConfigKey.PROXY_SERVER)
@@ -437,7 +440,7 @@ def gs(ctx, credentials, title):
     TITLE: Title of the Google Sheets to convert.
     """
 
-    initialize_logger("{:s} gs".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger(f"{PROGRAM_NAME:s} gs", ctx.obj[Context.LOG_LEVEL])
 
     max_workers = ctx.obj.get(Context.MAX_WORKERS)
     con, is_create_db = create_database(
@@ -478,9 +481,9 @@ def configure(ctx):
     You can remove these settings by deleting '~/.sqlitebiter'.
     """
 
-    initialize_logger("{:s} configure".format(PROGRAM_NAME), ctx.obj[Context.LOG_LEVEL])
+    initialize_logger(f"{PROGRAM_NAME:s} configure", ctx.obj[Context.LOG_LEVEL])
 
-    logger.debug("{} configuration file existence: {}".format(PROGRAM_NAME, app_config_mgr.exists))
+    logger.debug(f"{PROGRAM_NAME} configuration file existence: {app_config_mgr.exists}")
 
     sys.exit(app_config_mgr.configure())
 

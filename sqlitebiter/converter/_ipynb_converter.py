@@ -89,11 +89,11 @@ class NbAttr:
 
 
 class NbAttrDesc:
-    CELL_ID = "{:s} INTEGER NOT NULL".format(NbAttr.CELL_ID)
-    KEY = "{:s} TEXT NOT NULL".format(NbAttr.KEY)
-    LINE_NUMBER = "{:s} INTEGER NOT NULL".format(NbAttr.LINE_NUMBER)
-    SOURECE_ID = "{:s} INTEGER NOT NULL".format(NbAttr.SOURECE_ID)
-    VALUE = "{:s} TEXT".format(NbAttr.VALUE)
+    CELL_ID = f"{NbAttr.CELL_ID:s} INTEGER NOT NULL"
+    KEY = f"{NbAttr.KEY:s} TEXT NOT NULL"
+    LINE_NUMBER = f"{NbAttr.LINE_NUMBER:s} INTEGER NOT NULL"
+    SOURECE_ID = f"{NbAttr.SOURECE_ID:s} INTEGER NOT NULL"
+    VALUE = f"{NbAttr.VALUE:s} TEXT"
 
 
 class JupyterNotebookConverterInterface(metaclass=abc.ABCMeta):
@@ -118,7 +118,7 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
         self._source_info = source_info
         self._con = con
         self._result_logger = result_logger
-        self._changed_table_name_set = set()  # type: Set[str]
+        self._changed_table_name_set: Set[str] = set()
 
     def _get_log_header(self, info_name: str) -> str:
         return "{:s}: {:s}({:s})".format(
@@ -181,7 +181,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         if len(records) > 0:
             self._con.create_table(
                 table_name,
-                [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, "{:s} TEXT NOT NULL".format(NbAttr.VALUE)],
+                [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, f"{NbAttr.VALUE:s} TEXT NOT NULL"],
             )
             self._con.insert_many(table_name, records)
 
@@ -203,7 +203,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         codemirror_mode = language_info.get("codemirror_mode")
         if isinstance(codemirror_mode, dict):
             for key, value in codemirror_mode.items():
-                record_list.append((self.source_id, "codemirror_mode_{:s}".format(key), value))
+                record_list.append((self.source_id, f"codemirror_mode_{key:s}", value))
             del language_info["codemirror_mode"]
 
         for key, value in language_info.items():
@@ -213,7 +213,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
         if len(record_list) > 0:
             self._con.create_table(
                 table_name,
-                [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, "{:s} TEXT NOT NULL".format(NbAttr.VALUE)],
+                [NbAttrDesc.SOURECE_ID, NbAttrDesc.KEY, f"{NbAttr.VALUE:s} TEXT NOT NULL"],
             )
             self._con.insert_many(table_name, record_list)
 
@@ -239,7 +239,7 @@ class MetaDataConverter(JupyterNotebookConverterBase):
                     [
                         NbAttrDesc.SOURECE_ID,
                         NbAttrDesc.KEY,
-                        "{:s} TEXT NOT NULL".format(NbAttr.VALUE),
+                        f"{NbAttr.VALUE:s} TEXT NOT NULL",
                     ],
                 )
                 self._con.insert_many(table_name, records)
@@ -268,7 +268,7 @@ class CellConverter(JupyterNotebookConverterBase):
         super().__init__(logger, source_info, con, result_logger)
 
         self.__cells = cells
-        self._cell_id = None  # type: Optional[int]
+        self._cell_id: Optional[int] = None
 
     def convert(self) -> Set[str]:
         for cell_id, cell_data in enumerate(self.__cells):
@@ -358,7 +358,7 @@ class CellConverter(JupyterNotebookConverterBase):
 
                 self._con.insert_many(outputs_kv_table_name, self.__to_kv_records(output_data))
                 self._result_logger.logging_success(
-                    self._get_log_header("{} {}".format(category, KEY_VALUE_TABLE)),
+                    self._get_log_header(f"{category} {KEY_VALUE_TABLE}"),
                     outputs_kv_table_name,
                     need_create_output_kv_table,
                 )
@@ -407,7 +407,7 @@ class CellConverter(JupyterNotebookConverterBase):
             return False
 
         self._result_logger.logging_success(
-            self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
+            self._get_log_header(f"outputs {data_type}"), table_name, need_create_table
         )
         self._changed_table_name_set.add(table_name)
 
@@ -453,7 +453,7 @@ class CellConverter(JupyterNotebookConverterBase):
             return False
 
         self._result_logger.logging_success(
-            self._get_log_header("outputs {}".format(data_type)), table_name, need_create_table
+            self._get_log_header(f"outputs {data_type}"), table_name, need_create_table
         )
         self._changed_table_name_set.add(table_name)
 
@@ -463,7 +463,7 @@ class CellConverter(JupyterNotebookConverterBase):
 def convert_nb(
     logger, source_info: "SourceInfo", con: SimpleSQLite, result_logger: ResultLogger, nb
 ) -> Set[str]:
-    changed_table_name_set = set()  # type: Set[str]
+    changed_table_name_set: Set[str] = set()
     changed_table_name_set |= CellConverter(
         logger, source_info, con, result_logger, nb.cells
     ).convert()
@@ -482,7 +482,7 @@ def convert_nb(
         con.insert_many(table_name, kv_records)
 
         result_logger.logging_success(
-            "{}: {}".format(source_info.base_name, table_name), table_name, need_create_table
+            f"{source_info.base_name}: {table_name}", table_name, need_create_table
         )
         changed_table_name_set.add(table_name)
 

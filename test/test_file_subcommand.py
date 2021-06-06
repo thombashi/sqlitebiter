@@ -269,7 +269,7 @@ class Test_sqlitebiter_file:
                     table, expected_data, actual_data
                 )
 
-                print("--- table: {} ---".format(table))
+                print(f"--- table: {table} ---")
                 print_test_result(expected=expected_data, actual=actual_data)
 
                 assert sorted(expected_data) == sorted(actual_data), message
@@ -488,7 +488,7 @@ class Test_sqlitebiter_file:
                     table, expected_data, actual_data
                 )
 
-                print("--- table: {} ---".format(table))
+                print(f"--- table: {table} ---")
                 print_test_result(expected=expected_data, actual=actual_data)
 
                 assert expected_data == actual_data, message
@@ -528,7 +528,7 @@ class Test_sqlitebiter_file:
                     table, expected_data, actual_data
                 )
 
-                print("--- table: {} ---".format(table))
+                print(f"--- table: {table} ---")
                 print_test_result(expected=expected_data, actual=actual_data)
 
                 assert actual_data == expected_data, message
@@ -572,8 +572,8 @@ class Test_sqlitebiter_file:
     def test_normal_type_hint_header(self):
         runner = CliRunner()
         basename = "type_hint_header"
-        file_path = "{}.csv".format(basename)
-        db_path = "{}.sqlite".format(basename)
+        file_path = f"{basename}.csv"
+        db_path = f"{basename}.sqlite"
 
         with runner.isolated_filesystem():
             with open(file_path, "w") as f:
@@ -601,8 +601,8 @@ class Test_sqlitebiter_file:
     def test_normal_add_primary_key(self):
         runner = CliRunner()
         basename = "add_primary_key"
-        file_path = "{}.csv".format(basename)
-        db_path = "{}.sqlite".format(basename)
+        file_path = f"{basename}.csv"
+        db_path = f"{basename}.sqlite"
 
         with runner.isolated_filesystem():
             with open(file_path, "w") as f:
@@ -631,8 +631,8 @@ class Test_sqlitebiter_file:
     def test_normal_no_type_inference(self):
         runner = CliRunner()
         basename = "no_type_inference"
-        file_path = "{}.csv".format(basename)
-        db_path = "{}.sqlite".format(basename)
+        file_path = f"{basename}.csv"
+        db_path = f"{basename}.sqlite"
 
         with runner.isolated_filesystem():
             with open(file_path, "w") as f:

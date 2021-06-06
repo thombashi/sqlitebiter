@@ -2,26 +2,26 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from enum import Enum, unique
+from enum import Enum, auto, unique
 
 
 @unique
 class Context(Enum):
-    DUP_DATABASE = 1
-    CONVERT_CONFIG = 5
-    INDEX_LIST = 10
-    ADD_PRIMARY_KEY_NAME = 15
-    TYPE_INFERENCE = 19
-    TYPE_HINT_HEADER = 20
-    LOG_LEVEL = 30
-    OUTPUT_PATH = 40
-    VERBOSITY_LEVEL = 50
-    MAX_WORKERS = 55
-    SYMBOL_REPLACE_VALUE = 60
+    DUP_DATABASE = auto()
+    CONVERT_CONFIG = auto()
+    INDEX_LIST = auto()
+    ADD_PRIMARY_KEY_NAME = auto()
+    TYPE_INFERENCE = auto()
+    TYPE_HINT_HEADER = auto()
+    LOG_LEVEL = auto()
+    OUTPUT_PATH = auto()
+    VERBOSITY_LEVEL = auto()
+    MAX_WORKERS = auto()
+    SYMBOL_REPLACE_VALUE = auto()
 
 
 @unique
 class DupDatabase(Enum):
-    OVERWRITE = 1
-    APPEND = 2
-    SKIP = 3  # TODO
+    OVERWRITE = auto()
+    APPEND = auto()
+    SKIP = auto()  # TODO

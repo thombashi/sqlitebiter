@@ -24,7 +24,7 @@ class GoogleSheetsConverter(TableConverter):
 
         try:
             for table_data in loader.load():
-                logger.debug("loaded table_data: {}".format(str(table_data)))
+                logger.debug(f"loaded table_data: {str(table_data)}")
 
                 sqlite_tabledata = self.normalize_table(table_data)
                 source_info = SourceInfo(
@@ -45,9 +45,7 @@ class GoogleSheetsConverter(TableConverter):
             logger.error(msgfy.to_error_message(e))
             result_counter.inc_fail()
         except (ptr.ValidationError, ptr.DataError) as e:
-            logger.error(
-                "invalid credentials data: path={}, message={}".format(credentials, str(e))
-            )
+            logger.error(f"invalid credentials data: path={credentials}, message={str(e)}")
             result_counter.inc_fail()
         except ptr.APIError as e:
             logger.error(msgfy.to_error_message(e))
@@ -59,5 +57,5 @@ class GoogleSheetsConverter(TableConverter):
                 )
             )
         except OverflowError as e:
-            logger.error("{}: {}".format(title, e))
+            logger.error(f"{title}: {e}")
             result_counter.inc_fail()

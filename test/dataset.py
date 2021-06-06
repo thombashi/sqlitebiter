@@ -502,7 +502,7 @@ def valid_markdown_file():
 
 def valid_utf8_csv_file():
     encoding = "utf8"
-    file_path = "valid_{:s}.csv".format(encoding)
+    file_path = f"valid_{encoding:s}.csv"
 
     with open(file_path, "w", encoding=encoding) as f:
         f.write(dedent("""\
@@ -516,7 +516,7 @@ def valid_utf8_csv_file():
 
 def valid_utf16_csv_file():
     encoding = "utf16"
-    file_path = "valid_{:s}.csv".format(encoding)
+    file_path = f"valid_{encoding:s}.csv"
 
     with open(file_path, "w", encoding=encoding) as f:
         f.write(dedent("""\
