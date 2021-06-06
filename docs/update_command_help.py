@@ -15,7 +15,8 @@ def main() -> int:
     env = dict(os.environ, LC_ALL="C.UTF-8")
 
     proc = SubprocessRunner("sqlitebiter -h")
-    proc.run(env=env)
+    proc.run(env=env, check=True)
+    assert proc.stdout
     help_file_path = "pages/usage/help.txt"
     print(help_file_path)
 
@@ -32,9 +33,10 @@ def main() -> int:
         f.write(indent(proc.stdout, "    "))
 
     for subcommand in ["file", "gs", "url", "stdin"]:
-        proc = SubprocessRunner("sqlitebiter {:s} -h".format(subcommand))
-        proc.run(env=env)
-        help_file_path = "pages/usage/{:s}/help.txt".format(subcommand)
+        proc = SubprocessRunner(f"sqlitebiter {subcommand:s} -h")
+        proc.run(env=env, check=True)
+        assert proc.stdout
+        help_file_path = f"pages/usage/{subcommand:s}/help.txt"
 
         print(help_file_path)
 
@@ -47,8 +49,10 @@ def main() -> int:
 
                     ::
 
-                    """.format(subcommand)
+                    """.format(
+                        subcommand
                     )
+                )
             )
 
             f.write(indent(proc.stdout, "    "))
@@ -56,5 +60,5 @@ def main() -> int:
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

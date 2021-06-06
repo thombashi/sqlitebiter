@@ -3,25 +3,19 @@
     Usage: sqlitebiter [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --version                       Show the version and exit.
       -o, --output-path PATH          Output path of the SQLite database file.
                                       Defaults to 'out.sqlite'.
-
       -a, --append                    Append table(s) to existing database.
       --add-primary-key PRIMARY_KEY_NAME
                                       Add 'PRIMARY KEY AUTOINCREMENT' column with
                                       the specified name.
-
       --convert-config TEXT           [experimental] Configurations for data
                                       conversion. The option can be used only for
                                       url subcommand.
-
       -i, --index INDEX_ATTR          Comma separated attribute names to create
                                       indices.
-
       --no-type-inference             All of the columns assume as TEXT data type
                                       in creating tables.
-
       --type-hint-header              Use headers suffix as type hints. If there
                                       are type hints, converting columns by
                                       datatype corresponding with type hints. The
@@ -29,19 +23,17 @@
                                       hints (case insensitive): "text": TEXT
                                       datatype. "integer": INTEGER datatype.
                                       "real": REAL datatype.
-
       --replace-symbol TEXT           Replace symbols in attributes.
-      -v, --verbose
+      -v, --verbose                   [x>=0]
       --max-workers WORKERS           Specify maximum number of workers that the
                                       command may use. defaults to 1.
-
       --debug                         For debug print.
       -q, --quiet                     Suppress execution log messages.
       -h, --help                      Show this message and exit.
 
     Commands:
       completion  A helper command to setup command completion.
-      configure   Configure the following application settings: (1) Default...
+      configure   Configure the following application settings:
       file        Convert tabular data within CSV/Excel/HTML/JSON/Jupyter...
       gs          Convert a spreadsheet in Google Sheets to a SQLite database...
       stdin       Convert tabular data within CSV/HTML/JSON/Jupyter...

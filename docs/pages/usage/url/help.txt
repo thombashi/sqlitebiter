@@ -13,7 +13,6 @@
       -e, --encoding ENCODING         HTML page read encoding. Defaults to utf-8.
       -p, --proxy PROXY               Specify a proxy in the form
                                       [user:passwd@]proxy.server:port.
-
       -h, --help                      Show this message and exit.
 
       Documentation: https://sqlitebiter.rtfd.io/ Issue tracker:
