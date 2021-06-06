@@ -26,4 +26,4 @@ _to_type_hint = {
 
 
 def normalize_type_hint(type_hint_str: str) -> Type[AbstractType]:
-    return _to_type_hint[type_hint_str.strip().lower()]
+    return _to_type_hint[type_hint_str.strip().casefold()]
