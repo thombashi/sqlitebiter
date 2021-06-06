@@ -72,6 +72,7 @@ setuptools.setup(
         "Download": "{:s}/releases".format(REPOSITORY_URL),
         "Source": REPOSITORY_URL,
         "Tracker": "{:s}/issues".format(REPOSITORY_URL),
+        "Changes": "{:s}/releases".format(REPOSITORY_URL),
     },
     python_requires=">=3.5",
     install_requires=install_requires,
