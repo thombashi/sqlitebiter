@@ -230,7 +230,12 @@ def version(ctx):
 
     import envinfopy
 
-    click.echo(envinfopy.dumps(["sqlitebiter", "SimpleSQLite", "pytablereader"], "markdown"))
+    click.echo(
+        envinfopy.dumps(
+            ["sqlitebiter", "SimpleSQLite", "pytablereader"],
+            verbosity_level=ctx.obj[Context.VERBOSITY_LEVEL],
+        )
+    )
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
