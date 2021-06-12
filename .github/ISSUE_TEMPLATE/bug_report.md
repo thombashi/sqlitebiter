@@ -26,7 +26,10 @@ Steps to reproduce the behavior:
 # Environments
 Please complete the following information:
 
-- <past the output of `sqlitebiter version` subcommand>
+```
+<past the output of `sqlitebiter version` subcommand here>
+```
+
 - **Installation Method:** `pip` / `deb package ` / `apt(PPA)` / `brew` (choose one of these)
 
 
