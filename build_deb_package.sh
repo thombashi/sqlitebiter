@@ -40,4 +40,6 @@ Priority: extra
 _CONTROL_
 
 fakeroot dpkg-deb --build $DIST_DIR_NAME $DIST_DIR_NAME
+
+cd ${DIST_DIR_NAME}
 shasum -a 256 "sqlitebiter_${PKG_VERSION}_amd64.deb" > "${PKG_NAME}_deb_sha256.txt"
