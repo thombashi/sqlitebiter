@@ -101,4 +101,5 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: List build binaries
+        run: |
           ls dist
