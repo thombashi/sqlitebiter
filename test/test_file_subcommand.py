@@ -581,9 +581,9 @@ class Test_sqlitebiter_file:
                     dedent(
                         """\
                         "a text","b integer","c real"
-                        1,"1","1.1"
+                        01,"01","1.1"
                         2,"2","1.2"
-                        3,"3","1.3"
+                        03,"03","1.3"
                         """
                     )
                 )
@@ -596,7 +596,11 @@ class Test_sqlitebiter_file:
             con = SimpleSQLite(db_path, "r")
             tbldata = con.select_as_tabledata(basename)
             assert tbldata.headers == ["a text", "b integer", "c real"]
-            assert tbldata.rows == [("1", 1, 1.1), ("2", 2, 1.2), ("3", 3, 1.3)]
+            assert tbldata.rows == [
+                ("01", 1, 1.1),
+                ("2", 2, 1.2),
+                ("03", 3, 1.3),
+            ]
 
     def test_normal_add_primary_key(self):
         runner = CliRunner()
@@ -640,7 +644,7 @@ class Test_sqlitebiter_file:
                     dedent(
                         """\
                         "a","b"
-                        11,"xyz"
+                        011,"xyz"
                         22,"abc"
                         """
                     )
@@ -654,7 +658,10 @@ class Test_sqlitebiter_file:
             con = SimpleSQLite(db_path, "r")
             tbldata = con.select_as_tabledata(basename)
             assert tbldata.headers == ["a", "b"]
-            assert tbldata.rows == [("11", "xyz"), ("22", "abc")]
+            assert tbldata.rows == [
+                ("011", "xyz"),
+                ("22", "abc"),
+            ]
 
     def test_smoke_max_workers(self):
         db_path = "test.sqlite"
