@@ -113,6 +113,12 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: List build binaries
+        id: ls_dist
         shell: bash
         run: |
-          ls $DIST_DIR_NAME
+          echo "::set-output name=dist_files::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
+
+      - name: Release (dummy)
+        shell: bash
+        run: |
+          echo ${{ steps.ls_dist.outputs.ist_files }}
