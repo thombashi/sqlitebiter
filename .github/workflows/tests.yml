@@ -113,5 +113,6 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: List build binaries
+        shell: bash
         run: |
           ls $DIST_DIR_NAME
