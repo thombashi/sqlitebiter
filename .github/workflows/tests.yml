@@ -99,7 +99,7 @@ jobs:
         run: |
           python -m pip install --upgrade .[all,buildexe]
 
-          pyinstaller cli.py --onefile --name %BIN_NAME% --clean --noconfirm --specpath build
+          pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
         if: matrix.os == 'windows-latest'
         env:
           BIN_NAME: sqlitebiter
