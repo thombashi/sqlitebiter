@@ -93,12 +93,14 @@ jobs:
       - name: Build - macOS
         run: |
           ./build_macos_binary.sh
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macos-latest'
 
       - name: Build - Windows
         run: |
-          ./build_win_package.bat
+          pyinstaller cli.py --onefile --name %BIN_NAME% --clean --noconfirm --specpath build
         if: matrix.os == 'windows-latest'
+        env:
+          BIN_NAME: sqlitebiter
 
       - name: List build binaries
         run: |
