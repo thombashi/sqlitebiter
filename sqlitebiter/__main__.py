@@ -232,7 +232,9 @@ def version(ctx):
 
     click.echo(
         envinfopy.dumps(
-            ["sqlitebiter", "SimpleSQLite", "pytablereader"],
+            ["SimpleSQLite", "pytablereader"],
+            format="itemize",
+            additional_envinfo={"sqlitebiter": __version__},
             verbosity_level=ctx.obj[Context.VERBOSITY_LEVEL],
         )
     )
