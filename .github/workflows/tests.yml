@@ -90,11 +90,15 @@ jobs:
           ./build_deb_package.sh
         if: matrix.os == 'ubuntu-latest'
 
+      - name: Build - macOS
+        run: |
+          ./build_macos_binary.sh
+        if: matrix.os == 'ubuntu-latest'
+
       - name: Build - Windows
         run: |
-          BIN_NAME=sqlitebiter
-          DIST_DIR_NAME=dist
-
-          pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
-          ls $DIST_DIR_NAME
+          ./build_win_package.bat
         if: matrix.os == 'windows-latest'
+
+      - name: List build binaries
+          ls dist
