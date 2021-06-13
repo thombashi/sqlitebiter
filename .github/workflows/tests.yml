@@ -88,7 +88,7 @@ jobs:
           sudo apt install -y fakeroot
 
           ./build_deb_package.sh
-        if: matrix.os == "ubuntu-latest"
+        if: matrix.os == 'ubuntu-latest'
 
       - name: Build - Windows
         run: |
@@ -97,4 +97,4 @@ jobs:
 
           pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
           ls $DIST_DIR_NAME
-        if: matrix.os == "windows-latest"
+        if: matrix.os == 'windows-latest'
