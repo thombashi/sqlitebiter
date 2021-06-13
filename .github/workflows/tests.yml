@@ -101,12 +101,13 @@ jobs:
       - name: Build - Windows
         shell: bash
         run: |
-          BIN_PATH=%#DIST_DIR_NAME}/${BIN_NAME}.exe
+          BIN_PATH=${DIST_DIR_NAME}/${BIN_NAME}.exe
           ARCHIVE_PATH=${DIST_DIR_NAME}/${BIN_NAME}_win_x64.zip
 
           python -m pip install -q --upgrade .[all,buildexe]
 
           pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
+          ${BIN_PATH} version
 
           powershell compress-archive -Force %BIN_PATH% %ARCHIVE_PATH%
         if: matrix.os == 'windows-latest'
