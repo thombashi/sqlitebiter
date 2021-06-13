@@ -82,16 +82,13 @@ jobs:
           restore-keys: |
             ${{ matrix.os }}-pip-
 
-      - name: Install dependencies
+      - name: Build - Linux
         run: |
           sudo apt -qq update
           sudo apt install -y fakeroot
-        if: matrix.os == ubuntu-latest
 
-      - name: Build - Linux
-        run: |
           ./build_deb_package.sh
-        if: matrix.os == ubuntu-latest
+        if: matrix.os == "ubuntu-latest"
 
       - name: Build - Windows
         run: |
@@ -100,4 +97,4 @@ jobs:
 
           pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
           ls $DIST_DIR_NAME
-        if: matrix.os == windows-latest
+        if: matrix.os == "windows-latest"
