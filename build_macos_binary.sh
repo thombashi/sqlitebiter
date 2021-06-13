@@ -20,7 +20,7 @@ fi
 # initialize
 rm -rf $DIST_DIR_NAME
 
-$PIP install --upgrade "pip>=19.0.2"
+$PIP install --upgrade "pip>=21.1"
 $PIP install --upgrade .[all,buildexe]
 
 PKG_VERSION=$(${PYTHON} -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
@@ -35,7 +35,7 @@ echo $PKG_NAME $PKG_VERSION
 # build an executable binary file
 pyinstaller cli.py --clean --onefile --distpath $DIST_DIR_PATH --name $PKG_NAME
 
-${DIST_DIR_PATH}/sqlitebiter --version
+${DIST_DIR_PATH}/sqlitebiter version
 
 # generate an archive file
 cd $DIST_DIR_PATH
