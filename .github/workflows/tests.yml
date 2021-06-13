@@ -47,3 +47,56 @@ jobs:
           tox -e py
         env:
           PYTEST_DISCORD_WEBHOOK: ${{ secrets.PYTEST_DISCORD_WEBHOOK }}
+
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install pip
+        id: install-pip
+        run: |
+          python -m pip install --upgrade "pip>=21.1"
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ matrix.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ matrix.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          sudo apt -qq update
+          sudo apt install -y fakeroot
+        if: matrix.os == ubuntu-latest
+
+      - name: Build - Linux
+        run: |
+          ./build_deb_package.sh
+        if: matrix.os == ubuntu-latest
+
+      - name: Build - Windows
+        run: |
+          BIN_NAME=sqlitebiter
+          DIST_DIR_NAME=dist
+
+          pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
+          ls $DIST_DIR_NAME
+        if: matrix.os == windows-latest
