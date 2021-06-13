@@ -116,9 +116,11 @@ jobs:
         id: ls_dist
         shell: bash
         run: |
+          ls ${DIST_DIR_NAME}/${BIN_NAME}_*
+
           echo "::set-output name=dist_files::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
 
       - name: Release (dummy)
         shell: bash
         run: |
-          echo ${{ steps.ls_dist.outputs.ist_files }}
+          echo ${{ steps.ls_dist.outputs.dist_files }}
