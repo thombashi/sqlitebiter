@@ -116,7 +116,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ${{ steps.build_deb_package.outputs.dist_file }}
-            ${{ steps.build_deb_package.outputs.checksum_file }}
+            ${{ steps.ls_dist.outputs.dist_file }}
+            ${{ steps.checksum.outputs.checksum_file }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
