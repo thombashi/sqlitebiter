@@ -1,0 +1,122 @@
+name: Build and release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build_and_release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    timeout-minutes: 20
+    env:
+      BIN_NAME: sqlitebiter
+      DIST_DIR_NAME: dist
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install pip
+        id: install-pip
+        run: |
+          python -m pip install --upgrade "pip>=21.1"
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ matrix.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ matrix.os }}-pip-
+
+      - name: Build - Linux
+        run: |
+          sudo apt -qq update
+          sudo apt install -y fakeroot
+
+          ./build_deb_package.sh
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: Build - macOS
+        run: |
+          ./build_macos_binary.sh
+        if: matrix.os == 'macos-latest'
+
+      - name: Build - Windows
+        shell: bash
+        run: |
+          BIN_PATH=${DIST_DIR_NAME}/${BIN_NAME}.exe
+          ARCHIVE_PATH=${DIST_DIR_NAME}/${BIN_NAME}_win_x64.zip
+
+          python -m pip install -q --upgrade .[all,buildexe]
+
+          pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
+          ${BIN_PATH} version
+
+          powershell compress-archive -Force $BIN_PATH $ARCHIVE_PATH
+        if: matrix.os == 'windows-latest'
+
+      - name: List build binaries
+        id: ls_dist
+        shell: bash
+        run: |
+          ls ${DIST_DIR_NAME}/${BIN_NAME}_*
+
+          echo "::set-output name=dist_file::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
+
+      - name: Calculate checksum of a binary file - Posix
+        id: calc_sha_posix
+        shell: bash
+        run: |
+          set -x
+
+          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_file }}).txt"
+          shasum -a 256 "${{ steps.ls_dist.outputs.dist_file }}" > "$sha_file"
+
+          echo "::set-output name=sha_file::$sha_file"
+        if: matrix.os != 'windows-latest'
+
+      - name: Calculate checksum of a binary file - Windows
+        id: calc_sha_win
+        shell: bash
+        run: |
+          set -x
+
+          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_file }}).txt"
+          powershell certutil -hashfile "${{ steps.ls_dist.outputs.dist_file }}" SHA256 > "$sha_file"
+
+          echo "::set-output name=sha_file::$sha_file"
+        if: matrix.os == 'windows-latest'
+
+      - name: Checksum
+        id: checksum
+        shell: bash
+        run: |
+          if [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ]; then
+            echo "::set-output name=checksum_file::${{ steps.calc_sha_posix.outputs.sha_file }}"
+          elif [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ]; then
+            echo "::set-output name=checksum_file::${{ steps.calc_sha_win.outputs.sha_file }}"
+          fi
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ steps.build_deb_package.outputs.dist_file }}
+            ${{ steps.build_deb_package.outputs.checksum_file }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
