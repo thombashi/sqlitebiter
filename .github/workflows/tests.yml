@@ -121,7 +121,7 @@ jobs:
           echo "::set-output name=dist_files::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
 
       - name: Calculate checksum of a binary file - Posix
-        id: calc_sha
+        id: calc_sha_posix
         shell: bash
         run: |
           set -x
@@ -133,7 +133,7 @@ jobs:
         if: matrix.os != 'windows-latest'
 
       - name: Calculate checksum of a binary file - Windows
-        id: calc_sha
+        id: calc_sha_win
         shell: bash
         run: |
           set -x
@@ -148,4 +148,7 @@ jobs:
         shell: bash
         run: |
           echo ${{ steps.ls_dist.outputs.dist_files }}
-          echo ${{ steps.calc_sha.outputs.sha_file }}
+
+          [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ] && sha_file=${{ steps.calc_sha_posix.outputs.sha_file }}
+          [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ] && sha_file=${{ steps.calc_sha_posix.outputs.sha_file }}
+          echo $sha_file
