@@ -148,8 +148,11 @@ jobs:
         id: checksum
         shell: bash
         run: |
-          [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ] &&  echo "::set-output name=checksum_file::${{ steps.calc_sha_posix.outputs.sha_file }}"
-          [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ] && echo "::set-output name=checksum_file::${{ steps.calc_sha_win.outputs.sha_file }}"
+          if [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ]; then
+            echo "::set-output name=checksum_file::${{ steps.calc_sha_posix.outputs.sha_file }}"
+          elif [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ]; then
+            echo "::set-output name=checksum_file::${{ steps.calc_sha_win.outputs.sha_file }}"
+          fi
 
       - name: Release (dummy)
         shell: bash
