@@ -6,17 +6,9 @@
     :target: https://pypi.org/project/sqlitebiter
     :alt: Supported Python versions
 
-.. image:: https://github.com/thombashi/sqlitebiter/workflows/Tests/badge.svg
-    :target: https://github.com/thombashi/sqlitebiter/actions?query=workflow%3ATests
-    :alt: Linux/macOS/Windows test CI status
-
-.. image:: https://img.shields.io/travis/thombashi/sqlitebiter/master.svg?label=Linux/macOS%20CI
-   :target: https://travis-ci.org/thombashi/sqlitebiter
-   :alt: Linux/macOS build CI status
-
-.. image:: https://img.shields.io/appveyor/ci/thombashi/sqlitebiter/master.svg?label=Windows%20CI
-   :target: https://ci.appveyor.com/project/thombashi/sqlitebiter
-   :alt: Windows CI build status
+.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml
+    :alt: CI status of Linux/macOS/Windows
 
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
     :target: https://github.com/thombashi/sqlitebiter
