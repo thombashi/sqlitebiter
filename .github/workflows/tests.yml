@@ -130,6 +130,18 @@ jobs:
           shasum -a 256 "${{ steps.ls_dist.outputs.dist_files }}" > "$sha_file"
 
           echo "::set-output name=sha_file::$sha_file"
+        if: matrix.os != 'windows-latest'
+
+      - name: Calculate checksum of a binary file - Windows
+        shell: bash
+        run: |
+          set -x
+
+          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_files }}).txt"
+          powershell certutil -hashfile "${{ steps.ls_dist.outputs.dist_files }}" SHA256 > "$sha_file"
+
+          echo "::set-output name=sha_file::$sha_file"
+        if: matrix.os == 'windows-latest'
 
       - name: Release (dummy)
         shell: bash
