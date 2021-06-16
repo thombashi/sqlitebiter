@@ -118,7 +118,7 @@ jobs:
         run: |
           ls ${DIST_DIR_NAME}/${BIN_NAME}_*
 
-          echo "::set-output name=dist_files::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
+          echo "::set-output name=dist_file::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
 
       - name: Calculate checksum of a binary file - Posix
         id: calc_sha_posix
@@ -126,8 +126,8 @@ jobs:
         run: |
           set -x
 
-          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_files }}).txt"
-          shasum -a 256 "${{ steps.ls_dist.outputs.dist_files }}" > "$sha_file"
+          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_file }}).txt"
+          shasum -a 256 "${{ steps.ls_dist.outputs.dist_file }}" > "$sha_file"
 
           echo "::set-output name=sha_file::$sha_file"
         if: matrix.os != 'windows-latest'
@@ -138,8 +138,8 @@ jobs:
         run: |
           set -x
 
-          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_files }}).txt"
-          powershell certutil -hashfile "${{ steps.ls_dist.outputs.dist_files }}" SHA256 > "$sha_file"
+          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_file }}).txt"
+          powershell certutil -hashfile "${{ steps.ls_dist.outputs.dist_file }}" SHA256 > "$sha_file"
 
           echo "::set-output name=sha_file::$sha_file"
         if: matrix.os == 'windows-latest'
@@ -157,5 +157,5 @@ jobs:
       - name: Release (dummy)
         shell: bash
         run: |
-          echo ${{ steps.ls_dist.outputs.dist_files }}
+          echo ${{ steps.ls_dist.outputs.dist_file }}
           echo ${{ steps.checksum.outputs.checksum_file }}
