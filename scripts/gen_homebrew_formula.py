@@ -22,7 +22,7 @@ def main() -> int:
     base_url = "https://github.com/thombashi/{pkg}/releases/download/v{version}".format(
         pkg=sqlitebiter.__name__, version=sqlitebiter.__version__
     )
-    response = retryrequests.get(f"{base_url}/{sqlitebiter.__name__}_macos_sha256.txt")
+    response = retryrequests.get(f"{base_url}/sha256_{sqlitebiter.__name__}_macos_amd64.tar.gz.txt")
     response.raise_for_status()
 
     formula_body.extend(
