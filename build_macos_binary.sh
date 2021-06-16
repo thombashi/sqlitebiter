@@ -41,4 +41,4 @@ ${DIST_DIR_PATH}/sqlitebiter version
 cd $DIST_DIR_PATH
 ARCHIVE_FILE=sqlitebiter_macos_amd64.tar.gz
 tar -zcvf "$ARCHIVE_FILE" "$PKG_NAME"
-shasum -a 256 "$ARCHIVE_FILE" > "${PKG_NAME}_macos_sha256.txt"
+# shasum -a 256 "$ARCHIVE_FILE" > "${PKG_NAME}_macos_sha256.txt"
