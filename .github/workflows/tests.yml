@@ -144,11 +144,15 @@ jobs:
           echo "::set-output name=sha_file::$sha_file"
         if: matrix.os == 'windows-latest'
 
+      - name: Checksum
+        id: checksum
+        shell: bash
+        run: |
+          [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ] &&  echo "::set-output name=checksum_file::${{ steps.calc_sha_posix.outputs.sha_file }}"
+          [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ] && echo "::set-output name=checksum_file::${{ steps.calc_sha_win.outputs.sha_file }}"
+
       - name: Release (dummy)
         shell: bash
         run: |
           echo ${{ steps.ls_dist.outputs.dist_files }}
-
-          [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ] && sha_file=${{ steps.calc_sha_posix.outputs.sha_file }}
-          [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ] && sha_file=${{ steps.calc_sha_posix.outputs.sha_file }}
-          echo $sha_file
+          echo ${{ steps.checksum.outputs.checksum_file }}
