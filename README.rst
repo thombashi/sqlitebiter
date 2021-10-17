@@ -18,6 +18,10 @@ Summary
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml
     :alt: CI status of Linux/macOS/Windows
 
+.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/codeql-analysis.yml/badge.svg
+    :target: https://github.com/thombashi/sqlitebiter/actions/workflows/codeql-analysis.yml
+    :alt: CodeQL
+
 .. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
     :target: https://github.com/thombashi/sqlitebiter
     :alt: GitHub stars
@@ -137,8 +141,8 @@ Command help
                                       Defaults to 'out.sqlite'.
       -a, --append                    Append table(s) to existing database.
       --add-primary-key PRIMARY_KEY_NAME
-                                      Add 'PRIMARY KEY AUTOINCREMENT' column with
-                                      the specified name.
+                                      Add 'PRIMARY KEY AUTOINCREMENT' column to a
+                                      converted table with the specified name.
       --convert-config TEXT           [experimental] Configurations for data
                                       conversion. The option can be used only for
                                       url subcommand.
@@ -154,7 +158,7 @@ Command help
                                       datatype. "integer": INTEGER datatype.
                                       "real": REAL datatype.
       --replace-symbol TEXT           Replace symbols in attributes.
-      -v, --verbose                   [x>=0]
+      -v, --verbose
       --max-workers WORKERS           Specify maximum number of workers that the
                                       command may use. defaults to 1.
       --debug                         For debug print.
