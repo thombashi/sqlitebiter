@@ -130,7 +130,7 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
     "--add-primary-key",
     "add_pri_key_name",
     metavar="PRIMARY_KEY_NAME",
-    help="Add 'PRIMARY KEY AUTOINCREMENT' column with the specified name.",
+    help="Add 'PRIMARY KEY AUTOINCREMENT' column to a converted table with the specified name.",
 )
 @click.option(
     "--convert-config",
