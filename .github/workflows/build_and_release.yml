@@ -20,28 +20,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
       - name: Install pip
-        id: install-pip
-        run: |
-          python -m pip install --upgrade "pip>=21.1"
+        run: python -m pip install --upgrade --disable-pip-version-check "pip>=21.1"
 
       - name: Get pip cache dir
         id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
+        run: echo "::set-output name=dir::$(pip cache dir)"
 
       - name: Cache pip
         uses: actions/cache@v2
         with:
-          path: ${{ steps.pip-cache.outputs.dir }}
+          path: |
+            ${{ steps.pip-cache.outputs.dir }}
+            ./.tox
           key: ${{ matrix.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ matrix.os }}-pip-
+          restore-keys: ${{ matrix.os }}-pip-
 
       - name: Build - Linux
         run: |
