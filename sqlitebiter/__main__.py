@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
