@@ -48,11 +48,11 @@ readme:
 .PHONY: release
 release:
 	@cd $(PKG_BUILD_DIR) && $(PYTHON) setup.py release --sign
-	@make clean
+	@$(MAKE) clean
 
 .PHONY: setup
 setup:
-	@$(PYTHON) -m pip install  --disable-pip-version-check --upgrade releasecmd tox
+	@$(PYTHON) -m pip install --disable-pip-version-check --upgrade releasecmd tox
 
 .PHONY: setup-dev
 setup-dev: setup
