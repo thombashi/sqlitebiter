@@ -120,6 +120,7 @@ _build/
 _sandbox/
 _win_build_env/
 _work/
+dpkg_build/
 *_profile
 Untitled.ipynb
 
