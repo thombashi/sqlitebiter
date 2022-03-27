@@ -5,7 +5,9 @@ DOCS_DIR := docs
 DOCS_BUILD_DIR := $(DOCS_DIR)/_build
 PKG_BUILD_DIR := $(BUILD_WORK_DIR)/$(PACKAGE)
 SCRIPTS := $(shell \find . -not -path '*/\.*' -type f -regextype posix-extended -regex .+\.sh$)
+
 PYTHON := python3
+SUDO := sudo
 
 
 .PHONY: build-remote
@@ -20,6 +22,13 @@ build-remote: clean
 .PHONY: build
 build: clean
 	@$(PYTHON) -m tox -e build
+	ls -lh dist/*
+
+.PHONY: build-deb
+build-deb: clean
+	@$(SUDO) apt -qq update
+	@$(SUDO) apt install -qq -y --no-install-recommends git fakeroot rename
+	@./scripts/build_linux_package.sh
 	ls -lh dist/*
 
 .PHONY: check
