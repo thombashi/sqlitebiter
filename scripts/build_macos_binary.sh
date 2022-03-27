@@ -43,4 +43,4 @@ ARCH=$($PYTHON -c "import platform; machine=platform.machine().casefold(); print
 cd $DIST_DIR_PATH
 ARCHIVE_FILE=${PKG_NAME}_${SYSTEM}_${ARCH}.tar.gz
 tar -zcvf "$ARCHIVE_FILE" "$PKG_NAME"
-mv "$ARCHIVE_FILE" "${ROOT_DIR}/${DIST_DIR_NAME}/"
+# mv "$ARCHIVE_FILE" "${ROOT_DIR}/${DIST_DIR_NAME}/"
