@@ -23,6 +23,10 @@
                                       hints (case insensitive): "text": TEXT
                                       datatype. "integer": INTEGER datatype.
                                       "real": REAL datatype.
+      --matrix-formatting [header_aligned|trim]
+                                      header_aligned: fitting table data to header
+                                      columns. trim: fitting table data to minimum
+                                      column size. Defaults to header_aligned.
       --replace-symbol TEXT           Replace symbols in attributes.
       -v, --verbose
       --max-workers WORKERS           Specify maximum number of workers that the
