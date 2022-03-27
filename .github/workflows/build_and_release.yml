@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
 
 jobs:
   build_and_release:
@@ -44,78 +45,84 @@ jobs:
       - name: Build - Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt -qq update
-          sudo apt install -y fakeroot
+          make build-deb
 
-          ./build_deb_package.sh
-        if: matrix.os == 'ubuntu-latest'
+          # installation test
+          DEB_PACKAGE=$(find dist -type f -name \*.deb)
+          sudo dpkg -i $DEB_PACKAGE
 
       - name: Build - macOS
+        if: matrix.os == 'macos-latest'
         run: |
-          ./build_macos_binary.sh
+          ./scripts/build_macos_binary.sh
 
       - name: Build - Windows
         if: matrix.os == 'windows-latest'
         shell: bash
         run: |
           BIN_PATH=${DIST_DIR_NAME}/${BIN_NAME}.exe
-          ARCHIVE_PATH=${DIST_DIR_NAME}/${BIN_NAME}_win_x64.zip
+          SYSTEM=$(python3 -c "import platform; print(platform.system().casefold())")
+          MACHINE=$(python3 -c "import platform; machine=platform.machine().casefold(); print('amd64' if machine == 'x86_64' else machine)")
+          ARCHIVE_PATH=${DIST_DIR_NAME}/${BIN_NAME}_${SYSTEM}_${MACHINE}.zip
 
           python -m pip install -q --upgrade .[all,buildexe]
 
-          pyinstaller cli.py --onefile --name $BIN_NAME --clean --noconfirm --specpath build
+          pyinstaller cli.py --onefile --name "$BIN_NAME" --clean --noconfirm --specpath build
           ${BIN_PATH} version
 
-          powershell compress-archive -Force $BIN_PATH $ARCHIVE_PATH
+          powershell compress-archive -Force "$BIN_PATH" "$ARCHIVE_PATH"
 
-      - name: List build binaries
-        id: ls_dist
-        shell: bash
-        run: |
-          ls ${DIST_DIR_NAME}/${BIN_NAME}_*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: ${{ env.DIST_DIR_NAME }}/${{ env.BIN_NAME }}_*
+          if-no-files-found: error
+          retention-days: 1
 
-          echo "::set-output name=dist_file::$(ls ${DIST_DIR_NAME}/${BIN_NAME}_*)"
+      - name: Release binary packages
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: ${{ env.DIST_DIR_NAME }}/${{ env.BIN_NAME }}_*
 
-      - name: Calculate checksum of a binary file - Posix
-        id: calc_sha_posix
-        shell: bash
+  calc_hash:
+    needs: [build_and_release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SHA_DIR: sha
+      SHA_TEXT_FILE: crq_sha256.txt
+      DIST_DIR_NAME: dist
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: ${{ env.DIST_DIR_NAME }}
+
+      - name: Calculate checksums of binary packages
         run: |
           set -x
 
-          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_file }}).txt"
-          shasum -a 256 "${{ steps.ls_dist.outputs.dist_file }}" > "$sha_file"
+          mkdir -p "$SHA_DIR"
+          cd "$DIST_DIR_NAME"
+          sha256sum ${BIN_NAME}_* > "../${SHA_DIR}/${SHA_TEXT_FILE}"
 
-          echo "::set-output name=sha_file::$sha_file"
-        if: matrix.os != 'windows-latest'
-
-      - name: Calculate checksum of a binary file - Windows
-        id: calc_sha_win
-        shell: bash
-        run: |
-          set -x
-
-          sha_file="sha256_$(basename ${{ steps.ls_dist.outputs.dist_file }}).txt"
-          powershell certutil -hashfile "${{ steps.ls_dist.outputs.dist_file }}" SHA256 > "$sha_file"
-
-          echo "::set-output name=sha_file::$sha_file"
-        if: matrix.os == 'windows-latest'
-
-      - name: Checksum
-        id: checksum
-        shell: bash
-        run: |
-          if [ "${{ steps.calc_sha_posix.outputs.sha_file }}" != "" ]; then
-            echo "::set-output name=checksum_file::${{ steps.calc_sha_posix.outputs.sha_file }}"
-          elif [ "${{ steps.calc_sha_win.outputs.sha_file }}" != "" ]; then
-            echo "::set-output name=checksum_file::${{ steps.calc_sha_win.outputs.sha_file }}"
-          fi
+      - uses: actions/upload-artifact@v2
+        with:
+          name: shasum
+          path: ${{ env.SHA_DIR }}
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: |
-            ${{ steps.ls_dist.outputs.dist_file }}
-            ${{ steps.checksum.outputs.checksum_file }}
+          files: ${{ env.SHA_DIR }}/${{ env.SHA_TEXT_FILE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
