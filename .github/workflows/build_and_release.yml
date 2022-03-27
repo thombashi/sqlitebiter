@@ -17,6 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04, macos-latest, windows-latest]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}
+      cancel-in-progress: true
     timeout-minutes: 20
 
     steps:
@@ -94,6 +97,9 @@ jobs:
   calc_hash:
     needs: [build_and_release]
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.job }}
+      cancel-in-progress: true
     timeout-minutes: 20
     env:
       SHA_DIR: sha
