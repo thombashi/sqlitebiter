@@ -7,13 +7,14 @@ import os
 import re
 import sys
 from copy import deepcopy
-from typing import Dict, Optional, Pattern, Type
+from typing import Dict, Optional, Pattern, Sequence, Type
 from urllib.parse import urlparse
 
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
 from pytablereader.interface import AbstractTableReader
+from simplesqlite import SimpleSQLite
 from typepy.type import AbstractType
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
@@ -53,14 +54,14 @@ class UrlConverter(TableConverter):
     def __init__(
         self,
         logger,
-        con,
-        symbol_replace_value,
-        add_pri_key_name,
+        con: SimpleSQLite,
+        symbol_replace_value: Optional[str],
+        add_pri_key_name: Optional[str],
         convert_configs,
-        index_list,
-        is_type_inference,
-        is_type_hint_header,
-        verbosity_level,
+        index_list: Sequence[str],
+        is_type_inference: bool,
+        is_type_hint_header: bool,
+        verbosity_level: int,
         max_workers: int,
         format_name,
         encoding,

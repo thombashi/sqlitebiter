@@ -4,10 +4,11 @@
 
 import os.path
 from textwrap import indent
-from typing import Set, Tuple
+from typing import Optional, Sequence, Set, Tuple
 
 from path import Path
 from pytablereader.interface import AbstractTableReader
+from simplesqlite import SimpleSQLite
 from simplesqlite.model import Integer, Model, Text
 from tabledata import TableData
 from tcolorpy import tcolor
@@ -39,14 +40,14 @@ class TableConverter:
     def __init__(
         self,
         logger,
-        con,
-        symbol_replace_value,
-        add_pri_key_name,
+        con: SimpleSQLite,
+        symbol_replace_value: Optional[str],
+        add_pri_key_name: Optional[str],
         convert_configs,
-        index_list,
-        is_type_inference,
-        is_type_hint_header,
-        verbosity_level,
+        index_list: Sequence[str],
+        is_type_inference: bool,
+        is_type_hint_header: bool,
+        verbosity_level: int,
         max_workers: int,
         format_name=None,
         encoding=None,

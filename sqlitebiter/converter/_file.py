@@ -6,10 +6,12 @@ import os
 import stat
 from copy import deepcopy
 from errno import EBADF, ENAMETOOLONG, ENOENT, ENOTDIR
+from typing import Optional, Sequence
 
 import msgfy
 import pytablereader as ptr
 from path import Path
+from simplesqlite import SimpleSQLite
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
 from ._base import SourceInfo, TableConverter
@@ -27,14 +29,14 @@ class FileConverter(TableConverter):
     def __init__(
         self,
         logger,
-        con,
-        symbol_replace_value,
-        add_pri_key_name,
+        con: SimpleSQLite,
+        symbol_replace_value: Optional[str],
+        add_pri_key_name: Optional[str],
         convert_configs,
-        index_list,
-        is_type_inference,
-        is_type_hint_header,
-        verbosity_level,
+        index_list: Sequence[str],
+        is_type_inference: bool,
+        is_type_hint_header: bool,
+        verbosity_level: int,
         max_workers: int,
         format_name,
         encoding,
