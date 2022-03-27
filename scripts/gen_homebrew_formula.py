@@ -13,6 +13,17 @@ import retryrequests
 import sqlitebiter
 
 
+def fetch_checksum(base_url: str, exec_bin_filename: str) -> str:
+    response = retryrequests.get(f"{base_url}/sqlitebiter_sha256.txt")
+    response.raise_for_status()
+    for line in response.text.splitlines():
+        if exec_bin_filename in line:
+            return line.split()[0]
+
+    print(f"[ERROR] checksum not found of {exec_bin_filename}", file=sys.stderr)
+    sys.exit(2)
+
+
 def main() -> int:
     formula_body = []
 
@@ -22,19 +33,18 @@ def main() -> int:
     base_url = "https://github.com/thombashi/{pkg}/releases/download/v{version}".format(
         pkg=sqlitebiter.__name__, version=sqlitebiter.__version__
     )
-    response = retryrequests.get(f"{base_url}/sha256_{sqlitebiter.__name__}_macos_amd64.tar.gz.txt")
+    exec_bin_filename = f"{sqlitebiter.__name__}_macos_amd64.tar.gz"
+
+    exec_bin_url = f"{base_url}/{exec_bin_filename}"
+    response = retryrequests.head(exec_bin_url)
     response.raise_for_status()
 
     formula_body.extend(
         [
             f'homepage "https://github.com/thombashi/{sqlitebiter.__name__}"',
-            'url "{bin_url}"'.format(
-                bin_url="{base}/{pkg}_macos_amd64.tar.gz".format(
-                    base=base_url, pkg=sqlitebiter.__name__
-                )
-            ),
+            f'url "{exec_bin_url}"',
             f'version "{sqlitebiter.__version__}"',
-            f'sha256 "{response.text.split()[0]}"',
+            f'sha256 "{fetch_checksum(base_url, exec_bin_filename)}"',
             "",
             "def install",
             f'  bin.install "{sqlitebiter.__name__}"',
