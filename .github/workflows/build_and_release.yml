@@ -38,10 +38,11 @@ jobs:
           path: |
             ${{ steps.pip-cache.outputs.dir }}
             ./.tox
-          key: ${{ matrix.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ matrix.os }}-pip-${{ hashFiles('setup.py', '**/requirements.txt') }}
           restore-keys: ${{ matrix.os }}-pip-
 
       - name: Build - Linux
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt -qq update
           sudo apt install -y fakeroot
@@ -52,9 +53,9 @@ jobs:
       - name: Build - macOS
         run: |
           ./build_macos_binary.sh
-        if: matrix.os == 'macos-latest'
 
       - name: Build - Windows
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: |
           BIN_PATH=${DIST_DIR_NAME}/${BIN_NAME}.exe
@@ -66,7 +67,6 @@ jobs:
           ${BIN_PATH} version
 
           powershell compress-archive -Force $BIN_PATH $ARCHIVE_PATH
-        if: matrix.os == 'windows-latest'
 
       - name: List build binaries
         id: ls_dist
