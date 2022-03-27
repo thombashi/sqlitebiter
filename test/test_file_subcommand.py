@@ -49,6 +49,7 @@ class Test_sqlitebiter_file:
             [valid_tsv_file, ExitCode.SUCCESS],
             [valid_excel_file, ExitCode.SUCCESS],
             [valid_html_file, ExitCode.SUCCESS],
+            [valid_uneven_html_file, ExitCode.SUCCESS],
             [valid_ltsv_file, ExitCode.SUCCESS],
             [valid_markdown_file, ExitCode.SUCCESS],
             [valid_utf8_csv_file, ExitCode.SUCCESS],

@@ -44,6 +44,7 @@ COMMAND_EPILOG = dedent(
 class Default:
     OUTPUT_FILE = "out.sqlite"
     ENCODING = "utf-8"
+    MATRIX_FORMATTING = "header_aligned"
 
 
 def create_database(
@@ -185,12 +186,13 @@ def to_matrix_formatting_enum(ctx, param, value) -> MatrixFormatting:
 @click.option(
     "--matrix-formatting",
     type=click.Choice(["header_aligned", "trim"], case_sensitive=False),
-    default="trim",
+    default=Default.MATRIX_FORMATTING,
     callback=to_matrix_formatting_enum,
     help=dedent(
-        """\
-        HEADER_ALIGNED: fitting table data to header columns.
-        TRIM: fitting table data to minimum column size.
+        f"""\
+        header_aligned: fitting table data to header columns.
+        trim: fitting table data to minimum column size.
+        Defaults to {Default.MATRIX_FORMATTING}.
         """
     ),
 )

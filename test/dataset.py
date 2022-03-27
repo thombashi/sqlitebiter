@@ -440,6 +440,63 @@ def valid_html_file():
     return file_path
 
 
+def valid_uneven_html_file():
+    file_path = "valid_uneven.html"
+
+    with open(file_path, "w") as f:
+        f.write(dedent("""\
+            <!DOCTYPE html>
+            <html>
+            <head>
+            <meta name="generator" content=
+            "HTML Tidy for HTML5 for Linux version 5.6.0">
+            <title></title>
+            </head>
+            <body>
+            <table>
+            <tbody>
+            <tr>
+            <td width="125px"><span>Vincolo [10021]</span></td>
+            <td><strong>PARCO DELLA VILLA SCHELLA CON VEGETAZIONE ULTRASECOLARE
+            NEL COMUNE DI OVADA</strong></td>
+            </tr>
+            <tr>
+            <td>Pubblicazione</td>
+            <td>*</td>
+            </tr>
+            <tr>
+            <td>Decreto</td>
+            <td>emissione: 1964-10-05, notifica: 1964-10-20, trascrizione:
+            1965-01-04</td>
+            </tr>
+            <tr>
+            <td>Legge istitutiva</td>
+            <td>L1497/39</td>
+            </tr>
+            <tr>
+            <td>Stato del vincolo</td>
+            <td>Vincolo operante</td>
+            </tr>
+            <tr>
+            <td>Uso</td>
+            <td>Modificabilità previa autorizzazione</td>
+            </tr>
+            <tr>
+            <td>Lettera M</td>
+            <td>NO</td>
+            </tr>
+            <tr>
+            <td><span>Geometria</span></td>
+            </tr>
+            </tbody>
+            </table>
+            </body>
+            </html>
+            """))
+
+    return file_path
+
+
 def invalid_html_file():
     file_path = "invalid_html.html"
 
