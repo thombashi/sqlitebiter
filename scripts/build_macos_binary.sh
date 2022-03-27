@@ -2,6 +2,7 @@
 
 set -eux
 
+ROOT_DIR=$(git rev-parse --show-toplevel)
 DIST_DIR_NAME="dist"
 DIST_DIR_PATH="./${DIST_DIR_NAME}"
 PKG_NAME="sqlitebiter"
