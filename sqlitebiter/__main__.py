@@ -250,7 +250,9 @@ def version(ctx):
     "-f",
     "--format",
     "format_name",
-    type=click.Choice(ptr.TableFileLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST),
+    type=click.Choice(
+        ptr.TableFileLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST, case_sensitive=False
+    ),
     help="Data format to loading (auto-detect from file extensions in default).",
 )
 @click.option(
@@ -320,7 +322,9 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
 @cmd.command(epilog=COMMAND_EPILOG)
 @click.argument(
     "format_name",
-    type=click.Choice(ptr.TableTextLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST),
+    type=click.Choice(
+        ptr.TableTextLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST, case_sensitive=False
+    ),
 )
 @click.pass_context
 def stdin(ctx, format_name):
@@ -365,7 +369,9 @@ def stdin(ctx, format_name):
     "-f",
     "--format",
     "format_name",
-    type=click.Choice(ptr.TableUrlLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST),
+    type=click.Choice(
+        ptr.TableUrlLoader.get_format_names() + IPYNB_FORMAT_NAME_LIST, case_sensitive=False
+    ),
     help="Data format to loading (defaults to html).",
 )
 @click.option(
@@ -494,7 +500,7 @@ def configure(ctx):
 
 
 @cmd.command(epilog=COMMAND_EPILOG)
-@click.argument("shell", type=click.Choice(["bash", "zsh"]))
+@click.argument("shell", type=click.Choice(["bash", "zsh"], case_sensitive=False))
 @click.pass_context
 def completion(ctx, shell):
     """
@@ -508,6 +514,8 @@ def completion(ctx, shell):
 
         sqlitebiter completion zsh >> ~/.zshrc
     """
+
+    shell = shell.lower()
 
     if shell == "bash":
         click.echo(
