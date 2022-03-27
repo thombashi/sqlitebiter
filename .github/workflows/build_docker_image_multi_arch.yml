@@ -1,0 +1,68 @@
+name: Build and publish Docker images
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+jobs:
+  build-docker-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: "ghcr.io"
+      OWNER: "thombashi"
+      REPO: "sqlitebiter"
+      PLATFORMS: "linux/amd64,linux/arm64"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract version
+        id: extract-version
+        run: echo "::set-output name=version::$(./docker/extract_version.sh)"
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Package Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" -u ${{ github.actor }} --password-stdin
+
+      - name: Wait for PyPI to be reflected the package release
+        env:
+          PKG_VERSION: ${{ steps.extract-version.outputs.version }}
+        run: |
+          MAX_ATTEMPT=30
+          BASE_SLEEP=1
+          CMD="python3 -m pip install --retries 30 --disable-pip-version-check sqlitebiter==${PKG_VERSION}"
+
+          $CMD && exit 0
+          for attempt_num in $(seq $MAX_ATTEMPT); do
+              SLEEP=$(echo "$BASE_SLEEP * $attempt_num" | bc)
+              echo "'$CMD' failed. retrying in $SLEEP seconds..." 1>&2
+              sleep "$SLEEP"
+
+              $CMD && exit 0
+          done
+
+          exit 1
+
+      - name: Build and push Docker images
+        working-directory: docker
+        env:
+          PKG_VERSION: ${{ steps.extract-version.outputs.version }}
+        run: |
+          IMAGE_TAG=${REGISTRY}/${OWNER}/${REPO}:${PKG_VERSION}-${EXTRAS}
+
+          docker buildx build \
+            -t "$IMAGE_TAG" \
+            --platform=$PLATFORMS \
+            --build-arg version=$PKG_VERSION \
+            --push .
