@@ -64,7 +64,7 @@ class TextConverter(TableConverter):
 
             for table_name in changed_table_name_set:
                 record = deepcopy(source_info_record_base)
-                record.format_name = "ipynb"  # type: ignore
+                record.format_name = "ipynb"
                 record.dst_table = table_name
                 record.size = nb_size
                 SourceInfo.insert(record)
@@ -105,7 +105,7 @@ class TextConverter(TableConverter):
                     continue
 
                 record = deepcopy(source_info_record_base)
-                record.dst_table = sqlite_tabledata.table_name  # type: ignore
+                record.dst_table = sqlite_tabledata.table_name
                 SourceInfo.insert(record)
         except ptr.ValidationError as e:
             if loader.format_name == "json":
