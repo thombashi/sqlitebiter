@@ -6,6 +6,7 @@ import os.path
 from textwrap import indent
 from typing import Optional, Sequence, Set, Tuple
 
+from dataproperty import MatrixFormatting
 from path import Path
 from pytablereader.interface import AbstractTableReader
 from simplesqlite import SimpleSQLite
@@ -47,6 +48,7 @@ class TableConverter:
         index_list: Sequence[str],
         is_type_inference: bool,
         is_type_hint_header: bool,
+        matrix_formatting: MatrixFormatting,
         verbosity_level: int,
         max_workers: int,
         format_name=None,
@@ -59,6 +61,7 @@ class TableConverter:
         self._index_list = index_list
         self._is_type_inference = is_type_inference
         self._is_type_hint_header = is_type_hint_header
+        self._matrix_formatting = matrix_formatting
         self._verbosity_level = verbosity_level
         self._max_workers = max_workers
         self._format_name = format_name
@@ -103,6 +106,7 @@ class TableConverter:
         if dup_col_handler is None:
             dup_col_handler = DEFAULT_DUP_COL_HANDLER
 
+        table_data.dp_extractor.matrix_formatting = self._matrix_formatting
         normalized_table_data = SQLiteTableDataSanitizer(
             table_data,
             dup_col_handler=dup_col_handler,
@@ -218,6 +222,7 @@ class TableConverter:
             self._table_creator,
             source_info=source_info,
             index_list=self._index_list,
+            matrix_formatting=self._matrix_formatting,
             max_workers=self._max_workers,
         )
 

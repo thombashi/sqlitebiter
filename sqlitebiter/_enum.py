@@ -13,6 +13,7 @@ class Context(Enum):
     ADD_PRIMARY_KEY_NAME = auto()
     TYPE_INFERENCE = auto()
     TYPE_HINT_HEADER = auto()
+    MATRIX_FORMATTING = auto()
     LOG_LEVEL = auto()
     OUTPUT_PATH = auto()
     VERBOSITY_LEVEL = auto()

@@ -8,6 +8,7 @@ from typing import List, Sequence, Set, cast
 
 import msgfy
 import pytablereader as ptr
+from dataproperty import MatrixFormatting
 from simplesqlite import SQLiteTableDataSanitizer
 from tabledata import TableData
 
@@ -26,6 +27,7 @@ class DictConverter:
         table_creator: TableCreator,
         source_info: SourceInfo,
         index_list: Sequence[str],
+        matrix_formatting: MatrixFormatting,
         max_workers: int,
     ) -> None:
         self.__logger = logger
@@ -33,6 +35,7 @@ class DictConverter:
         self.__index_list = index_list
         self.__source_info = source_info
         self.__max_workers = max_workers
+        self.__matrix_formatting = matrix_formatting
         self.__converted_table_name_set: Set[str] = set()
 
     def to_sqlite_table(self, data: OrderedDict, keys: List[str]) -> None:
@@ -88,6 +91,7 @@ class DictConverter:
     def __convert(self, table_data: TableData) -> None:
         self.__logger.debug(f"loaded tabledata: {str(table_data)}")
 
+        table_data.dp_extractor.matrix_formatting = self.__matrix_formatting
         sqlite_tabledata = SQLiteTableDataSanitizer(
             table_data, max_workers=self.__max_workers
         ).normalize()

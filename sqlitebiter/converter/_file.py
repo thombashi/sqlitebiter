@@ -10,6 +10,7 @@ from typing import Optional, Sequence
 
 import msgfy
 import pytablereader as ptr
+from dataproperty import MatrixFormatting
 from path import Path
 from simplesqlite import SimpleSQLite
 
@@ -36,6 +37,7 @@ class FileConverter(TableConverter):
         index_list: Sequence[str],
         is_type_inference: bool,
         is_type_hint_header: bool,
+        matrix_formatting: MatrixFormatting,
         verbosity_level: int,
         max_workers: int,
         format_name,
@@ -52,6 +54,7 @@ class FileConverter(TableConverter):
             index_list=index_list,
             is_type_inference=is_type_inference,
             is_type_hint_header=is_type_hint_header,
+            matrix_formatting=matrix_formatting,
             verbosity_level=verbosity_level,
             max_workers=max_workers,
             format_name=format_name,

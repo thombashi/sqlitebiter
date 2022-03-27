@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
+from dataproperty import MatrixFormatting
 from pytablereader.interface import AbstractTableReader
 from simplesqlite import SimpleSQLite
 from typepy.type import AbstractType
@@ -61,6 +62,7 @@ class UrlConverter(TableConverter):
         index_list: Sequence[str],
         is_type_inference: bool,
         is_type_hint_header: bool,
+        matrix_formatting: MatrixFormatting,
         verbosity_level: int,
         max_workers: int,
         format_name,
@@ -76,6 +78,7 @@ class UrlConverter(TableConverter):
             index_list=index_list,
             is_type_inference=is_type_inference,
             is_type_hint_header=is_type_hint_header,
+            matrix_formatting=matrix_formatting,
             verbosity_level=verbosity_level,
             max_workers=max_workers,
             format_name=format_name,

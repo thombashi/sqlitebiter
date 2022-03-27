@@ -14,6 +14,7 @@ import path
 import pytablereader as ptr
 import simplesqlite as sqlite
 import typepy
+from dataproperty import MatrixFormatting
 from loguru import logger
 
 from .__version__ import __version__
@@ -109,6 +110,20 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
     return configs.get(subcommand)
 
 
+def to_matrix_formatting_enum(ctx, param, value) -> MatrixFormatting:
+    import re
+
+    if not value:
+        raise click.BadParameter("empty matrix-formatting")
+
+    nomalized_value = re.sub(r"[\s\-\.]", "_", value).upper()
+
+    try:
+        return MatrixFormatting[nomalized_value]
+    except KeyError as e:
+        raise click.BadParameter(str(e))
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__, message="%(prog)s %(version)s")
 @click.option(
@@ -167,6 +182,18 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
         """
     ),
 )
+@click.option(
+    "--matrix-formatting",
+    type=click.Choice(["header_aligned", "trim"], case_sensitive=False),
+    default="trim",
+    callback=to_matrix_formatting_enum,
+    help=dedent(
+        """\
+        HEADER_ALIGNED: fitting table data to header columns.
+        TRIM: fitting table data to minimum column size.
+        """
+    ),
+)
 @click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
 @click.option("-v", "--verbose", "verbosity_level", count=True)
 @click.option(
@@ -199,6 +226,7 @@ def cmd(
     index_list,
     no_type_inference,
     is_type_hint_header,
+    matrix_formatting: MatrixFormatting,
     symbol_replace_value,
     verbosity_level,
     max_workers,
@@ -212,6 +240,7 @@ def cmd(
     ctx.obj[Context.CONVERT_CONFIG] = convert_config
     ctx.obj[Context.TYPE_INFERENCE] = not no_type_inference
     ctx.obj[Context.TYPE_HINT_HEADER] = is_type_hint_header
+    ctx.obj[Context.MATRIX_FORMATTING] = matrix_formatting
     ctx.obj[Context.VERBOSITY_LEVEL] = verbosity_level
     ctx.obj[Context.MAX_WORKERS] = max_workers
     ctx.obj[Context.LOG_LEVEL] = "INFO" if log_level is None else log_level
@@ -291,6 +320,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
+        matrix_formatting=ctx.obj[Context.MATRIX_FORMATTING],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         max_workers=max_workers,
         format_name=format_name,
@@ -353,6 +383,7 @@ def stdin(ctx, format_name):
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
+        matrix_formatting=ctx.obj[Context.MATRIX_FORMATTING],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         max_workers=max_workers,
         format_name=format_name,
@@ -427,6 +458,7 @@ def url(ctx, url, format_name, encoding, proxy):
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
+        matrix_formatting=ctx.obj[Context.MATRIX_FORMATTING],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         max_workers=max_workers,
         format_name=format_name,
@@ -470,6 +502,7 @@ def gs(ctx, credentials, title):
         index_list=ctx.obj.get(Context.INDEX_LIST),
         is_type_inference=ctx.obj[Context.TYPE_INFERENCE],
         is_type_hint_header=ctx.obj[Context.TYPE_HINT_HEADER],
+        matrix_formatting=ctx.obj[Context.MATRIX_FORMATTING],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         max_workers=max_workers,
     )
