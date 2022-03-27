@@ -37,10 +37,9 @@ pyinstaller cli.py --clean --onefile --distpath $DIST_DIR_PATH --name $PKG_NAME
 ${DIST_DIR_PATH}/${PKG_NAME} version
 
 # generate an archive file
-SYSTEM=$($PYTHON -c "import platform; print(platform.system().casefold())")
 ARCH=$($PYTHON -c "import platform; machine=platform.machine().casefold(); print('amd64' if machine == 'x86_64' else machine)")
 
 cd $DIST_DIR_PATH
-ARCHIVE_FILE=${PKG_NAME}_${SYSTEM}_${ARCH}.tar.gz
+ARCHIVE_FILE=${PKG_NAME}_macos_${ARCH}.tar.gz
 tar -zcvf "$ARCHIVE_FILE" "$PKG_NAME"
 # mv "$ARCHIVE_FILE" "${ROOT_DIR}/${DIST_DIR_NAME}/"
