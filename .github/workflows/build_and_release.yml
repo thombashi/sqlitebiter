@@ -103,7 +103,7 @@ jobs:
     timeout-minutes: 20
     env:
       SHA_DIR: sha
-      SHA_TEXT_FILE: ${{ env.BIN_NAME }}_sha256.txt
+      SHA_TEXT_FILE: sqlitebiter_sha256.txt
 
     steps:
       - uses: actions/checkout@v2
