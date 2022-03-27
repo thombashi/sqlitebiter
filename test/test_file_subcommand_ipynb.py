@@ -4,6 +4,7 @@
 
 import os
 import platform
+from textwrap import dedent
 
 import pytest
 from click.testing import CliRunner
@@ -59,7 +60,36 @@ class Test_file_subcommand_ipynb:
                 os.remove(db_path)
 
     @pytest.mark.parametrize(
-        ["content", "expected"], [["", ExitCode.NO_INPUT], ["{}", ExitCode.NO_INPUT]]
+        ["content", "expected"],
+        [
+            ["", ExitCode.NO_INPUT],
+            [
+                dedent(
+                    r"""\
+                    {
+                     "cells": [
+                      {
+                       "cell_type": "code",
+                       "execution_count": null,
+                       "metadata": {},
+                       "outputs": [],
+                       "source": []
+                      }
+                     ],
+                     "metadata": {
+                      "language_info": {
+                       "name": "python"
+                      },
+                      "orig_nbformat": 4
+                     },
+                     "nbformat": 4,
+                     "nbformat_minor": 2
+                    }
+                    """
+                ),
+                ExitCode.NO_INPUT,
+            ],
+        ],
     )
     def test_abnormal_empty_file(self, content, expected):
         runner = CliRunner()
