@@ -59,7 +59,7 @@ jobs:
         env:
           PKG_VERSION: ${{ steps.extract-version.outputs.version }}
         run: |
-          IMAGE_TAG=${REGISTRY}/${OWNER}/${REPO}:${PKG_VERSION}-${EXTRAS}
+          IMAGE_TAG=${REGISTRY}/${OWNER}/${REPO}:${PKG_VERSION}
 
           docker buildx build \
             -t "$IMAGE_TAG" \
