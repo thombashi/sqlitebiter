@@ -169,7 +169,7 @@ class TableConverter:
         if self._result_counter.created_table_count > 0:
             log_list.append(
                 tcolor("created-table=", color="white")
-                + tcolor(str(self._result_counter.skip_count), color="light_white"),
+                + tcolor(str(self._result_counter.created_table_count), color="light_white"),
             )
 
         logger.info("converted results: {}".format(", ".join(log_list)))
