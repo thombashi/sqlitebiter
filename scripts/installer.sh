@@ -7,7 +7,7 @@ if [ $UID -ne 0 ]; then
     exit 13
 fi
 
-ARCHIVE_URL=$(curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep deb)
+ARCHIVE_URL=$(curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep bionic_amd64.deb)
 TEMP_DEB="$(mktemp)"
 
 trap "\rm -f $TEMP_DEB" 0 1 2 3 15
