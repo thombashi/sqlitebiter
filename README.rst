@@ -34,6 +34,7 @@ Features
         - Microsoft Excel :superscript:`TM`
         - HTML
         - JSON
+            - See also: :ref:`Limitations of JSON conversion`
         - `Jupyter Notebook <https://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__ / NDJSON / JSON Lines
@@ -92,7 +93,7 @@ Following is an example that converts HTML table tags within a web page to SQLit
 
 The attributes within the converted SQLite database may include symbols as the above.
 Symbols within attributes can be replaced by using ``--replace-symbol`` option.
-In the following example shows replace symbols to underscores.
+The following example shows replacing symbols with underscores.
 
 :Example:
     .. code-block:: console
@@ -150,21 +151,21 @@ Command help
                                       indices.
       --no-type-inference             All of the columns assume as TEXT data type
                                       in creating tables.
-      --type-hint-header              Use headers suffix as type hints. If there
-                                      are type hints, converting columns by
-                                      datatype corresponding with type hints. The
-                                      following suffixes can be recognized as type
-                                      hints (case insensitive): "text": TEXT
-                                      datatype. "integer": INTEGER datatype.
-                                      "real": REAL datatype.
+      --type-hint-header              Use header suffixes as type hints. If there
+                                      are type hints, convert columns by datatype
+                                      corresponding with type hints. The following
+                                      suffixes can be recognized as type hints
+                                      (case insensitive): "text": TEXT datatype.
+                                      "integer": INTEGER datatype. "real": REAL
+                                      datatype.
       --matrix-formatting [header_aligned|trim]
                                       header_aligned: fitting table data to header
                                       columns. trim: fitting table data to minimum
                                       column size. Defaults to header_aligned.
       --replace-symbol TEXT           Replace symbols in attributes.
       -v, --verbose
-      --max-workers WORKERS           Specify maximum number of workers that the
-                                      command may use. defaults to 1.
+      --max-workers WORKERS           Specify the maximum number of workers that
+                                      the command may use. Defaults to 1.
       --debug                         For debug print.
       -q, --quiet                     Suppress execution log messages.
       -h, --help                      Show this message and exit.
