@@ -174,8 +174,8 @@ def to_matrix_formatting_enum(ctx, param, value) -> MatrixFormatting:
     is_flag=True,
     help=dedent(
         """\
-        Use headers suffix as type hints.
-        If there are type hints, converting columns by datatype corresponding with type hints.
+        Use header suffixes as type hints.
+        If there are type hints, convert columns by datatype corresponding with type hints.
         The following suffixes can be recognized as type hints (case insensitive):
         "text": TEXT datatype.
         "integer": INTEGER datatype.
@@ -205,8 +205,8 @@ def to_matrix_formatting_enum(ctx, param, value) -> MatrixFormatting:
     default=1,
     help=dedent(
         """\
-        Specify maximum number of workers that the command may use.
-        defaults to 1.
+        Specify the maximum number of workers that the command may use.
+        Defaults to 1.
         """
     ),
 )
