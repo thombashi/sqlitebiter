@@ -7,7 +7,11 @@ if [ $UID -ne 0 ]; then
     exit 13
 fi
 
-ARCHIVE_URL=$(curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep deb)
+ARCH=$(dpkg --print-architecture)
+CODENAME=$(lsb_release -c | awk '{print $2}')
+DEBFILE=$CODENAME\_$ARCH\.deb
+
+ARCHIVE_URL=$(curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep $DEBFILE)
 TEMP_DEB="$(mktemp)"
 
 trap "\rm -f $TEMP_DEB" 0 1 2 3 15
