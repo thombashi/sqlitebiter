@@ -69,4 +69,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run the installer script
-        run: curl -sSL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash
+        run: curl -sSL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash -x
