@@ -6,7 +6,7 @@ Features
         - Microsoft Excel :superscript:`TM`
         - HTML
         - JSON
-            - See also: :ref:`Limitations of JSON conversion`
+            - See also: `Limitations of JSON conversion <https://sqlitebiter.readthedocs.io/en/latest/pages/usage/limitations.html>`_
         - `Jupyter Notebook <https://jupyter.org/>`__
         - `Labeled Tab-separated Values (LTSV) <http://ltsv.org/>`__
         - `Line-delimited JSON(LDJSON) <https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON>`__ / NDJSON / JSON Lines
