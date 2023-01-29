@@ -1,6 +1,6 @@
 Supported data formats
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Following table shows that the supported data formats:
+The following table shows the supported data formats:
 
 .. table:: Available data formats
 
@@ -8,7 +8,7 @@ Following table shows that the supported data formats:
      Format               File Extension                       Remarks                         
     ===================  ===================================  =================================================================
     CSV                  ``.csv``                                                               
-    Excel                ``.xlsx``/``.xls``                   Create table for each sheet in the Excel workbook.
+    Excel                ``.xlsx``/``.xls``                   Create a table for each sheet in the Excel workbook.
     HTML                 ``.html``/``.htm``                   | Scrape tabular data from ``<table>`` tags in the HTML file.
                                                               | And create table for each ``<table>`` tag data.
     JSON                 ``.json``                                                                  

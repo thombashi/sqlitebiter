@@ -44,7 +44,7 @@ Designate multiple file path to convert:
 
 .. note::
 
-    - Available JSON Schema is limited. Acceptable format described in `here <http://pytablereader.rtfd.io/en/latest/pages/reference/format_specific_loader.html#json-loader-classes>`__
+    - See also: :ref:`Limitations of JSON conversion`
     - Wildcard characters cannot use in Windows environments
 
 You could specify converting file format with the ``--format`` option

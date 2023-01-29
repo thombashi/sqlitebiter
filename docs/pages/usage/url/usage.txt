@@ -37,7 +37,7 @@ Following is an example that converts HTML table tags within a web page to SQLit
 
 The attributes within the converted SQLite database may include symbols as the above.
 Symbols within attributes can be replaced by using ``--replace-symbol`` option.
-In the following example shows replace symbols to underscores.
+The following example shows replacing symbols with underscores.
 
 :Example:
     .. code-block:: console

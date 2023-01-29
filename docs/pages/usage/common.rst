@@ -1,6 +1,6 @@
 ``sqlitebiter`` command help
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-``sqlitebiter`` has following subcommands:
+``sqlitebiter`` has the following subcommands:
 
 - ``file``: Convert tabular data within CSV/Excel/HTML/JSON/LTSV/Markdown/SQLite/TSV file(s) to a SQLite database file.
     - :doc:`file/index`

@@ -9,3 +9,4 @@ Usage
    url/index
    stdin/index
    gs/index
+   limitations
