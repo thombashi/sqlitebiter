@@ -8,10 +8,10 @@ if [ $UID -ne 0 ]; then
 fi
 
 ARCH=$(dpkg --print-architecture)
-CODENAME=$(lsb_release -c | awk '{print $2}')
-DEBFILE=$CODENAME\_$ARCH\.deb
+VERSION_CODENAME=$(\grep -Po "(?<=VERSION_CODENAME=)[a-z]+" /etc/os-release)
+DEBFILE="${VERSION_CODENAME}_${ARCH}\.deb"
 
-ARCHIVE_URL=$(curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep $DEBFILE)
+ARCHIVE_URL=$(curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' | \grep "$DEBFILE")
 TEMP_DEB="$(mktemp)"
 
 trap "\rm -f $TEMP_DEB" 0 1 2 3 15
