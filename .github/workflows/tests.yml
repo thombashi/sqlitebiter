@@ -13,6 +13,8 @@ jobs:
         exclude:
           - os: ubuntu-latest
             python-version: '3.6'
+          - os: windows-latest
+            python-version: '3.6'
     concurrency:
       group: ${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}-${{ matrix.python-version }}
       cancel-in-progress: true
