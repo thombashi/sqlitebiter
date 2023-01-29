@@ -53,3 +53,20 @@ jobs:
         run: |
           python -m pip install --upgrade .[test] -c constraints.txt
           pytest test
+
+  installer:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}
+      cancel-in-progress: true
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run the installer script
+        run: curl -sSL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash
