@@ -67,3 +67,7 @@ setup:
 setup-dev: setup
 	@$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade -e .[test]
 	@$(PYTHON) -m pip check
+
+.PHONY: latest-release-assets
+latest-release-assets:
+	curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' > scripts/latest_release_assets.list
