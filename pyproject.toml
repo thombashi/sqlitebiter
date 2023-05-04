@@ -19,7 +19,7 @@ exclude = '''
 | docs/conf.py
 | test/dataset.py
 '''
-target-version = ['py36', 'py37', 'py38', 'py39', 'py310']
+target-version = ['py37', 'py38', 'py39', 'py310']
 
 [tool.isort]
 known_third_party = [
@@ -42,7 +42,7 @@ skip_glob = [
 
 [tool.mypy]
 ignore_missing_imports = true
-python_version = 3.6
+python_version = 3.7
 
 pretty = true
 
