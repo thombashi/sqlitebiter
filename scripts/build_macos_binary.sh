@@ -33,7 +33,7 @@ fi
 echo $PKG_NAME $PKG_VERSION
 
 # build an executable binary file
-pyinstaller cli.py --clean --onefile --distpath $DIST_DIR_PATH --name $PKG_NAME
+pyinstaller cli.py --clean --onefile --strip --distpath $DIST_DIR_PATH --name $PKG_NAME
 ${DIST_DIR_PATH}/${PKG_NAME} version
 
 # generate an archive file
