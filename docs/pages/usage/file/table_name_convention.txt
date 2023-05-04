@@ -17,7 +17,7 @@ Table name automatically decided as follows for each format:
     ========  ================================================================================
 
 - Common behavior
-    - ``<filename>`` replaced with filename of converting file (without extensions)
+    - ``<filename>`` replaced with the filename of converting file (without extensions)
         - e.g. If the input file name is ``sample.csv``, ``<filename>`` is ``sample``
 
 If a created table name already exists in the database, the behavior differs depending on 
@@ -25,5 +25,5 @@ the existing table (after this referred to as ``A``) and create table (after thi
 
 1. ``A`` and ``B`` has the same table name and table structure
     - Append creating table data to the existing table data
-2. ``A`` and ``B`` has the same table name, but different table structure
+2. ``A`` and ``B`` has the same table name, but the different table structure
     - ``sqlitebiter`` try to create unique table name for ``B`` by appending suffix id number
