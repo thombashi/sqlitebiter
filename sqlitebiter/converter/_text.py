@@ -35,7 +35,7 @@ def create_text_loader(
             encoding=encoding,
             type_hint_rules=type_hint_rules,
         )
-    except (ptr.LoaderNotFoundError) as e:
+    except ptr.LoaderNotFoundError as e:
         logger.error(msgfy.to_error_message(e))
         sys.exit(ExitCode.FAILED_LOADER_NOT_FOUND)
 

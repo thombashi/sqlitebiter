@@ -16,7 +16,6 @@ from .dataset import complex_json
 
 
 class Test_stdin_subcommand:
-
     db_path = "test.sqlite"
 
     def test_normal_json(self):

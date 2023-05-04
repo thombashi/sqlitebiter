@@ -18,7 +18,6 @@ from .dataset import complex_json
 
 
 class Test_url_subcommand:
-
     db_path = "test.sqlite"
 
     @responses.activate
