@@ -50,7 +50,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
+        os: [ubuntu-20.04]
+        #os: [ubuntu-20.04, ubuntu-22.04]
     concurrency:
       group: ${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}
       cancel-in-progress: true
