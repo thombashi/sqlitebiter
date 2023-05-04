@@ -34,6 +34,8 @@ echo $PKG_NAME $PKG_VERSION
 
 # build an executable binary file
 pyinstaller cli.py --clean --onefile --strip --distpath "$BUILD_DIR_PATH" --name $PKG_NAME
+
+# check the built binary file
 ${BUILD_DIR_PATH}/${PKG_NAME} version
 
 # build a deb package
