@@ -27,7 +27,7 @@ jobs:
 
       - name: Extract version
         id: extract-version
-        run: echo "::set-output name=version::$(./docker/extract_version.sh)"
+        run: echo "version=$(./docker/extract_version.sh)" >> $GITHUB_OUTPUT
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v1
