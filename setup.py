@@ -3,7 +3,7 @@
 """
 
 import os.path
-from typing import Dict
+from typing import Dict, Type
 
 import setuptools
 
@@ -16,7 +16,7 @@ ENCODING = "utf8"
 pkg_info: Dict[str, str] = {}
 
 
-def get_release_command_class() -> Dict[str, setuptools.Command]:
+def get_release_command_class() -> Dict[str, Type[setuptools.Command]]:
     try:
         from releasecmd import ReleaseCommand
     except ImportError:
