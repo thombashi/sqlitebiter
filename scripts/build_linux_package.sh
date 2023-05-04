@@ -19,8 +19,9 @@ cd "$ROOT_DIR"
 rm -rf "$DIST_DIR_NAME" "$DPKG_BUILD_DIR" build
 mkdir -p "${DPKG_BUILD_DIR}/DEBIAN" "$DIST_DIR_NAME"
 
-pip install --upgrade "pip>=21.1"
-pip install --upgrade .[all,buildexe]
+# setup
+$PYTHON -m pip install --upgrade "pip>=21.1"
+$PYTHON -m pip install --upgrade .[all,buildexe]
 
 PKG_VERSION=$($PYTHON -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
 
