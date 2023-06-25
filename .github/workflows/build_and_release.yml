@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, macos-latest, windows-latest]
     concurrency:
-      group: ${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}
+      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-build-release-${{ matrix.os }}
       cancel-in-progress: true
     timeout-minutes: 20
 
