@@ -60,8 +60,8 @@ release:
 	@$(MAKE) clean
 
 .PHONY: setup-ci
-setup:
-	@$(PYTHON) -m pip install --disable-pip-version-check --upgrade tox
+setup-ci:
+	$(PYTHON) -m pip install --disable-pip-version-check --upgrade tox
 
 .PHONY: setup-dev
 setup-dev: setup-ci
