@@ -43,7 +43,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 build_exe_requires = ["pyinstaller>=4.10"]
 gs_requires = ["gspread", "oauth2client", "pyOpenSSL"]
 mediawiki_requires = ["pypandoc"]
-optional_requires = ["ujson>=1.33,<5"]
+optional_requires = ["ujson>=1.33,<6"]
 
 setuptools.setup(
     name=MODULE_NAME,
