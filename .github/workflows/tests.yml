@@ -1,6 +1,18 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/*.yml'
+      - '.gitignore'
+      - 'README.rst'
+  pull_request:
+    paths-ignore:
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/*.yml'
+      - '.gitignore'
+      - 'README.rst'
 
 jobs:
   build-package:
