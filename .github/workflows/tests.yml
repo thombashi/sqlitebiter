@@ -3,6 +3,20 @@ name: Tests
 on: [push, pull_request]
 
 jobs:
+  build-package:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-build-pkg
+      cancel-in-progress: true
+    timeout-minutes: 20
+    container:
+      image: ghcr.io/thombashi/python-ci:3.11
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: make build
+
   unit-test:
     runs-on: ${{ matrix.os }}
     strategy:
