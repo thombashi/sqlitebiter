@@ -45,6 +45,9 @@ gs_requires = ["gspread", "oauth2client", "pyOpenSSL"]
 mediawiki_requires = ["pypandoc"]
 optional_requires = ["ujson>=1.33,<6"]
 
+all_requires = gs_requires + mediawiki_requires + optional_requires
+tests_requires = list(set(tests_requires + all_requires))
+
 setuptools.setup(
     name=MODULE_NAME,
     version=pkg_info["__version__"],
@@ -78,11 +81,11 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=install_requires,
     extras_require={
-        "all": gs_requires + mediawiki_requires + optional_requires,
+        "all": all_requires,
         "buildexe": build_exe_requires,
         "gs": gs_requires,
         "mediawiki": mediawiki_requires,
-        "test": set(tests_requires + optional_requires),
+        "test": tests_requires,
     },
     classifiers=[
         "Development Status :: 4 - Beta",
