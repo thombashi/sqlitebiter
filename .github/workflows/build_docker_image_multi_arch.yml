@@ -10,7 +10,7 @@ jobs:
   build-docker-images:
     runs-on: ubuntu-latest
     concurrency:
-      group: ${{ github.workflow }}-${{ github.job }}
+      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-build-docker
       cancel-in-progress: true
     timeout-minutes: 30
     permissions:
