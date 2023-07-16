@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from ._base import SourceInfo  # noqa
 
 
+NB_VERSION = 4
 KEY_VALUE_TABLE = "kv"
 
 
@@ -52,7 +53,7 @@ def _schema_not_found_error_handler(e: Exception) -> None:
 def load_ipynb_file(file_path: str, encoding: Optional[str]) -> nbformat.NotebookNode:
     with open(file_path, encoding=encoding) as f:
         try:
-            return nbformat.read(f, as_version=4)
+            return nbformat.read(f, as_version=NB_VERSION)
         except AttributeError as e:
             raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
         except OSError as e:
@@ -62,7 +63,7 @@ def load_ipynb_file(file_path: str, encoding: Optional[str]) -> nbformat.Noteboo
 
 def load_ipynb_text(text: str) -> nbformat.NotebookNode:
     try:
-        return nbformat.reads(text, as_version=4)
+        return nbformat.reads(text, as_version=NB_VERSION)
     except AttributeError as e:
         raise nbformat.reader.NotJSONError(msgfy.to_error_message(e))
     except OSError as e:
@@ -75,7 +76,7 @@ def load_ipynb_url(url: str, proxies: Optional[Dict]) -> Tuple:
     response.raise_for_status()
 
     try:
-        return (nbformat.reads(response.text, as_version=4), len(response.content))
+        return (nbformat.reads(response.text, as_version=NB_VERSION), len(response.content))
     except OSError as e:
         _schema_not_found_error_handler(e)
         raise
