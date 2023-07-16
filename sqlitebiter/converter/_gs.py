@@ -31,7 +31,7 @@ class GoogleSheetsConverter(TableConverter):
                 source_info = SourceInfo(
                     base_name=title,
                     dst_table=sqlite_tabledata.table_name,
-                    format_name="google sheets",
+                    format_name=self._format_name,
                     source_id=source_id,
                 )
 

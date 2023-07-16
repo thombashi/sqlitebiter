@@ -526,6 +526,7 @@ def gs(ctx: click.Context, credentials: click.Path, title: str) -> None:
         matrix_formatting=ctx.obj[Context.MATRIX_FORMATTING],
         verbosity_level=ctx.obj.get(Context.VERBOSITY_LEVEL),
         max_workers=max_workers,
+        format_name="google sheets",
     )
 
     converter.convert(credentials, title)
