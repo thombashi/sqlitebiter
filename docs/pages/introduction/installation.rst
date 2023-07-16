@@ -81,7 +81,7 @@ Python package dependencies
 
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Extra Python packages are required to install to use Google Sheets feature (`gs` subcommand):
+Extra Python packages are required to install to use the Google Sheets feature (`gs` subcommand):
 
 - `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
