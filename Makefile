@@ -25,7 +25,8 @@ build: clean
 	ls -lh dist/*
 
 .PHONY: build-deb
-build-deb: clean setup-ci
+build-deb: setup-ci
+	$(MAKE) clean
 	$(SUDO) apt -qq update
 	$(SUDO) apt install -qq -y --no-install-recommends git fakeroot rename
 	./scripts/build_linux_package.sh
