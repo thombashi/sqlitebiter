@@ -30,7 +30,7 @@ Please complete the following information:
 <past the output of `sqlitebiter version` subcommand here>
 ```
 
-- **Installation Method:** `pip` / `deb package ` / `apt(PPA)` / `brew` (choose one of these)
+- **Installation Method:** `pip` / `release assets` / `deb package ` / `apt(PPA)` / `brew` (choose one of these)
 
 
 # Additional context
