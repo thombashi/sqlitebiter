@@ -21,7 +21,7 @@ mkdir -p "${DPKG_BUILD_DIR}/DEBIAN" "$DIST_DIR_NAME"
 
 # setup
 $PYTHON -m pip install --upgrade "pip>=21.1"
-$PYTHON -m pip install --upgrade .[all,buildexe]
+$PYTHON -m pip install --upgrade .[all,buildexe] jsonschema-specifications
 
 PKG_VERSION=$($PYTHON -c "import ${PKG_NAME}; print(${PKG_NAME}.__version__)")
 
@@ -33,7 +33,8 @@ fi
 echo $PKG_NAME $PKG_VERSION
 
 # build an executable binary file
-pyinstaller cli.py --clean --onefile --strip --distpath "$BUILD_DIR_PATH" --name $PKG_NAME
+pyinstaller cli.py --clean --onefile --strip --distpath "$BUILD_DIR_PATH" --name $PKG_NAME \
+    --collect-all=jsonschema_specifications --hidden-import =jsonschema_specifications 
 
 # check the built binary file
 ${BUILD_DIR_PATH}/${PKG_NAME} version

@@ -25,10 +25,10 @@ build: clean
 	ls -lh dist/*
 
 .PHONY: build-deb
-build-deb: clean
-	@$(SUDO) apt -qq update
-	@$(SUDO) apt install -qq -y --no-install-recommends git fakeroot rename
-	@./scripts/build_linux_package.sh
+build-deb: clean setup-ci
+	$(SUDO) apt -qq update
+	$(SUDO) apt install -qq -y --no-install-recommends git fakeroot rename
+	./scripts/build_linux_package.sh
 	ls -lh dist/*
 
 .PHONY: check

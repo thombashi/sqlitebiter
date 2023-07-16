@@ -57,9 +57,10 @@ jobs:
           MACHINE=$(python3 -c "import platform; machine=platform.machine().casefold(); print('amd64' if machine == 'x86_64' else machine)")
           ARCHIVE_PATH=${DIST_DIR_NAME}/${BIN_NAME}_${SYSTEM}_${MACHINE}.zip
 
-          python -m pip install -q --upgrade .[all,buildexe]
+          python -m pip install -q --upgrade .[all,buildexe]  jsonschema-specifications
 
-          pyinstaller cli.py --onefile --name "$BIN_NAME" --clean --noconfirm --specpath build
+          pyinstaller cli.py --clean --onefile --name "$BIN_NAME" --noconfirm --specpath build --strip  \
+              --collect-all=jsonschema_specifications --hidden-import =jsonschema_specifications
           ${BIN_PATH} version
 
           powershell compress-archive -Force "$BIN_PATH" "$ARCHIVE_PATH"
