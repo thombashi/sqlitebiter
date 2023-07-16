@@ -1,7 +1,7 @@
 nbformat>=5.0.6
 pytest>=7
-pytest-discord>=0.1.1
-pytest-md-report>=0.2
-responses>=0.17
+pytest-discord>=0.1.4
+pytest-md-report>=0.4
+responses>=0.23
 sqliteschema[dumps]>=1.3
 XlsxWriter>=3

@@ -43,7 +43,7 @@ with open(os.path.join(REQUIREMENT_DIR, "test_requirements.txt")) as f:
 with open(os.path.join(REQUIREMENT_DIR, "docs_requirements.txt")) as f:
     docs_requires = [line.strip() for line in f if line.strip()]
 
-build_exe_requires = ["pyinstaller>=4.10"]
+build_exe_requires = ["pyinstaller>=5.13"]
 gs_requires = ["gspread", "oauth2client", "pyOpenSSL"]
 mediawiki_requires = ["pypandoc"]
 optional_requires = ["ujson>=1.33,<6"]
