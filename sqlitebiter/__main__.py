@@ -5,7 +5,7 @@
 import os
 import sys
 from textwrap import dedent
-from typing import Dict, Tuple
+from typing import Any, List, Optional, Tuple, Union
 
 import appconfigpy
 import click
@@ -14,6 +14,7 @@ import path
 import pytablereader as ptr
 import simplesqlite as sqlite
 import typepy
+from click.core import Option, Parameter
 from dataproperty import MatrixFormatting
 from loguru import logger
 
@@ -22,7 +23,14 @@ from ._common import DEFAULT_DUP_COL_HANDLER
 from ._config import ConfigKey, app_config_mgr
 from ._const import IPYNB_FORMAT_NAME_LIST, PROGRAM_NAME, ExitCode
 from ._enum import Context, DupDatabase
-from .converter import FileConverter, GoogleSheetsConverter, TextConverter, UrlConverter
+from ._types import ConvertConfig
+from .converter import (
+    FileConverter,
+    GoogleSheetsConverter,
+    TableConverter,
+    TextConverter,
+    UrlConverter,
+)
 
 
 try:
@@ -86,7 +94,7 @@ def initialize_logger(name: str, log_level: str) -> None:
     appconfigpy.set_logger(True)
 
 
-def finalize(con, converter, is_create_db: bool) -> int:
+def finalize(con: sqlite.SimpleSQLite, converter: TableConverter, is_create_db: bool) -> int:
     converter.write_completion_message()
     database_path = con.database_path
     con.close()
@@ -97,7 +105,7 @@ def finalize(con, converter, is_create_db: bool) -> int:
     return converter.get_return_code()
 
 
-def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
+def load_convert_config(logger: Any, config_filepath: str, subcommand: str) -> ConvertConfig:
     if not config_filepath:
         return {}
 
@@ -111,7 +119,9 @@ def load_convert_config(logger, config_filepath: str, subcommand: str) -> Dict:
     return configs.get(subcommand)
 
 
-def to_matrix_formatting_enum(ctx, param, value) -> MatrixFormatting:
+def to_matrix_formatting_enum(
+    _ctx: click.Context, _param: Union[Option, Parameter], value: str
+) -> MatrixFormatting:
     import re
 
     if not value:
@@ -220,20 +230,20 @@ def to_matrix_formatting_enum(ctx, param, value) -> MatrixFormatting:
 )
 @click.pass_context
 def cmd(
-    ctx,
-    output_path,
-    is_append_table,
-    add_pri_key_name,
-    convert_config,
-    index_list,
-    no_type_inference,
-    is_type_hint_header,
+    ctx: click.Context,
+    output_path: str,
+    is_append_table: bool,
+    add_pri_key_name: bool,
+    convert_config: str,
+    index_list: str,
+    no_type_inference: bool,
+    is_type_hint_header: bool,
     matrix_formatting: MatrixFormatting,
-    symbol_replace_value,
-    verbosity_level,
-    max_workers,
-    log_level,
-):
+    symbol_replace_value: Optional[str],
+    verbosity_level: int,
+    max_workers: int,
+    log_level: str,
+) -> None:
     ctx.obj[Context.OUTPUT_PATH] = output_path
     ctx.obj[Context.SYMBOL_REPLACE_VALUE] = symbol_replace_value
     ctx.obj[Context.DUP_DATABASE] = DupDatabase.APPEND if is_append_table else DupDatabase.OVERWRITE
@@ -252,7 +262,7 @@ def cmd(
 
 @cmd.command(epilog=COMMAND_EPILOG)
 @click.pass_context
-def version(ctx):
+def version(ctx: click.Context) -> None:
     """
     Show version information
     """
@@ -292,7 +302,16 @@ def version(ctx):
     help="Encoding to load files. Auto-detection from files in default.",
 )
 @click.pass_context
-def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, encoding):
+def file(
+    ctx: click.Context,
+    files: List[str],
+    recursive: bool,
+    pattern: str,
+    exclude: str,
+    follow_symlinks: bool,
+    format_name: str,
+    encoding: str,
+) -> None:
     """
     Convert tabular data within
     CSV/Excel/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SQLite/SSV/TSV
@@ -359,7 +378,7 @@ def file(ctx, files, recursive, pattern, exclude, follow_symlinks, format_name, 
     ),
 )
 @click.pass_context
-def stdin(ctx, format_name):
+def stdin(ctx: click.Context, format_name: str) -> None:
     """
     Convert tabular data within
     CSV/HTML/JSON/Jupyter Notebook/LDJSON/LTSV/Markdown/Mediawiki/SSV/TSV
@@ -422,7 +441,7 @@ def stdin(ctx, format_name):
     help="Specify a proxy in the form [user:passwd@]proxy.server:port.",
 )
 @click.pass_context
-def url(ctx, url, format_name, encoding, proxy):
+def url(ctx: click.Context, url: str, format_name: str, encoding: str, proxy: str) -> None:
     """
     Scrape tabular data from a URL and convert data to a SQLite database file.
     """
@@ -477,7 +496,7 @@ def url(ctx, url, format_name, encoding, proxy):
 @click.argument("credentials", type=click.Path(exists=True))
 @click.argument("title", type=str)
 @click.pass_context
-def gs(ctx, credentials, title):
+def gs(ctx: click.Context, credentials: click.Path, title: str) -> None:
     """
     Convert a spreadsheet in Google Sheets to a SQLite database file.
 
@@ -516,7 +535,7 @@ def gs(ctx, credentials, title):
 
 @cmd.command()
 @click.pass_context
-def configure(ctx):
+def configure(ctx: click.Context) -> None:
     """
     Configure the following application settings:
 
@@ -537,7 +556,7 @@ def configure(ctx):
 @cmd.command(epilog=COMMAND_EPILOG)
 @click.argument("shell", type=click.Choice(["bash", "zsh"], case_sensitive=False))
 @click.pass_context
-def completion(ctx, shell):
+def completion(ctx: click.Context, shell: str) -> None:
     """
     A helper command to setup command completion.
 
@@ -575,7 +594,7 @@ def completion(ctx, shell):
 
                 complete $COMPLETION_OPTIONS -F _sqlitebiter_completion sqlitebiter
             }
-            """
+            """  # noqa
             )
         )
     elif shell == "zsh":

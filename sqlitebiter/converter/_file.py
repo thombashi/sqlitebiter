@@ -6,7 +6,7 @@ import os
 import stat
 from copy import deepcopy
 from errno import EBADF, ENAMETOOLONG, ENOENT, ENOTDIR
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 import msgfy
 import pytablereader as ptr
@@ -15,12 +15,13 @@ from path import Path
 from simplesqlite import SimpleSQLite
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT
+from .._types import ConvertConfig
 from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES
 from ._ipynb_converter import is_ipynb_file_path, load_ipynb_file
 
 
-def _get_format_type_from_path(file_path) -> str:
+def _get_format_type_from_path(file_path: Path) -> str:
     return file_path.ext.lstrip(".")
 
 
@@ -29,22 +30,22 @@ class FileConverter(TableConverter):
 
     def __init__(
         self,
-        logger,
+        logger: Any,
         con: SimpleSQLite,
         symbol_replace_value: Optional[str],
         add_pri_key_name: Optional[str],
-        convert_configs,
+        convert_configs: ConvertConfig,
         index_list: Sequence[str],
         is_type_inference: bool,
         is_type_hint_header: bool,
         matrix_formatting: MatrixFormatting,
         verbosity_level: int,
         max_workers: int,
-        format_name,
-        encoding,
-        exclude_pattern,
-        follow_symlinks,
-    ):
+        format_name: str,
+        encoding: str,
+        exclude_pattern: Optional[str],
+        follow_symlinks: bool,
+    ) -> None:
         super().__init__(
             logger,
             con=con,
@@ -64,36 +65,36 @@ class FileConverter(TableConverter):
         self.__exclude_pattern = exclude_pattern
         self.__follow_symlinks = follow_symlinks
 
-    def convert(self, file_path) -> None:
-        file_path = Path(file_path)
+    def convert(self, file_path: str) -> None:
+        fpath = Path(file_path)
         logger = self._logger
         result_counter = self._result_counter
 
-        if not self.__is_file(file_path):
+        if not self.__is_file(fpath):
             return
 
-        if self.__exclude_pattern and file_path.fnmatch(self.__exclude_pattern):
+        if self.__exclude_pattern and fpath.fnmatch(self.__exclude_pattern):
             logger.debug(
-                self.SKIP_MSG_FORMAT.format(source=file_path, message="matching an exclude pattern")
+                self.SKIP_MSG_FORMAT.format(source=fpath, message="matching an exclude pattern")
             )
             self._result_counter.inc_skip()
             return
 
-        logger.debug(f"converting '{file_path}'")
+        logger.debug(f"converting '{fpath}'")
         success_count = result_counter.success_count
         fail_count = result_counter.fail_count
-        source_info_record_base = self.__get_source_info_base(file_path.realpath())
+        source_info_record_base = self.__get_source_info_base(fpath.realpath())
 
-        if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(file_path):
+        if self._format_name in IPYNB_FORMAT_NAME_LIST or is_ipynb_file_path(fpath):
             import nbformat
 
             try:
                 changed_table_name_set = self._convert_nb(
-                    nb=load_ipynb_file(file_path, encoding=self._encoding),
+                    nb=load_ipynb_file(fpath, encoding=self._encoding),
                     source_info=source_info_record_base,
                 )
             except (nbformat.reader.NotJSONError, RuntimeError) as e:
-                logger.error(f"failed to load {file_path}: {e}")
+                logger.error(f"failed to load {fpath}: {e}")
                 return
 
             for table_name in changed_table_name_set:
@@ -102,13 +103,13 @@ class FileConverter(TableConverter):
                 record.dst_table = table_name
                 SourceInfo.insert(record)
         else:
-            self.__convert(file_path, source_info_record_base)
+            self.__convert(fpath, source_info_record_base)
 
         if result_counter.fail_count > fail_count:
             return
 
         if result_counter.success_count == success_count:
-            logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(file_path))
+            logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(fpath))
 
     def __convert(self, file_path: Path, source_info_record_base: SourceInfo) -> None:
         logger = self._logger

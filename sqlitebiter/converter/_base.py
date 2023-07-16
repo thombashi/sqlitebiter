@@ -4,8 +4,9 @@
 
 import os.path
 from textwrap import indent
-from typing import Optional, Sequence, Set, Tuple
+from typing import Any, Optional, Sequence, Set, Tuple
 
+import nbformat
 from dataproperty import MatrixFormatting
 from path import Path
 from pytablereader.interface import AbstractTableReader
@@ -17,6 +18,7 @@ from tcolorpy import tcolor
 from .._common import DEFAULT_DUP_COL_HANDLER, ResultLogger
 from .._const import MAX_VERBOSITY_LEVEL, PROGRAM_NAME, TABLE_NOT_FOUND_MSG_FORMAT
 from .._counter import ResultCounter
+from .._types import ConvertConfig
 from ._ipynb_converter import convert_nb
 from ._table_creator import TableCreator
 
@@ -30,7 +32,7 @@ class SourceInfo(Model):
     size = Integer()
     mtime = Integer()
 
-    def get_name(self, verbosity_level):
+    def get_name(self, verbosity_level: int) -> str:
         if verbosity_level == 0 or self.dir_name is None:
             return self.base_name
 
@@ -40,20 +42,20 @@ class SourceInfo(Model):
 class TableConverter:
     def __init__(
         self,
-        logger,
+        logger: Any,
         con: SimpleSQLite,
         symbol_replace_value: Optional[str],
         add_pri_key_name: Optional[str],
-        convert_configs,
+        convert_configs: ConvertConfig,
         index_list: Sequence[str],
         is_type_inference: bool,
         is_type_hint_header: bool,
         matrix_formatting: MatrixFormatting,
         verbosity_level: int,
         max_workers: int,
-        format_name=None,
-        encoding=None,
-    ):
+        format_name: str,
+        encoding: Optional[str] = None,
+    ) -> None:
         self._logger = logger
         self._con = con
         self._symbol_replace_value = symbol_replace_value
@@ -99,12 +101,15 @@ class TableConverter:
     def get_success_count(self) -> int:
         return self._result_counter.success_count
 
-    def normalize_table(self, table_data: TableData, dup_col_handler=None) -> TableData:
+    def normalize_table(
+        self, table_data: TableData, dup_col_handler: Optional[str] = None
+    ) -> TableData:
         from pathvalidate import replace_symbol, replace_unprintable_char
         from simplesqlite import SQLiteTableDataSanitizer
 
         if dup_col_handler is None:
             dup_col_handler = DEFAULT_DUP_COL_HANDLER
+        assert dup_col_handler
 
         table_data.dp_extractor.matrix_formatting = self._matrix_formatting
         normalized_table_data = SQLiteTableDataSanitizer(
@@ -198,7 +203,7 @@ class TableConverter:
         else:
             logger.debug(database_path_msg)
 
-    def _convert_nb(self, nb, source_info):
+    def _convert_nb(self, nb: nbformat.NotebookNode, source_info: SourceInfo) -> Set[str]:
         success_count = self._result_counter.success_count
         created_table_set = convert_nb(
             logger=self._logger,
@@ -214,7 +219,9 @@ class TableConverter:
 
         return created_table_set
 
-    def _convert_complex_json(self, json_loader: AbstractTableReader, source_info) -> Set[str]:
+    def _convert_complex_json(
+        self, json_loader: AbstractTableReader, source_info: SourceInfo
+    ) -> Set[str]:
         from ._dict_converter import DictConverter
 
         dict_converter = DictConverter(

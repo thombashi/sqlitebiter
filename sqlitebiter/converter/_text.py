@@ -4,28 +4,25 @@
 
 import sys
 from copy import deepcopy
-from typing import Dict, Optional, Pattern, Type
+from typing import Any, Optional
 
 import msgfy
 import pytablereader as ptr
 import simplesqlite as sqlite
 from pytablereader.interface import AbstractTableReader
-from typepy.type import AbstractType
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
+from .._types import TypeHintRules
 from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES
 from ._ipynb_converter import load_ipynb_text
 
 
-TypeHintRules = Dict[Pattern, Type[AbstractType]]
-
-
 def create_text_loader(
-    logger,
+    logger: Any,
     text: str,
     format_name: str,
-    encoding: str,
+    encoding: Optional[str],
     type_hint_rules: Optional[TypeHintRules],
 ) -> AbstractTableReader:
     try:

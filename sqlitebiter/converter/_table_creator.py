@@ -3,7 +3,7 @@
 """
 
 from textwrap import dedent
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Any, Optional, Sequence
 
 import simplesqlite
 from simplesqlite import SimpleSQLite
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 class TableCreator:
     def __init__(
         self,
-        logger,
+        logger: Any,
         dst_con: SimpleSQLite,
         add_pri_key_name: Optional[str],
         result_logger: ResultLogger,

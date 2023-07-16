@@ -7,7 +7,7 @@ import os
 import re
 import sys
 from copy import deepcopy
-from typing import Dict, Optional, Pattern, Sequence, Type
+from typing import Any, Dict, Optional, Sequence
 from urllib.parse import urlparse
 
 import msgfy
@@ -16,22 +16,19 @@ import simplesqlite as sqlite
 from dataproperty import MatrixFormatting
 from pytablereader.interface import AbstractTableReader
 from simplesqlite import SimpleSQLite
-from typepy.type import AbstractType
 
 from .._const import IPYNB_FORMAT_NAME_LIST, TABLE_NOT_FOUND_MSG_FORMAT, ExitCode
+from .._types import ConvertConfig, TypeHintRules
 from ._base import SourceInfo, TableConverter
 from ._common import TYPE_HINT_FROM_HEADER_RULES, normalize_type_hint
 from ._ipynb_converter import is_ipynb_url, load_ipynb_url
 
 
-TypeHintRules = Dict[Pattern, Type[AbstractType]]
-
-
 def create_url_loader(
-    logger,
+    logger: Any,
     source_url: str,
     format_name: str,
-    encoding: str,
+    encoding: Optional[str],
     type_hint_rules: Optional[TypeHintRules],
     proxies: Optional[Dict],
 ) -> AbstractTableReader:
@@ -54,21 +51,21 @@ def create_url_loader(
 class UrlConverter(TableConverter):
     def __init__(
         self,
-        logger,
+        logger: Any,
         con: SimpleSQLite,
         symbol_replace_value: Optional[str],
         add_pri_key_name: Optional[str],
-        convert_configs,
+        convert_configs: ConvertConfig,
         index_list: Sequence[str],
         is_type_inference: bool,
         is_type_hint_header: bool,
         matrix_formatting: MatrixFormatting,
         verbosity_level: int,
         max_workers: int,
-        format_name,
-        encoding,
-        proxy,
-    ):
+        format_name: str,
+        encoding: str,
+        proxy: Optional[str],
+    ) -> None:
         super().__init__(
             logger,
             con,
@@ -162,7 +159,7 @@ class UrlConverter(TableConverter):
         if result_counter.success_count == success_count:
             logger.warning(TABLE_NOT_FOUND_MSG_FORMAT.format(url))
 
-    def __get_proxies(self) -> Dict:
+    def __get_proxies(self) -> Dict[str, Optional[str]]:
         return {"http": self.__proxy, "https": self.__proxy}
 
     def __create_loader(self, url: str) -> AbstractTableReader:

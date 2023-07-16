@@ -6,12 +6,13 @@ import abc
 import os.path
 import re
 from typing import Mapping  # noqa
-from typing import TYPE_CHECKING, Dict, List, Optional, Sequence, Set, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Set, Tuple
 from urllib.parse import urlparse
 
 import msgfy
 import nbformat
 import retryrequests
+from nbformat.notebooknode import NotebookNode
 from simplesqlite import SimpleSQLite
 
 from .._common import ResultLogger
@@ -48,7 +49,7 @@ def _schema_not_found_error_handler(e: Exception) -> None:
         )
 
 
-def load_ipynb_file(file_path: str, encoding: str):
+def load_ipynb_file(file_path: str, encoding: Optional[str]) -> nbformat.NotebookNode:
     with open(file_path, encoding=encoding) as f:
         try:
             return nbformat.read(f, as_version=4)
@@ -59,7 +60,7 @@ def load_ipynb_file(file_path: str, encoding: str):
             raise
 
 
-def load_ipynb_text(text: str):
+def load_ipynb_text(text: str) -> nbformat.NotebookNode:
     try:
         return nbformat.reads(text, as_version=4)
     except AttributeError as e:
@@ -98,7 +99,7 @@ class NbAttrDesc:
 
 class JupyterNotebookConverterInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def convert(self):  # pragma: no cover
+    def convert(self) -> Set[str]:  # pragma: no cover
         pass
 
 
@@ -108,12 +109,12 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
         pass
 
     @property
-    def source_id(self):
+    def source_id(self) -> int:
         return self._source_info.source_id
 
     def __init__(
-        self, logger, source_info: "SourceInfo", con: SimpleSQLite, result_logger: ResultLogger
-    ):
+        self, logger: Any, source_info: "SourceInfo", con: SimpleSQLite, result_logger: ResultLogger
+    ) -> None:
         self._logger = logger
         self._source_info = source_info
         self._con = con
@@ -138,17 +139,17 @@ class JupyterNotebookConverterBase(JupyterNotebookConverterInterface):
 
 class MetaDataConverter(JupyterNotebookConverterBase):
     @property
-    def _base_table_name(self):
+    def _base_table_name(self) -> str:
         return "metadata"
 
     def __init__(
         self,
-        logger,
+        logger: Any,
         source_info: "SourceInfo",
         con: SimpleSQLite,
         result_logger: ResultLogger,
-        metadata,
-    ):
+        metadata: NotebookNode,
+    ) -> None:
         super().__init__(logger, source_info, con, result_logger)
 
         self.__metadata = metadata
@@ -259,12 +260,12 @@ class CellConverter(JupyterNotebookConverterBase):
 
     def __init__(
         self,
-        logger,
+        logger: Any,
         source_info: "SourceInfo",
         con: SimpleSQLite,
         result_logger: ResultLogger,
         cells: Sequence,
-    ):
+    ) -> None:
         super().__init__(logger, source_info, con, result_logger)
 
         self.__cells = cells
@@ -461,7 +462,11 @@ class CellConverter(JupyterNotebookConverterBase):
 
 
 def convert_nb(
-    logger, source_info: "SourceInfo", con: SimpleSQLite, result_logger: ResultLogger, nb
+    logger: Any,
+    source_info: "SourceInfo",
+    con: SimpleSQLite,
+    result_logger: ResultLogger,
+    nb: nbformat.NotebookNode,
 ) -> Set[str]:
     changed_table_name_set: Set[str] = set()
     changed_table_name_set |= CellConverter(

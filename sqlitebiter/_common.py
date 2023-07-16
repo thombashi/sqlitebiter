@@ -2,7 +2,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
-from typing import Union
+from typing import Any, Union
 
 from path import Path
 from sqliteschema import SQLiteSchemaExtractor
@@ -21,7 +21,7 @@ class ResultLogger:
 
     def __init__(
         self,
-        logger,
+        logger: Any,
         schema_extractor: SQLiteSchemaExtractor,
         result_counter: ResultCounter,
         verbosity_level: int,

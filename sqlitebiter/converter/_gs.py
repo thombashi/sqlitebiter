@@ -2,6 +2,7 @@
 .. codeauthor:: Tsuyoshi Hombashi <tsuyoshi.hombashi@gmail.com>
 """
 
+import click
 import msgfy
 import pytablereader as ptr
 
@@ -9,7 +10,7 @@ from ._base import SourceInfo, TableConverter
 
 
 class GoogleSheetsConverter(TableConverter):
-    def convert(self, credentials, title: str) -> None:
+    def convert(self, credentials: click.Path, title: str) -> None:
         logger = self._logger
         result_counter = self._result_counter
         source_id = self._fetch_next_source_id()

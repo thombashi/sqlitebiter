@@ -4,7 +4,7 @@
 
 import re
 from collections import OrderedDict
-from typing import List, Sequence, Set, cast
+from typing import Any, List, Sequence, Set, cast
 
 import msgfy
 import pytablereader as ptr
@@ -23,7 +23,7 @@ class DictConverter:
 
     def __init__(
         self,
-        logger,
+        logger: Any,
         table_creator: TableCreator,
         source_info: SourceInfo,
         index_list: Sequence[str],
@@ -44,7 +44,7 @@ class DictConverter:
 
         self.__logger.debug(f"to_sqlite_table: {type(data)}, keys={keys}")
 
-        if isinstance(data, (list, tuple)):  # type: ignore
+        if isinstance(data, (list, tuple)):
             for s in data:
                 self.to_sqlite_table(s, keys)
             return
