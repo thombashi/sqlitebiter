@@ -10,10 +10,6 @@
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml
     :alt: CI status of Linux/macOS/Windows
 
-.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/codeql-analysis.yml/badge.svg
-    :target: https://github.com/thombashi/sqlitebiter/actions/workflows/codeql-analysis.yml
+.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql/badge.svg
+    :target: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql
     :alt: CodeQL
-
-.. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
-    :target: https://github.com/thombashi/sqlitebiter
-    :alt: GitHub stars
