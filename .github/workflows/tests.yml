@@ -6,12 +6,14 @@ on:
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/*.yml'
       - '.gitignore'
+      - '.readthedocs.yaml'
       - 'README.rst'
   pull_request:
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/*.yml'
       - '.gitignore'
+      - '.readthedocs.yaml'
       - 'README.rst'
 
 jobs:
