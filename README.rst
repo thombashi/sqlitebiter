@@ -18,13 +18,9 @@ Summary
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml
     :alt: CI status of Linux/macOS/Windows
 
-.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/codeql-analysis.yml/badge.svg
-    :target: https://github.com/thombashi/sqlitebiter/actions/workflows/codeql-analysis.yml
+.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql/badge.svg
+    :target: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql
     :alt: CodeQL
-
-.. image:: https://img.shields.io/github/stars/thombashi/sqlitebiter.svg?style=social&label=Star
-    :target: https://github.com/thombashi/sqlitebiter
-    :alt: GitHub stars
 
 Features
 --------
@@ -267,7 +263,7 @@ Python package dependencies
 
 Google Sheets dependencies (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Extra Python packages are required to install to use Google Sheets feature (`gs` subcommand):
+Extra Python packages are required to install to use the Google Sheets feature (`gs` subcommand):
 
 - `gspread <https://github.com/burnash/gspread>`_
 - `oauth2client <https://github.com/google/oauth2client/>`_
