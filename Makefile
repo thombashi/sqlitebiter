@@ -71,4 +71,4 @@ setup-dev: setup-ci
 
 .PHONY: latest-release-assets
 latest-release-assets:
-	curl -sSL https://api.github.com/repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' > scripts/latest_release_assets.list
+	gh api repos/thombashi/sqlitebiter/releases/latest | jq -r '.assets[].browser_download_url' > scripts/latest_release_assets.list
