@@ -75,11 +75,12 @@ setuptools.setup(
     long_description_content_type="text/x-rst",
     packages=setuptools.find_packages(exclude=["test*"]),
     project_urls={
+        "Changlog": f"{REPOSITORY_URL:s}/releases",
         "Documentation": f"https://{MODULE_NAME:s}.rtfd.io/",
         "Download": f"{REPOSITORY_URL:s}/releases",
+        "Funding": "https://github.com/sponsors/thombashi",
         "Source": REPOSITORY_URL,
         "Tracker": f"{REPOSITORY_URL:s}/issues",
-        "Changlog": f"{REPOSITORY_URL:s}/releases",
     },
     python_requires=">=3.7",
     install_requires=install_requires,
