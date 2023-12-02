@@ -4,7 +4,7 @@
 
     Options:
       -o, --output-path PATH          Output path of the SQLite database file.
-                                      Defaults to 'out.sqlite'.
+                                      [default: out.sqlite]
       -a, --append                    Append table(s) to existing database.
       --add-primary-key PRIMARY_KEY_NAME
                                       Add 'PRIMARY KEY AUTOINCREMENT' column to a
@@ -26,11 +26,11 @@
       --matrix-formatting [header_aligned|trim]
                                       header_aligned: fitting table data to header
                                       columns. trim: fitting table data to minimum
-                                      column size. Defaults to header_aligned.
+                                      column size.  [default: header_aligned]
       --replace-symbol TEXT           Replace symbols in attributes.
-      -v, --verbose
+      -v, --verbose                   Verbosity level.  [default: 0]
       --max-workers WORKERS           Specify the maximum number of workers that
-                                      the command may use. Defaults to 1.
+                                      the command may use.  [default: 1]
       --debug                         For debug print.
       -q, --quiet                     Suppress execution log messages.
       -h, --help                      Show this message and exit.

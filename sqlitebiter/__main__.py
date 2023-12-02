@@ -39,7 +39,7 @@ except ImportError:
     import json  # type: ignore
 
 
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], obj={})
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"], show_default=True, obj={})
 QUIET_LOG_LEVEL = "QUIET"
 COMMAND_EPILOG = dedent(
     """\
@@ -142,10 +142,7 @@ def to_matrix_formatting_enum(
     "--output-path",
     metavar="PATH",
     default=Default.OUTPUT_FILE,
-    help=f"""
-        Output path of the SQLite database file.
-        Defaults to '{Default.OUTPUT_FILE:s}'.
-    """,
+    help="Output path of the SQLite database file.",
 )
 @click.option(
     "-a", "--append", "is_append_table", is_flag=True, help="Append table(s) to existing database."
@@ -199,15 +196,14 @@ def to_matrix_formatting_enum(
     default=Default.MATRIX_FORMATTING,
     callback=to_matrix_formatting_enum,
     help=dedent(
-        f"""\
+        """\
         header_aligned: fitting table data to header columns.
         trim: fitting table data to minimum column size.
-        Defaults to {Default.MATRIX_FORMATTING}.
         """
     ),
 )
 @click.option("--replace-symbol", "symbol_replace_value", help="Replace symbols in attributes.")
-@click.option("-v", "--verbose", "verbosity_level", count=True)
+@click.option("-v", "--verbose", "verbosity_level", count=True, help="Verbosity level.")
 @click.option(
     "--max-workers",
     metavar="WORKERS",
@@ -216,7 +212,6 @@ def to_matrix_formatting_enum(
     help=dedent(
         """\
         Specify the maximum number of workers that the command may use.
-        Defaults to 1.
         """
     ),
 )
