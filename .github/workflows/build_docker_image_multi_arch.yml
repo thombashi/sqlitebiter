@@ -33,7 +33,7 @@ jobs:
         uses: docker/setup-qemu-action@v1
 
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Package Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" -u ${{ github.actor }} --password-stdin
