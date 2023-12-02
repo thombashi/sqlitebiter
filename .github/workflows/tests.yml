@@ -27,7 +27,7 @@ jobs:
       image: ghcr.io/thombashi/python-ci:3.11
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - run: make build
 
@@ -44,7 +44,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
@@ -85,7 +85,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Run the installer script
         run: curl -sSL https://raw.githubusercontent.com/thombashi/sqlitebiter/master/scripts/installer.sh | sudo bash -x

@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -89,7 +89,7 @@ jobs:
       SHA_TEXT_FILE: sqlitebiter_sha256.txt
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v3
         with:
