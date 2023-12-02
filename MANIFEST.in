@@ -1,7 +1,6 @@
 include docs/pages/introduction/summary.txt
 include LICENSE
 include README.rst
-include setup.cfg
 include tox.ini
 
 recursive-include requirements *
