@@ -19,7 +19,7 @@ exclude = '''
 | docs/conf.py
 | test/dataset.py
 '''
-target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311', 'py312']
 
 [tool.isort]
 known_third_party = [
