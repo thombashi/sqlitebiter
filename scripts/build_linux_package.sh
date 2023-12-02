@@ -34,7 +34,8 @@ echo $PKG_NAME $PKG_VERSION
 
 # build an executable binary file
 pyinstaller cli.py --clean --onefile --strip --distpath "$BUILD_DIR_PATH" --name $PKG_NAME \
-    --collect-all=jsonschema_specifications --hidden-import =jsonschema_specifications 
+    --collect-all=jsonschema_specifications \
+    --hidden-import=jsonschema_specifications
 
 # check the built binary file
 ${BUILD_DIR_PATH}/${PKG_NAME} version
