@@ -65,7 +65,7 @@ jobs:
 
           powershell compress-archive -Force "$BIN_PATH" "$ARCHIVE_PATH"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: binaries
           path: ${{ env.DIST_DIR_NAME }}/${{ env.BIN_NAME }}_*
@@ -105,7 +105,7 @@ jobs:
           ls -l --time-style=long-iso --file-type --human-readable --group-directories-first
           sha256sum ${BIN_NAME}_* > "../${SHA_DIR}/${SHA_TEXT_FILE}"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: shasum
           path: ${{ env.SHA_DIR }}
