@@ -215,7 +215,7 @@ Installation: Windows
 ``sqlitebiter`` can be used in Windows environments without Python installation as follows:
 
 #. Navigate to https://github.com/thombashi/sqlitebiter/releases
-#. Download the latest version of the ``sqlitebiter_win_x64.zip``
+#. Download the latest version of the ``sqlitebiter_windows_amd64.zip``
 #. Unzip the file
 #. Execute ``sqlitebiter.exe`` in either Command Prompt or PowerShell
 
