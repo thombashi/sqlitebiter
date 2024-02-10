@@ -80,7 +80,7 @@ jobs:
         os: [ubuntu-20.04]
         #os: [ubuntu-20.04, ubuntu-22.04]
     concurrency:
-      group: ${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}
+      group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref_name }}-installer-${{ matrix.os }}
       cancel-in-progress: true
     timeout-minutes: 20
 
