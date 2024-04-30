@@ -6,19 +6,21 @@ Summary
 =========
 `sqlitebiter <https://github.com/thombashi/sqlitebiter>`__ is a CLI tool to convert CSV / Excel / HTML / JSON / Jupyter Notebook / LDJSON / LTSV / Markdown / SQLite / SSV / TSV / Google-Sheets to a SQLite database file.
 
-.. image:: https://badge.fury.io/py/sqlitebiter.svg
+|PyPI pkg ver| |Supported Python ver| |CI status| |CodeQL|
+
+.. |PyPI pkg ver| image:: https://badge.fury.io/py/sqlitebiter.svg
     :target: https://badge.fury.io/py/sqlitebiter
     :alt: PyPI package version
 
-.. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
+.. |Supported Python ver| image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
     :target: https://pypi.org/project/sqlitebiter
     :alt: Supported Python versions
 
-.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml/badge.svg
+.. |CI status| image:: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml/badge.svg
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml
     :alt: CI status of Linux/macOS/Windows
 
-.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql/badge.svg
+.. |CodeQL| image:: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql/badge.svg
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql
     :alt: CodeQL
 
@@ -295,15 +297,23 @@ https://sqlitebiter.rtfd.io/
 
 Sponsors
 ====================================
-.. image:: https://avatars.githubusercontent.com/u/44389260?s=48&u=6da7176e51ae2654bcfd22564772ef8a3bb22318&v=4
+|chasbecker| |shiguredo| |b4tman| |Arturi0| |github|
+
+.. |chasbecker| image:: https://avatars.githubusercontent.com/u/44389260?s=48&u=6da7176e51ae2654bcfd22564772ef8a3bb22318&v=4
    :target: https://github.com/chasbecker
-   :alt: Charles Becker (chasbecker)
-.. image:: https://avatars.githubusercontent.com/u/46711571?s=48&u=57687c0e02d5d6e8eeaf9177f7b7af4c9f275eb5&v=4
-   :target: https://github.com/Arturi0
-   :alt: onetime: Arturi0
-.. image:: https://avatars.githubusercontent.com/u/3658062?s=48&v=4
+   :alt: ex-sponsor: Charles Becker (chasbecker)
+.. |shiguredo| image:: https://avatars.githubusercontent.com/u/2549434?s=48&v=4
+   :target: https://github.com/shiguredo
+   :alt: ex-sponsor: 時雨堂 (shiguredo)
+.. |b4tman| image:: https://avatars.githubusercontent.com/u/3658062?s=48&v=4
    :target: https://github.com/b4tman
    :alt: onetime: Dmitry Belyaev (b4tman)
+.. |Arturi0| image:: https://avatars.githubusercontent.com/u/46711571?s=48&u=57687c0e02d5d6e8eeaf9177f7b7af4c9f275eb5&v=4
+   :target: https://github.com/Arturi0
+   :alt: onetime: Arturi0
+.. |github| image:: https://avatars.githubusercontent.com/u/9919?s=48&v=4
+   :target: https://github.com/github
+   :alt: onetime: GitHub (github)
 
 `Become a sponsor <https://github.com/sponsors/thombashi>`__
 
