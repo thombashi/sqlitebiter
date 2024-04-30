@@ -14,4 +14,4 @@ jobs:
           close-issue-message: 'This issue was closed because it has been stalled for 7 days with no activity.'
           days-before-stale: 15
           days-before-close: 7
-          only-labels: 'invalid,needs-info,wontfix'
+          any-of-labels: 'invalid,needs-info,wontfix'
