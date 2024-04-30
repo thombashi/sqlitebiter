@@ -62,12 +62,13 @@ release:
 
 .PHONY: setup-ci
 setup-ci:
-	$(PYTHON) -m pip install --disable-pip-version-check --upgrade tox
+	$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade pip
+	$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade tox
 
 .PHONY: setup-dev
 setup-dev: setup-ci
-	@$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade -e .[test] releasecmd
-	@$(PYTHON) -m pip check
+	$(PYTHON) -m pip install -q --disable-pip-version-check --upgrade -e .[test]
+	$(PYTHON) -m pip check
 
 .PHONY: latest-release-assets
 latest-release-assets:
