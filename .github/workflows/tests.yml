@@ -18,6 +18,9 @@ on:
       - ".readthedocs.yaml"
       - "README.rst"
 
+permissions:
+  contents: read
+
 jobs:
   build-package:
     runs-on: ubuntu-latest
