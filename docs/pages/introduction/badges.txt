@@ -1,15 +1,17 @@
-.. image:: https://badge.fury.io/py/sqlitebiter.svg
+|PyPI pkg ver| |Supported Python ver| |CI status| |CodeQL|
+
+.. |PyPI pkg ver| image:: https://badge.fury.io/py/sqlitebiter.svg
     :target: https://badge.fury.io/py/sqlitebiter
     :alt: PyPI package version
 
-.. image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
+.. |Supported Python ver| image:: https://img.shields.io/pypi/pyversions/sqlitebiter.svg
     :target: https://pypi.org/project/sqlitebiter
     :alt: Supported Python versions
 
-.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml/badge.svg
+.. |CI status| image:: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml/badge.svg
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/tests.yml
     :alt: CI status of Linux/macOS/Windows
 
-.. image:: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql/badge.svg
+.. |CodeQL| image:: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql/badge.svg
     :target: https://github.com/thombashi/sqlitebiter/actions/workflows/github-code-scanning/codeql
     :alt: CodeQL
