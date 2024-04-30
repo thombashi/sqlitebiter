@@ -2,6 +2,8 @@ name: Tests
 
 on:
   push:
+    branches:
+      - master
     paths-ignore:
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/*.yml"
