@@ -23,10 +23,10 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
           cache-dependency-path: |
@@ -65,7 +65,7 @@ jobs:
 
           powershell compress-archive -Force "$BIN_PATH" "$ARCHIVE_PATH"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: binaries
           path: ${{ env.DIST_DIR_NAME }}/${{ env.BIN_NAME }}_*
@@ -89,9 +89,9 @@ jobs:
       SHA_TEXT_FILE: sqlitebiter_sha256.txt
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: binaries
           path: ${{ env.DIST_DIR_NAME }}
@@ -105,7 +105,7 @@ jobs:
           ls -l --time-style=long-iso --file-type --human-readable --group-directories-first
           sha256sum ${BIN_NAME}_* > "../${SHA_DIR}/${SHA_TEXT_FILE}"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: shasum
           path: ${{ env.SHA_DIR }}
