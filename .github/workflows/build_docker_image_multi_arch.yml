@@ -23,17 +23,17 @@ jobs:
       PLATFORMS: "linux/amd64,linux/arm64"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Extract version
         id: extract-version
         run: echo "version=$(./docker/extract_version.sh)" >> $GITHUB_OUTPUT
 
       - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Login to GitHub Package Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login "$REGISTRY" -u ${{ github.actor }} --password-stdin
