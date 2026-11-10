@@ -116,7 +116,10 @@ def load_convert_config(logger: Any, config_filepath: str, subcommand: str) -> C
     with open(config_filepath, encoding="utf-8") as f:
         configs = json.load(f)
 
-    return configs.get(subcommand)
+    # The file may not have a section for this subcommand (e.g. a "file"
+    # config used with the "url" subcommand). Fall back to an empty config
+    # instead of None, which converters iterate over.
+    return configs.get(subcommand) or {}
 
 
 def to_matrix_formatting_enum(
