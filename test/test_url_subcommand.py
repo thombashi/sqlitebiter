@@ -155,3 +155,32 @@ class Test_url_subcommand:
             print_traceback(result)
 
             assert result.exit_code == ExitCode.SUCCESS
+
+    @responses.activate
+    def test_convert_config_without_url_section(self):
+        url = "https://example.com/no_config_section.csv"
+        responses.add(
+            responses.GET,
+            url,
+            body=dedent(
+                """\
+                "a","b"
+                1,2
+                """
+            ),
+            content_type="text/plain; charset=utf-8",
+            status=200,
+        )
+        runner = CliRunner()
+
+        with runner.isolated_filesystem():
+            with open("convert_config.json", "w", encoding="utf-8") as f:
+                f.write('{"file": []}')
+            result = runner.invoke(
+                cmd,
+                ["-o", self.db_path, "--convert-config", "convert_config.json", "url", url],
+            )
+            print_traceback(result)
+
+            assert result.exit_code == ExitCode.SUCCESS
+            assert result.exception is None
